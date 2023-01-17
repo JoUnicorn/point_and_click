@@ -29,6 +29,7 @@
 
       function preload ()
       {
+        this.load.image('BS_paris1', 'assets/BS_paris1.png');
         this.load.image('sky', 'assets/sky.png');
         this.load.image('ground', 'assets/platform.png');
         this.load.image('star', 'assets/star.png');
@@ -42,7 +43,7 @@
       function create ()
       {
         //this.add.image(400, 300, 'sky');
-        this.add.image(0, 0, 'sky').setOrigin(0, 0);
+        this.add.image(0, 0, 'BS_paris1').setOrigin(0, 0);
         platforms = this.physics.add.staticGroup();
 
         platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -74,7 +75,7 @@
             frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
-        });        
+        });
       }
 
       function update ()
