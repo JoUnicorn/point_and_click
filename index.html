@@ -42,7 +42,13 @@
         graphics.fillRect(300, 200, 256, 256);
 
         graphics.fillStyle(0x00ff00, 1);
-        graphics.fillTriangle(200, 200, 400, 50, 500, 300);        
+        graphics.fillTriangle(200, 200, 400, 50, 500, 300);
+
+        var rect = new Phaser.Geom.Rectangle(250, 200, 300, 200);
+
+        var graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
+
+        graphics.fillRectShape(rect);        
       }
 
       function update ()
