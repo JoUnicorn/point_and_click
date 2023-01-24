@@ -72,7 +72,14 @@
         platforms.create(50, 250, 'ground');
         platforms.create(750, 220, 'ground');
 
-        player = this.physics.add.sprite(100, 450, 'dude');
+        var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
+        var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
+        var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+        var line = new Phaser.Geom.Line();
+        var angle = 0;
+        const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
+
+        player = this.physics.add.sprite(cannon.x, cannon.y - 50, 'dude');
 
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
@@ -98,15 +105,10 @@
         });
 
         this.physics.add.collider(player, platforms);
+
         cursors = this.input.keyboard.createCursorKeys();
 
-        var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
-        var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
-        var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
-        var line = new Phaser.Geom.Line();
-        var angle = 0;
-        const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
-
+        player.disableBody(true, true);
         this.input.on('pointermove', function (pointer) {
             angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
             angle=Math.max(angle,-1);
@@ -117,7 +119,11 @@
             gfx.clear().strokeLineShape(line);
         }, this);
 
-
+        this.input.on('pointerup', function () {
+            player.enableBody(true, cannon.x, cannon.y - 50, true, true);
+            player.play('right');
+            this.physics.velocityFromRotation(angle, 600, player.body.velocity);
+        }, this);
       }
 
       function update ()
