@@ -74,12 +74,12 @@
 
         var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
         var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
+        var player = this.physics.add.sprite(cannon.x, cannon.y - 50, 'dude');
         var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
         var line = new Phaser.Geom.Line();
         var angle = 0;
         const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
 
-        player = this.physics.add.sprite(cannon.x, cannon.y - 50, 'dude');
 
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
