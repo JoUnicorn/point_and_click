@@ -105,15 +105,17 @@
         var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
         var line = new Phaser.Geom.Line();
         var angle = 0;
+        const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
 
         this.input.on('pointermove', function (pointer) {
             angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
             cannonHead.rotation = angle;
+            text.setText([angle]);
             Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
             gfx.clear().strokeLineShape(line);
         }, this);
 
-        
+
       }
 
       function update ()
