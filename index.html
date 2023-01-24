@@ -121,7 +121,7 @@
         this.input.on('pointerup', function () {
             player.enableBody(true, cannon.x, cannon.y - 50, true, true);
             player.play('right');
-            text.setText([angle,player.body.velocity.X]);
+            text.setText([angle,player.body.velocity.x]);
             this.physics.velocityFromRotation(angle, 600, player.body.velocity);
         }, this);
       }
