@@ -106,7 +106,14 @@
         var line = new Phaser.Geom.Line();
         var angle = 0;
 
+        this.input.on('pointermove', function (pointer) {
+            angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
+            cannonHead.rotation = angle;
+            Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
+            gfx.clear().strokeLineShape(line);
+        }, this);
 
+        
       }
 
       function update ()
