@@ -114,7 +114,6 @@
             angle=Math.max(angle,-1);
             angle=Math.min(angle,.5);
             cannonHead.rotation = angle;
-            text.setText([angle]);
             Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
             gfx.clear().strokeLineShape(line);
         }, this);
@@ -122,6 +121,7 @@
         this.input.on('pointerup', function () {
             player.enableBody(true, cannon.x, cannon.y - 50, true, true);
             player.play('right');
+            text.setText([angle]);
             this.physics.velocityFromRotation(angle, 600, player.body.velocity);
         }, this);
       }
