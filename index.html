@@ -40,6 +40,9 @@
             'assets/images/dude.png',
             { frameWidth: 32, frameHeight: 48 }
         );
+
+        this.load.image('cannon_head', 'assets/tests/timer/cannon_head.png');
+        this.load.image('cannon_body', 'assets/tests/timer/cannon_body.png');
       }
 
       function create ()
@@ -96,6 +99,9 @@
 
         this.physics.add.collider(player, platforms);
         cursors = this.input.keyboard.createCursorKeys();
+
+        var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
+        var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);        
 
       }
 
