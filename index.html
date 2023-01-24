@@ -95,6 +95,7 @@
         });
 
         this.physics.add.collider(player, platforms);
+        cursors = this.input.keyboard.createCursorKeys();
 
       }
 
@@ -122,7 +123,7 @@
         if (cursors.up.isDown && player.body.touching.down)
         {
             player.setVelocityY(-330);
-        }        
+        }
       }
 
     </script>
