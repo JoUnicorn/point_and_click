@@ -109,6 +109,8 @@
 
         this.input.on('pointermove', function (pointer) {
             angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
+            angle=Math.max(angle,-1);
+            angle=Math.min(angle,.5);
             cannonHead.rotation = angle;
             text.setText([angle]);
             Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
