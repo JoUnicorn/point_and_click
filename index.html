@@ -101,8 +101,12 @@
         cursors = this.input.keyboard.createCursorKeys();
 
         var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
-        var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);        
+        var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
+        var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+        var line = new Phaser.Geom.Line();
+        var angle = 0;
 
+        
       }
 
       function update ()
