@@ -78,7 +78,7 @@
         var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
         var line = new Phaser.Geom.Line();
         var angle = 0;
-        const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
+        //const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
 
 
         player.setBounce(0.2);
@@ -136,7 +136,6 @@
           .on('pointerup',  function () {
               player.enableBody(true, cannon.x, cannon.y - 50, true, true);
               player.play('right');
-              text.setText([angle,player.body.velocity.x]);
               this.physics.velocityFromRotation(angle, 600, player.body.velocity);
           }, this);
 
