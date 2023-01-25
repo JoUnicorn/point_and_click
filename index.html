@@ -88,7 +88,7 @@
         player.disableBody(true, true);
         */
 
-        bullets = game.add.group();
+        bullets = this.add.group();
         bullets.enableBody = true;
         bullets.createMultiple(50, 'dude');
         bullets.setAll('checkWorldBounds', true);
