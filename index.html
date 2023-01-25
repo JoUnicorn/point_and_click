@@ -146,7 +146,7 @@
         this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
           .setInteractive({ useHandCursor: true })
           .on('pointerup',  function () {
-              var bullet = bullets.getFirstDead(false);
+              var bullet = bullets.getFirstDead();
               console.log(bullet);
               bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
               bullet.play('right');
