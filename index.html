@@ -109,7 +109,7 @@
         cursors = this.input.keyboard.createCursorKeys();
 
         player.disableBody(true, true);
-        this.input.on('pointermove', function (pointer) {
+        this.input.on('pointerdown', function (pointer) {
             angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
             angle=Math.max(angle,-1);
             angle=Math.min(angle,.5);
