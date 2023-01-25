@@ -91,8 +91,6 @@
         bullets = this.add.group();
         bullets.enableBody = true;
         bullets.createMultiple(50, 'dude');
-        bullets.setAll('checkWorldBounds', true);
-        bullets.setAll('outOfBoundsKill', true);
         bullets.setBounce(0.2);
         bullets.setCollideWorldBounds(true);
         this.physics.add.collider(bullets, platforms);
