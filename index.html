@@ -144,9 +144,10 @@
         this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
           .setInteractive({ useHandCursor: true })
           .on('pointerup',  function () {
-              player.enableBody(true, cannon.x, cannon.y - 50, true, true);
-              player.play('right');
-              this.physics.velocityFromRotation(angle, 600, player.body.velocity);
+              var bullet = bullets.getFirstDead();
+              bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
+              bullet.play('right');
+              this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
           }, this);
 
       }
