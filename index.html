@@ -145,7 +145,7 @@
           .setInteractive({ useHandCursor: true })
           .on('pointerup',  function () {
               var bullet = bullets.getFirstDead(false);
-              comnsole.log(bullet);
+              console.log(bullet);
               bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
               bullet.play('right');
               this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
