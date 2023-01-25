@@ -109,13 +109,17 @@
         cursors = this.input.keyboard.createCursorKeys();
 
         player.disableBody(true, true);
+
+        var pointer = this.input.activePointer;
         this.input.on('pointermove', function (pointer) {
-            angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
-            angle=Math.max(angle,-1);
-            angle=Math.min(angle,.5);
-            cannonHead.rotation = angle;
-            Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
-            gfx.clear().strokeLineShape(line);
+            if (pointer.isDown) {
+              angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
+              angle=Math.max(angle,-1);
+              angle=Math.min(angle,.5);
+              cannonHead.rotation = angle;
+              Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
+              gfx.clear().strokeLineShape(line);
+            }
         }, this);
 
         this.input.on('pointerup', function () {
