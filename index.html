@@ -131,7 +131,7 @@
         }, this);
         */
 
-        this.clickButton = this.add.text(100, 100, 'Click me!', { fill: '#0f0' })
+        this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
           .setInteractive({ useHandCursor: true })
           .on('pointerup',  function () {
               player.enableBody(true, cannon.x, cannon.y - 50, true, true);
