@@ -144,7 +144,7 @@
         this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
           .setInteractive({ useHandCursor: true })
           .on('pointerup',  function () {
-              var bullet = bullets.getFirstDead();
+              var bullet = bullets.getFirstDead(false);
               bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
               bullet.play('right');
               this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
