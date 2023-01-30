@@ -98,7 +98,6 @@
           visible: false,
           repeat: 50
         });
-        console.log(bullets.getFirstDead(false));
         /*
         console.log(bullets.total);
         console.log(bullets.countLiving());
@@ -157,7 +156,9 @@
           .on('pointerup',  function () {
               var bullet = bullets.getFirstDead();
               console.log(bullet);
-              bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
+              bullet.body.reset(cannon.x, cannon.y - 50);
+              bullet.setActive(true);
+              bullet.setVisible(true);              
               bullet.play('right');
               this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
           }, this);
