@@ -96,13 +96,13 @@
           frameQuantity: 1,
           active: false,
           visible: false,
-          repeat: 50 
+          repeat: 50
         });
-        console.log(bullets);
+        console.log(bullets.getFirstDead(false));
+        /*
         console.log(bullets.total);
         console.log(bullets.countLiving());
         console.log(bullets.countDead());
-        /*
         bullets.setBounce(0.2);
         bullets.setCollideWorldBounds(true);
         this.physics.add.collider(bullets, platforms);
