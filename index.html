@@ -88,9 +88,16 @@
         player.disableBody(true, true);
         */
 
-        bullets = this.add.group({ key: 'dude', frame: [0], frameQuantity: 1, repeat: 50 });
+        bullets = this.add.group();
         //bullets.createMultiple(50, 'dude');
-        //bullets.createMultiple({ key: 'dude', frame: [0], frameQuantity: 1, repeat: 50 });
+        bullets.createMultiple({
+          key: 'dude',
+          frame: [0],
+          frameQuantity: 1,
+          active: false,
+          visible: false,
+          repeat: 50 
+        });
         console.log(bullets);
         console.log(bullets.total);
         console.log(bullets.countLiving());
