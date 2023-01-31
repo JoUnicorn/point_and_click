@@ -85,15 +85,6 @@
         //const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
         /////// end canon ////////////////
 
-
-        /*
-        var player = this.physics.add.sprite(cannon.x, cannon.y - 50, 'dude');
-        player.setBounce(0.2);
-        player.setCollideWorldBounds(true);
-        this.physics.add.collider(player, platforms);
-        player.disableBody(true, true);
-        */
-
         bullets = this.physics.add.group({
           key: 'dude',
           frame: [0],
@@ -110,7 +101,6 @@
         });
 
         this.physics.add.collider(bullets, platforms);
-        //bullets.disableBody(true, true);
 
         this.anims.create({
             key: 'left',
