@@ -161,7 +161,7 @@
           .on('pointerup',  function () {
               var bullet = bullets.getFirstDead();
               console.log(bullet);
-              bullet.body.reset(cannon.x, cannon.y - 50);
+              bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
               bullet.setActive(true);
               bullet.setVisible(true);
               bullet.play('right');
