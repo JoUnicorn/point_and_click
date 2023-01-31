@@ -79,7 +79,8 @@
         platforms.create(600, 400, 'ground');
         platforms.create(50, 250, 'ground');
         platforms.create(750, 220, 'ground');
-        wall=this.physics.add.image(1300, 0, 'ground').setOrigin(0).setRotation(Phaser.Math.DegToRad(90));
+        platforms2 = this.physics.add.staticGroup();
+        platforms2.create(1300, 0, 'ground').setOrigin(0).setRotation(Phaser.Math.DegToRad(90));
         /////// end platform ////////////////
 
         /////// canon ////////////////
@@ -109,8 +110,7 @@
         });
 
         this.physics.add.collider(bullets, platforms);
-        this.physics.add.collider(wall, platforms);
-        this.physics.add.collider(bullets, wall);
+        this.physics.add.collider(bullets, platforms2);
         /////// bullets ////////////////
 
         /////// animation ////////////////
