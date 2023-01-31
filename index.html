@@ -62,8 +62,11 @@
         graphics.strokeRect(0, gameHeight-squareHeight, squareWidth, squareHeight);
         */
 
+        /////// sky ////////////////
         this.add.image(400, 300, 'sky');
+        /////// end sky ////////////////
 
+        /////// platform ////////////////
         platforms = this.physics.add.staticGroup();
 
         platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -71,13 +74,16 @@
         platforms.create(600, 400, 'ground');
         platforms.create(50, 250, 'ground');
         platforms.create(750, 220, 'ground');
+        /////// end platform ////////////////
 
+        /////// canon ////////////////
         var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
         var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
         var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
         var line = new Phaser.Geom.Line();
         var angle = 0;
         //const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
+        /////// end canon ////////////////
 
 
         /*
@@ -88,9 +94,7 @@
         player.disableBody(true, true);
         */
 
-        bullets = this.add.group();
-        //bullets.createMultiple(50, 'dude');
-        bullets.createMultiple({
+        bullets = this.physics.add.group({
           key: 'dude',
           frame: [0],
           frameQuantity: 1,
@@ -98,15 +102,19 @@
           visible: false,
           repeat: 50
         });
-        /*
+        console.log(bullets);
         console.log(bullets.total);
         console.log(bullets.countLiving());
         console.log(bullets.countDead());
         bullets.setBounce(0.2);
         bullets.setCollideWorldBounds(true);
+        bullets.children.iterate(function (child) {
+            child.setBounce(0.2);
+            child.setCollideWorldBounds(true);
+        });
+
         this.physics.add.collider(bullets, platforms);
         bullets.disableBody(true, true);
-        */
 
         this.anims.create({
             key: 'left',
@@ -158,7 +166,7 @@
               console.log(bullet);
               bullet.body.reset(cannon.x, cannon.y - 50);
               bullet.setActive(true);
-              bullet.setVisible(true);              
+              bullet.setVisible(true);
               bullet.play('right');
               this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
           }, this);
