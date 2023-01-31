@@ -85,6 +85,7 @@
         //const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
         /////// end canon ////////////////
 
+        /////// bullets ////////////////
         bullets = this.physics.add.group({
           key: 'dude',
           frame: [0],
@@ -93,9 +94,8 @@
           visible: false,
           repeat: 3
         });
-        console.log(bullets);
-        console.log(bullets.total);
-        console.log(bullets.countActive(true));
+        //console.log(bullets);
+        //console.log(bullets.countActive(true));
         bullets.children.iterate(function (child) {
             child.setBounce(0.2);
             child.setCollideWorldBounds(true);
@@ -103,7 +103,9 @@
         });
 
         this.physics.add.collider(bullets, platforms);
+        /////// bullets ////////////////
 
+        /////// animation ////////////////
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -123,6 +125,7 @@
             frameRate: 10,
             repeat: -1
         });
+        /////// end animation ////////////////
 
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -137,15 +140,6 @@
               gfx.clear().strokeLineShape(line);
             }
         }, this);
-
-        /*
-        this.input.on('pointerup', function () {
-            player.enableBody(true, cannon.x, cannon.y - 50, true, true);
-            player.play('right');
-            text.setText([angle,player.body.velocity.x]);
-            this.physics.velocityFromRotation(angle, 600, player.body.velocity);
-        }, this);
-        */
 
         this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
           .setInteractive({ useHandCursor: true })
