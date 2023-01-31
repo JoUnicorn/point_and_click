@@ -149,12 +149,13 @@
           .setInteractive({ useHandCursor: true })
           .on('pointerup',  function () {
               var bullet = bullets.getFirstDead();
-              console.log(bullet);
-              bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
-              bullet.setActive(true);
-              bullet.setVisible(true);
-              bullet.play('right');
-              this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
+              if(bullet){
+                bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
+                bullet.setActive(true);
+                bullet.setVisible(true);
+                bullet.play('right');
+                this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
+              }
           }, this);
 
       }
