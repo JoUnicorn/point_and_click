@@ -104,8 +104,7 @@
         });
         console.log(bullets);
         console.log(bullets.total);
-        console.log(bullets.countLiving());
-        console.log(bullets.countDead());
+        console.log(bullets.countActive(true));
         bullets.setBounce(0.2);
         bullets.setCollideWorldBounds(true);
         bullets.children.iterate(function (child) {
