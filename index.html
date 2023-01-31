@@ -136,7 +136,7 @@
               angle=Math.max(angle,-1);
               angle=Math.min(angle,.5);
               cannonHead.rotation = angle;
-              Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
+              Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y, angle, 128);
               gfx.clear().strokeLineShape(line);
             }
         }, this);
