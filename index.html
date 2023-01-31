@@ -98,8 +98,6 @@
           key: 'dude',
           frame: [0],
           frameQuantity: 1,
-          active: false,
-          visible: false,
           repeat: 3
         });
         console.log(bullets);
@@ -108,6 +106,7 @@
         bullets.children.iterate(function (child) {
             child.setBounce(0.2);
             child.setCollideWorldBounds(true);
+            child.disableBody(true, true);
         });
 
         this.physics.add.collider(bullets, platforms);
