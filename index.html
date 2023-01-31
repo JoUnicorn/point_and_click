@@ -155,6 +155,7 @@
                 bullet.setVisible(true);
                 bullet.play('right');
                 this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
+                this.cameras.main.startFollow(bullet, true, 0.05, 0.05);
               }
           }, this);
 
