@@ -74,7 +74,7 @@
         platforms = this.physics.add.staticGroup();
 
         platforms.create(0, 568, 'ground').setOrigin(0).setScale(2).refreshBody();
-        platforms.create(800, 568, 'ground').setScale(2).refreshBody();
+        platforms.create(800, 568, 'ground').setOrigin(0).setScale(2).refreshBody();
 
         platforms.create(600, 400, 'ground');
         platforms.create(50, 250, 'ground');
