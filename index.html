@@ -67,38 +67,6 @@
             graphics.strokeRect(0, gameHeight-squareHeight, squareWidth, squareHeight);
             */
 
-            ////////////////planck///////////////
-            // Box2D works with meters. We need to convert meters to pixels.
-            // let's say 30 pixels = 1 meter.
-            this.worldScale = 30;
-
-            // world gravity, as a Vec2 object. It's just a x, y vector
-            let gravity = planck.Vec2(0, 3);
-
-            // this is how we create a Box2D world
-            this.world = planck.World(gravity);
-
-            // createBox is a method I wrote to create a box, see how it works at line 55
-            this.createBox(game.config.width / 2, game.config.height - 20, game.config.width, 40, false);
-
-            // the rest of the script just creates a random box each 500ms, then restarts after 100 iterations
-            this.tick = 0;
-            this.time.addEvent({
-                delay: 500,
-                callbackScope: this,
-                callback: function(){
-                    this.createBox(Phaser.Math.Between(100, game.config.width - 100), -100, Phaser.Math.Between(20, 80), Phaser.Math.Between(20, 80), true);
-                    this.tick ++;
-                    if(this.tick == 100){
-                        this.scene.start("PlayGame");
-                    }
-                },
-                loop: true
-            });
-            ////////////////end of planck///////////////
-
-
-
             this.cameras.main.setBounds(0, 0, gameWidth*2, gameHeight);
             this.physics.world.setBounds(0, 0, gameWidth*2, gameHeight);
 
@@ -108,15 +76,15 @@
             /////// end sky ////////////////
 
             /////// platform ////////////////
-            platforms = this.physics.add.staticGroup();
+            this.platforms = this.physics.add.staticGroup();
 
-            platforms.create(0, 536, 'ground').setOrigin(0).setScale(2).refreshBody();
-            platforms.create(800, 536, 'ground').setOrigin(0).setScale(2).refreshBody();
+            this.platforms.create(0, 536, 'ground').setOrigin(0).setScale(2).refreshBody();
+            this.platforms.create(800, 536, 'ground').setOrigin(0).setScale(2).refreshBody();
 
             //platforms.create(600, 400, 'ground');
-            platforms.create(50, 250, 'ground');
+            this.platforms.create(50, 250, 'ground');
             //platforms.create(750, 220, 'ground');
-            platforms.create(1300, 150, 'ground').setOrigin(0).setRotation(Phaser.Math.DegToRad(90)).refreshBody();
+            this.platforms.create(1300, 150, 'ground').setOrigin(0).setRotation(Phaser.Math.DegToRad(90)).refreshBody();
             /////// end platform ////////////////
 
             /////// canon ////////////////
@@ -129,7 +97,7 @@
             /////// end canon ////////////////
 
             /////// bullets ////////////////
-            bullets = this.physics.add.group({
+            this.bullets = this.physics.add.group({
               key: 'dude',
               frame: [0],
               frameQuantity: 1,
@@ -139,13 +107,13 @@
             });
             //console.log(bullets);
             //console.log(bullets.countActive(true));
-            bullets.children.iterate(function (child) {
+            this.bullets.children.iterate(function (child) {
                 child.setBounce(0.1);
                 child.setCollideWorldBounds(true);
                 child.disableBody(true, true);
             });
 
-            this.physics.add.collider(bullets, platforms);
+            this.physics.add.collider(this.bullets, this.platforms);
             /////// bullets ////////////////
 
             /////// animation ////////////////
@@ -170,7 +138,7 @@
             });
             /////// end animation ////////////////
 
-            cursors = this.input.keyboard.createCursorKeys();
+            this.cursors = this.input.keyboard.createCursorKeys();
 
             var pointer = this.input.activePointer;
             this.input.on('pointermove', function (pointer) {
@@ -184,10 +152,11 @@
                 }
             }, this);
 
+            /*
             this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  var bullet = bullets.getFirstDead();
+                  var bullet = this.bullets.getFirstDead();
                   if(bullet){
                     bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
                     bullet.setActive(true);
@@ -197,6 +166,66 @@
                     this.cameras.main.startFollow(bullet, true, 0.05, 0.05);
                   }
               }, this);
+            */
+
+
+            ////////////////planck///////////////
+            // Box2D works with meters. We need to convert meters to pixels.
+            // let's say 30 pixels = 1 meter.
+            this.worldScale = 30;
+
+            // world gravity, as a Vec2 object. It's just a x, y vector
+            let gravity = planck.Vec2(0, 3);
+
+            // this is how we create a Box2D world
+            this.world = planck.World(gravity);
+
+            // createBox is a method I wrote to create a box, see how it works at line 55
+            var decal=300
+            this.createBox(500+decal, game.config.height - 100, 500, 40, false);
+            this.createBox(400+decal, -100, 30, 180, true);
+            this.createBox(600+decal, -100, 30, 180, true);
+            this.time.addEvent({
+                delay: 500,
+                callbackScope: this,
+                callback: function(){
+                    this.createBox(500+decal, -100, 280, 30, true);
+                },
+                loop: false
+            });
+
+            /*
+            // the rest of the script just creates a random box each 500ms, then restarts after 100 iterations
+            this.tick = 0;
+            this.time.addEvent({
+                delay: 500,
+                callbackScope: this,
+                callback: function(){
+                    this.createBox(Phaser.Math.Between(100, game.config.width - 100), -100, Phaser.Math.Between(20, 80), Phaser.Math.Between(20, 80), true);
+                    this.tick ++;
+                    if(this.tick == 50){
+                        this.scene.start("PlayGame");
+                    }
+                },
+                loop: true
+            });
+            */
+
+            this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
+              .setInteractive({ useHandCursor: true })
+              .on('pointerup',  function () {
+                  var bullet = this.createBox(400+decal, -100, 30, 180, true);;
+                  if(bullet){
+                    bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
+                    bullet.setActive(true);
+                    bullet.setVisible(true);
+                    bullet.play('right');
+                    this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
+                    this.cameras.main.startFollow(bullet, true, 0.05, 0.05);
+                  }
+              }, this);
+
+            ////////////////end of planck///////////////
 
           }
 
