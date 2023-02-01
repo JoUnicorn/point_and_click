@@ -32,7 +32,7 @@
               super("PlayGame");
           }
 
-          function preload ()
+          preload ()
           {
             this.load.image('sky', 'assets/images/sky.png');
             this.load.image('ground', 'assets/images/platform.png');
@@ -47,7 +47,7 @@
             this.load.image('cannon_body', 'assets/images/cannon_body.png');
           }
 
-          function create ()
+          create ()
           {
             /*
             var graphics = this.add.graphics();
@@ -197,7 +197,7 @@
 
           }
 
-          function update ()
+          update ()
           {
             /*
             if (cursors.left.isDown)
@@ -230,7 +230,7 @@
           // here we go with some Box2D stuff
           // arguments: x, y coordinates of the center, with and height of the box, in pixels
           // we'll conver pixels to meters inside the method
-          function createBox(posX, posY, width, height, isDynamic){
+          createBox(posX, posY, width, height, isDynamic){
 
               // this is how we create a generic Box2D body
               let box = this.world.createBody();
