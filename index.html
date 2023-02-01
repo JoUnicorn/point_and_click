@@ -2,10 +2,15 @@
 <html>
 <head>
     <script src="js/phaser.min.js"></script>
+    <script src="js/planck.js"></script>
 </head>
 <body>
 
     <script>
+
+      // to open the server with python
+      // python -m http.server 8080
+      // http://localhost:8080/
 
       var gameWidth=800
       var gameHeight=600
@@ -76,9 +81,9 @@
         platforms.create(0, 536, 'ground').setOrigin(0).setScale(2).refreshBody();
         platforms.create(800, 536, 'ground').setOrigin(0).setScale(2).refreshBody();
 
-        platforms.create(600, 400, 'ground');
+        //platforms.create(600, 400, 'ground');
         platforms.create(50, 250, 'ground');
-        platforms.create(750, 220, 'ground');
+        //platforms.create(750, 220, 'ground');
         platforms.create(1300, 150, 'ground').setOrigin(0).setRotation(Phaser.Math.DegToRad(90)).refreshBody();
         /////// end platform ////////////////
 
