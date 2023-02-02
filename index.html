@@ -174,7 +174,7 @@
             // let's say 30 pixels = 1 meter.
             this.worldScale = 30;
 
-            // world gravity, as a Vec2 object. It's just a x, y vector
+            // world gravity, as a Vec2 object. It's just a x, y vector (x=gravity horizontal, y gravity vertical)
             let gravity = planck.Vec2(0, 3);
 
             // this is how we create a Box2D world
@@ -214,15 +214,8 @@
             this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  var bullet = this.createBox(400+decal, -100, 30, 180, true);;
-                  if(bullet){
-                    bullet.enableBody(true, cannon.x, cannon.y - 50, true, true);
-                    bullet.setActive(true);
-                    bullet.setVisible(true);
-                    bullet.play('right');
-                    this.physics.velocityFromRotation(angle, 600, bullet.body.velocity);
-                    this.cameras.main.startFollow(bullet, true, 0.05, 0.05);
-                  }
+                  this.createBox2(cannon.x+100, cannon.y - 50, 30,30, true);
+                  this.createBox2(cannon.x+150, cannon.y - 50, 30,30, true);
               }, this);
 
             ////////////////end of planck///////////////
@@ -323,6 +316,78 @@
 
               // a body can have anything in its user data, normally it's used to store its sprite
               box.setUserData(userData);
+          }
+
+          createBox2(posX, posY, width, height, isDynamic){
+
+              // this is how we create a generic Box2D body
+              let box = this.world.createBody({
+                                                gravityScale: 0,
+                                                active: false,
+                                              });
+              box.setDynamic();
+
+              // a body can have one or more fixtures. This is how we create a box fixture inside a body
+              box.createFixture(planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale));
+
+              // now we place the body in the world
+              box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+
+              // time to set mass information
+              box.setMassData({
+                  mass: 1,
+                  center: planck.Vec2(),
+
+                  // I have to say I do not know the meaning of this "I", but if you set it to zero, bodies won't rotate
+                  I: 1
+              });
+
+              // now we create a graphics object representing the body
+              var color = new Phaser.Display.Color();
+              color.random();
+              color.brighten(50).saturate(100);
+              let userData = this.add.graphics();
+              userData.fillStyle(color.color, 1);
+              userData.fillRect(- width / 2, - height / 2, width, height);
+
+              // a body can have anything in its user data, normally it's used to store its sprite
+              box.setUserData(userData);
+          }
+
+          createCircle(posX, posY, width, isDynamic){
+
+              // this is how we create a generic Box2D body
+              let circle = this.world.createBody({
+                                                gravityScale: 0
+                                              });
+              circle.setDynamic();
+
+              // a body can have one or more fixtures. This is how we create a box fixture inside a body
+              circle.createFixture(planck.Circle(width / this.worldScale));
+
+              // now we place the body in the world
+              circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+
+              // time to set mass information
+              circle.setMassData({
+                  mass: 1,
+                  center: planck.Vec2(),
+
+                  // I have to say I do not know the meaning of this "I", but if you set it to zero, bodies won't rotate
+                  I: 1
+              });
+
+              // now we create a graphics object representing the body
+              var color = new Phaser.Display.Color();
+              color.random();
+              color.brighten(50).saturate(100);
+              let userData = this.add.graphics();
+              userData.fillStyle(color.color, 1);
+              userData.fillCircle(- width / 2, - width / 2, width /this.worldScale);
+
+              // a body can have anything in its user data, normally it's used to store its sprite
+              circle.setUserData(userData);
+
           }
 
       };
