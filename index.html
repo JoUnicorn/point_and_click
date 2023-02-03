@@ -216,6 +216,14 @@
                 },
                 loop: false
             });
+            this.time.addEvent({
+                delay: 1000,
+                callbackScope: this,
+                callback: function(){
+                  this.createBox(500+decal, -100, 40, 180, true);
+                },
+                loop: false
+            });
 
             /*
             // the rest of the script just creates a random box each 500ms, then restarts after 100 iterations
@@ -241,7 +249,6 @@
                   let veloci = planck.Vec2(finallaunchVelocity.x/this.worldScale, finallaunchVelocity.y/this.worldScale);
                   ball.setLinearVelocity(veloci);
                   ball.setGravityScale(1/this.worldScale);
-                  console.log(ball);
               }, this);
 
             ////////////////end of planck///////////////
