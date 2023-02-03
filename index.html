@@ -12,7 +12,7 @@
       // python -m http.server 8080
       // http://localhost:8080/
 
-      var gameWidth=800
+      var gameWidth=1000
       var gameHeight=600
 
       let game;
@@ -90,9 +90,6 @@
             /////// canon ////////////////
             var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
             var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
-            var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
-            var line = new Phaser.Geom.Line();
-            var angle = 0;
             //const text = this.add.text(350, 270, '', { font: '16px Courier', fill: '#00ff00' });
             /////// end canon ////////////////
 
@@ -141,6 +138,12 @@
             this.cursors = this.input.keyboard.createCursorKeys();
 
             var pointer = this.input.activePointer;
+            var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            var gfx2 = this.add.graphics();
+            var line = new Phaser.Geom.Line();
+            var angle = 0;
+            var finallaunchVelocity;
+
             this.input.on('pointermove', function (pointer) {
                 if (pointer.isDown) {
                   angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
@@ -149,6 +152,24 @@
                   cannonHead.rotation = angle;
                   Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
                   gfx.clear().strokeLineShape(line);
+
+                  var launchVelocity = this.getLaunchVelocity(cannon);
+                  finallaunchVelocity=launchVelocity;
+                  var lastPos = null;
+
+                  gfx2.clear();
+                  for (var i = 0; i < 500; i += 6)
+                  {
+                      var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, i);
+
+                      if (lastPos && i % 12 == 0)
+                      {
+                          this.line(gfx2,lastPos.x, lastPos.y, trajectoryPoint.x, trajectoryPoint.y);
+                      }
+
+                      lastPos = trajectoryPoint;
+                  }
+
                 }
             }, this);
 
@@ -175,10 +196,11 @@
             this.worldScale = 30;
 
             // world gravity, as a Vec2 object. It's just a x, y vector (x=gravity horizontal, y gravity vertical)
-            let gravity = planck.Vec2(0, 3);
+            let gravity = planck.Vec2(0, 5);
 
             // this is how we create a Box2D world
             this.world = planck.World(gravity);
+            console.log(this.world.getGravity().y)
 
             // createBox is a method I wrote to create a box, see how it works at line 55
             var decal=300
@@ -214,8 +236,11 @@
             this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  this.createBox2(cannon.x+100, cannon.y - 50, 30,30, true);
-                  this.createBox2(cannon.x+150, cannon.y - 50, 30,30, true);
+                  let ball=this.createCircle(cannon.x, cannon.y - 50, 15, true);
+                  let veloci = planck.Vec2(finallaunchVelocity.x/this.worldScale, finallaunchVelocity.y/this.worldScale);
+                  ball.setLinearVelocity(veloci);
+                  ball.setGravityScale(1/this.worldScale);
+                  console.log(ball);
               }, this);
 
             ////////////////end of planck///////////////
@@ -277,6 +302,48 @@
 
           }
 
+          line(gfx2,x1, y1, x2, y2) {
+              gfx2.beginPath();
+              gfx2.moveTo(x1, y1);
+              gfx2.lineTo(x2, y2);
+              gfx2.stroke();
+          }
+
+          getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
+
+              //velocity and gravity are given per second but we want time step values here
+              var t = 1 / 60.0; // seconds per time step (at 60fps)
+
+              var stepVelocityX = t *  -velocityX ; // m/s
+              var stepVelocityY = t * -velocityY ;
+
+              var stepGravityX = t * t * -this.world.getGravity().x ; // m/s/s
+              var stepGravityY = t * t * -this.world.getGravity().y ;
+
+              startX = -startX;
+              startY = -startY;
+
+              var tpx = startX + n * stepVelocityX + 0.5 * (n*n+n) * stepGravityX;
+              var tpy = startY + n * stepVelocityY + 0.5 * (n*n+n) * stepGravityY;
+
+              tpx = -tpx;
+              tpy = -tpy;
+
+              return { x: tpx, y: tpy };
+
+          }
+
+          getLaunchVelocity(cannon) {
+
+              var dx = this.input.mousePointer.x - cannon.x;
+              var dy = this.input.mousePointer.y+30 - cannon.y - 50;
+
+              // Give it some more beans
+              dx *= 2;
+              dy *= 2;
+
+              return { x: dx, y: dy };
+          }
 
           // here we go with some Box2D stuff
           // arguments: x, y coordinates of the center, with and height of the box, in pixels
@@ -323,7 +390,7 @@
               // this is how we create a generic Box2D body
               let box = this.world.createBody({
                                                 gravityScale: 0,
-                                                active: false,
+                                                //active: false,
                                               });
               box.setDynamic();
 
@@ -358,12 +425,12 @@
 
               // this is how we create a generic Box2D body
               let circle = this.world.createBody({
-                                                gravityScale: 0
+                                                gravityScale: 0,
                                               });
               circle.setDynamic();
 
               // a body can have one or more fixtures. This is how we create a box fixture inside a body
-              circle.createFixture(planck.Circle(width / this.worldScale));
+              circle.createFixture(planck.Circle(width/ this.worldScale));
 
               // now we place the body in the world
               circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
@@ -383,10 +450,12 @@
               color.brighten(50).saturate(100);
               let userData = this.add.graphics();
               userData.fillStyle(color.color, 1);
-              userData.fillCircle(- width / 2, - width / 2, width /this.worldScale);
+              userData.fillCircle(0, 0, width);
 
               // a body can have anything in its user data, normally it's used to store its sprite
               circle.setUserData(userData);
+
+              return circle;
 
           }
 
