@@ -138,27 +138,20 @@
             this.cursors = this.input.keyboard.createCursorKeys();
 
             var pointer = this.input.activePointer;
-            var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
-            var gfx2 = this.add.graphics();
-            var line = new Phaser.Geom.Line();
+            //var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            //var line = new Phaser.Geom.Line();
             var angle = 0;
             var finallaunchVelocity;
 
             this.input.on('pointermove', function (pointer) {
                 if (pointer.isDown) {
-                  angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
-                  angle=Math.max(angle,-1);
-                  angle=Math.min(angle,.5);
-                  cannonHead.rotation = angle;
-                  Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
-                  gfx.clear().strokeLineShape(line);
-
                   var launchVelocity = this.getLaunchVelocity(cannon);
                   finallaunchVelocity=launchVelocity;
                   var lastPos = null;
 
                   gfx2.clear();
-                  for (var i = 0; i < 500; i += 6)
+                  for (var i = 0; i < 1000; i += 6)
                   {
                       var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, i);
 
@@ -169,6 +162,14 @@
 
                       lastPos = trajectoryPoint;
                   }
+                  var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 100);
+                  //angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
+                  angle = Phaser.Math.Angle.BetweenPoints(cannon, trajectoryPoint);
+                  //angle=Math.max(angle,-1);
+                  //angle=Math.min(angle,.5);
+                  cannonHead.rotation = angle;
+                  //Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
+                  //gfx.clear().strokeLineShape(line);
 
                 }
             }, this);
@@ -196,11 +197,10 @@
             this.worldScale = 30;
 
             // world gravity, as a Vec2 object. It's just a x, y vector (x=gravity horizontal, y gravity vertical)
-            let gravity = planck.Vec2(0, 5);
+            let gravity = planck.Vec2(0, 4);
 
             // this is how we create a Box2D world
             this.world = planck.World(gravity);
-            console.log(this.world.getGravity().y)
 
             // createBox is a method I wrote to create a box, see how it works at line 55
             var decal=300
