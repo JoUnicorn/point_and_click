@@ -206,13 +206,13 @@
             // createBox is a method I wrote to create a box, see how it works at line 55
             var decal=300
             this.createBox(500+decal, game.config.height - 100, 500, 40, false);
-            this.createBox(400+decal, 0, 40, 180, true);
-            this.createBox(600+decal, 0, 40, 180, true);
+            this.createBox(400+decal, 100, 40, 180, true);
+            this.createBox(600+decal, 100, 40, 180, true);
             this.time.addEvent({
                 delay: 500,
                 callbackScope: this,
                 callback: function(){
-                    this.createBox(500+decal, 0, 280, 30, true);
+                    this.createBox(500+decal, 100, 280, 30, true);
                 },
                 loop: false
             });
@@ -220,7 +220,7 @@
                 delay: 1000,
                 callbackScope: this,
                 callback: function(){
-                  this.createBox(500+decal, 0, 40, 180, true);
+                  this.createBox(500+decal, 100, 40, 180, true);
                 },
                 loop: false
             });
