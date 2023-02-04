@@ -138,6 +138,7 @@
             this.cursors = this.input.keyboard.createCursorKeys();
 
             var pointer = this.input.activePointer;
+            console.log(pointer);
             //var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
             var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
             //var line = new Phaser.Geom.Line();
@@ -206,8 +207,8 @@
             // createBox is a method I wrote to create a box, see how it works at line 55
             var decal=300
             this.createBox(500+decal, game.config.height - 100, 500, 40, false);
-            this.createBox(400+decal, -100, 30, 180, true);
-            this.createBox(600+decal, -100, 30, 180, true);
+            this.createBox(400+decal, -100, 40, 180, true);
+            this.createBox(600+decal, -100, 40, 180, true);
             this.time.addEvent({
                 delay: 500,
                 callbackScope: this,
@@ -343,8 +344,8 @@
 
           getLaunchVelocity(cannon) {
 
-              var dx = this.input.mousePointer.x - cannon.x;
-              var dy = this.input.mousePointer.y+30 - cannon.y - 50;
+              var dx = this.input.activePointer.x - cannon.x;
+              var dy = this.input.activePointer.y+30 - cannon.y - 50;
 
               // Give it some more beans
               dx *= 2;
