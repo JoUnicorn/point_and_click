@@ -145,7 +145,7 @@
             var finallaunchVelocity;
 
             this.input.on('pointermove', function (pointer) {
-                if (pointer.isDown) {
+                if (pointer.isDown & pointer.y>200) {
                   var launchVelocity = this.getLaunchVelocity(cannon);
                   finallaunchVelocity=launchVelocity;
                   var lastPos = null;
