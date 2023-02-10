@@ -145,8 +145,8 @@
             var finallaunchVelocity;
 
             this.input.on('pointermove', function (pointer) {
-                if (pointer.isDown & pointer.y>200) {
-                  var launchVelocity = this.getLaunchVelocity(cannon);
+                if (pointer.isDown & pointer.y>300 & pointer.x<200) {
+                  var launchVelocity = this.getLaunchVelocity(cannon,pointer);
                   finallaunchVelocity=launchVelocity;
                   var lastPos = null;
 
@@ -252,6 +252,15 @@
                   ball.setGravityScale(1/this.worldScale);
               }, this);
 
+              /// viseur///
+              var graphics = this.add.graphics();
+              var squareWidth=200
+              var squareHeight=gameHeight-300
+
+              graphics.fillStyle(0xffffff, .2);
+              graphics.fillRect(0, gameHeight-squareHeight, squareWidth, squareHeight);
+
+
             ////////////////end of planck///////////////
 
           }
@@ -342,10 +351,10 @@
 
           }
 
-          getLaunchVelocity(cannon) {
+          getLaunchVelocity(cannon,pointer) {
 
-              var dx = this.input.activePointer.x - cannon.x;
-              var dy = this.input.activePointer.y+30 - cannon.y - 50;
+              var dx = pointer.x+120 - cannon.x;
+              var dy = pointer.y+30 - cannon.y - 50;
 
               // Give it some more beans
               dx *= 2;
@@ -353,6 +362,7 @@
 
               return { x: dx, y: dy };
           }
+
 
           // here we go with some Box2D stuff
           // arguments: x, y coordinates of the center, with and height of the box, in pixels
