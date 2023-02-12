@@ -14,6 +14,7 @@
 
       var gameWidth=1000
       var gameHeight=600
+      var worldScaleParam=30;
 
       let game;
       window.onload = function() {
@@ -21,9 +22,6 @@
               type: Phaser.AUTO,
               width: gameWidth,
               height: gameHeight,
-              physics: {
-                  default: 'arcade',
-              },
               scene: playGame
           }
           game = new Phaser.Game(gameConfig);
@@ -37,17 +35,94 @@
 
           preload ()
           {
+            this.load.image('sky', 'assets/images/sky.png');
+            this.load.image('ground', 'assets/images/platform.png');
           }
 
           create ()
           {
+            /////// camera /////
+            this.cameras.main.setBounds(0, 0, gameWidth*2, gameHeight);
+            var cam = this.cameras.main;
+            cam.setZoom(1); //<1 => zoom out
+            /////// end camera /////
+
+            /////// sky ////////////////
+            var skyWidth=this.textures.get('sky').source[0].width;
+            this.add.image(0, 0, 'sky').setOrigin(0);
+            this.add.image(skyWidth, 0, 'sky').setOrigin(0);
+            this.add.image(2*skyWidth, 0, 'sky').setOrigin(0);
+            /////// end sky ////////////////
+
+            //////// planck.js box2d /////////////
+            // Box2D works with meters. We need to convert meters to pixels.
+            // let's say 30 pixels = 1 meter.
+            this.worldScale = worldScaleParam;
+
+            // world gravity, as a Vec2 object. It's just a x, y vector (x=gravity horizontal, y gravity vertical)
+            let gravity = planck.Vec2(0, 3);
+            // this is how we create a Box2D world
+            this.world = planck.World(gravity);
+
+            //ground
+            var groundHeight=this.textures.get('ground').source[0].height;
+            var groundWidth=this.textures.get('ground').source[0].width;
+            this.createGround(0, game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(2*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
+
 
           }
 
           update ()
           {
+            this.world.step(1 / worldScaleParam);
+
+            // crearForces  method should be added at the end on each step
+            this.world.clearForces();
+
+            // iterate through all bodies
+            for (let b = this.world.getBodyList(); b; b = b.getNext()){
+                //console.log(b);
+
+                // get body position
+                let bodyPosition = b.getPosition();
+
+                // get body angle, in radians
+                let bodyAngle = b.getAngle();
+
+                // get body user data, the graphics object
+                let userData = b.getUserData();
+
+                // adjust graphic object position and rotation
+                userData.x = bodyPosition.x * this.worldScale;
+                userData.y = bodyPosition.y * this.worldScale;
+                userData.rotation = bodyAngle;
+            }
 
 
+          }
+
+          createBox(posX, posY, width, height, isDynamic){
+              let box = this.world.createBody();
+              if(isDynamic){
+                  box.setDynamic();
+              }
+              box.createFixture(planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale));
+              box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+              box.setMassData({
+                  mass: 1,
+                  center: planck.Vec2(),
+                  I: 1
+              });
+              return box;
+            }
+
+          createGround(posX, posY, width, height, isDynamic){
+              let box = this.createBox(posX, posY, width, height, isDynamic);
+              let userData = this.add.image(0, 0, 'ground').setOrigin(0);
+
+              box.setUserData(userData);
           }
 
 
