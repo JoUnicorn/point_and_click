@@ -142,12 +142,11 @@
             var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
             //var line = new Phaser.Geom.Line();
             var angle = 0;
-            var finallaunchVelocity;
+            var launchVelocity;
 
             this.input.on('pointermove', function (pointer) {
                 if (pointer.isDown & pointer.y>300 & pointer.x<200) {
-                  var launchVelocity = this.getLaunchVelocity(cannon,pointer);
-                  finallaunchVelocity=launchVelocity;
+                  launchVelocity = this.getLaunchVelocity(cannon,pointer);
                   var lastPos = null;
 
                   gfx2.clear();
@@ -206,8 +205,9 @@
             // createBox is a method I wrote to create a box, see how it works at line 55
             var decal=300
             this.createBox(500+decal, game.config.height - 100, 500, 40, false);
-            this.createBox(400+decal, 100, 40, 180, true);
+            this.createBox(300+decal, 100, 40, 180, true);
             this.createBox(600+decal, 100, 40, 180, true);
+            /*
             this.time.addEvent({
                 delay: 1000,
                 callbackScope: this,
@@ -224,7 +224,7 @@
                 },
                 loop: false
             });
-
+            */
             /*
             // the rest of the script just creates a random box each 500ms, then restarts after 100 iterations
             this.tick = 0;
@@ -242,15 +242,39 @@
             });
             */
 
+            let balls=[];
             this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
               .setFontSize(50)
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  let ball=this.createCircle(cannon.x, cannon.y - 50, 15, true);
-                  let veloci = planck.Vec2(finallaunchVelocity.x/this.worldScale, finallaunchVelocity.y/this.worldScale);
-                  ball.setLinearVelocity(veloci);
-                  ball.setGravityScale(1/this.worldScale);
+                  balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
+                  let veloci = planck.Vec2(4*launchVelocity.x/this.worldScale, 4*launchVelocity.y/this.worldScale);
+                  console.log(veloci);
+                  balls[balls.length-1].setLinearVelocity(veloci);
+                  balls[balls.length-1].setGravityScale(16/this.worldScale);
               }, this);
+              this.clickButton = this.add.text(300, 100, 'EXPLOSION!', { fill: '#0f0' })
+                .setFontSize(50)
+                .setInteractive({ useHandCursor: true })
+                .on('pointerup',  function () {
+                    let posx=balls[balls.length-1].getPosition().x* this.worldScale;
+                    let posy=balls[balls.length-1].getPosition().y* this.worldScale;
+                    console.log(balls[balls.length-1].getUserData());
+                    balls[balls.length-1].getUserData().clear();
+                    this.world.destroyBody(balls[balls.length-1]);
+                    balls=[];
+                    var numRays=10;
+                    var DEGTORAD=0.0174532925199432957;
+                    for (var i = 0; i < numRays; i++)
+                    {
+                      var angle = (i / numRays) * 360 * DEGTORAD;
+                      var blastPower =10
+                      let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
+                      let part=this.createParticulesExpl(posx, posy,10);
+                      part.setLinearVelocity(rayDir);
+                      console.log(rayDir);
+                    }
+                }, this);
 
               /// viseur///
               var graphics = this.add.graphics();
@@ -301,6 +325,7 @@
 
             // iterate through all bodies
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
+                //console.log(b);
 
                 // get body position
                 let bodyPosition = b.getPosition();
@@ -444,9 +469,10 @@
 
               // this is how we create a generic Box2D body
               let circle = this.world.createBody({
+                                                type: 'dynamic',
                                                 gravityScale: 0,
                                               });
-              circle.setDynamic();
+              //circle.setDynamic();
 
               // a body can have one or more fixtures. This is how we create a box fixture inside a body
               circle.createFixture(planck.Circle(width/ this.worldScale));
@@ -475,6 +501,50 @@
               circle.setUserData(userData);
 
               return circle;
+
+          }
+
+          createParticulesExpl(posX, posY, width){
+
+              let part = this.world.createBody({
+                                                type: 'dynamic',
+                                                fixedRotation: true,
+                                                bullet: true,
+                                                linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
+                                                //linearVelocity: rayDir,
+                                                gravityScale: 0,
+                                              });
+
+              let circleShape = planck.Circle(width/ this.worldScale);
+              part.createFixture({
+                shape: circleShape,
+                density: 60,
+                friction: 0,
+                restitution: .99,
+                filterGroupIndex:-1
+              });
+
+              // now we place the body in the world
+              part.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+
+              part.setMassData({
+                  mass: 1,
+                  center: planck.Vec2(),
+
+                  // I have to say I do not know the meaning of this "I", but if you set it to zero, bodies won't rotate
+                  I: 1
+              });
+              var color = new Phaser.Display.Color();
+              color.random();
+              color.brighten(50).saturate(100);
+              let userData = this.add.graphics();
+              userData.fillStyle(color.color, 1);
+              userData.fillCircle(0, 0, width);
+
+              // a body can have anything in its user data, normally it's used to store its sprite
+              part.setUserData(userData);
+
+              return part;
 
           }
 
