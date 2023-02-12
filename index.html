@@ -68,6 +68,8 @@
             */
 
             this.cameras.main.setBounds(0, 0, gameWidth*2, gameHeight);
+            var cam = this.cameras.main;
+            cam.setZoom(1); //<1 => zoom out
             this.physics.world.setBounds(0, 0, gameWidth*2, gameHeight);
 
             /////// sky ////////////////
@@ -252,6 +254,7 @@
                   console.log(veloci);
                   balls[balls.length-1].setLinearVelocity(veloci);
                   balls[balls.length-1].setGravityScale(16/this.worldScale);
+                  this.cameras.main.startFollow(balls[balls.length-1], true, 0.05, 0.05);
               }, this);
               this.clickButton = this.add.text(300, 100, 'EXPLOSION!', { fill: '#0f0' })
                 .setFontSize(50)
