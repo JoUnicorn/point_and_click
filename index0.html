@@ -268,7 +268,7 @@
                     for (var i = 0; i < numRays; i++)
                     {
                       var angle = (i / numRays) * 360 * DEGTORAD;
-                      var blastPower =100
+                      var blastPower =10
                       let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
                       let part=this.createParticulesExpl(posx, posy,10);
                       part.setLinearVelocity(rayDir);
