@@ -176,6 +176,7 @@
                 }
                 else{
                   if (!pointer.isDown) return;
+                  this.cameras.main.stopFollow();
                   cam.scrollX -= (pointer.x - pointer.prevPosition.x) / cam.zoom;
                 }
             }, this);
@@ -248,28 +249,27 @@
             });
             */
 
-            let balls=[];
+            this.balls=[];
             this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
               .setFontSize(50)
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
+                  this.balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
                   let veloci = planck.Vec2(4*launchVelocity.x/this.worldScale, 4*launchVelocity.y/this.worldScale);
-                  console.log(veloci);
-                  balls[balls.length-1].setLinearVelocity(veloci);
-                  balls[balls.length-1].setGravityScale(16/this.worldScale);
-                  this.cameras.main.startFollow(balls[balls.length-1], true, 0.05, 0.05);
+                  let ud=this.balls[this.balls.length-1].getUserData();
+                  this.balls[this.balls.length-1].setLinearVelocity(veloci);
+                  this.balls[this.balls.length-1].setGravityScale(16/this.worldScale);
+                  this.cameras.main.startFollow(ud, true, 0.05, 0.05);
               }, this);
               this.clickButton = this.add.text(300, 100, 'EXPLOSION!', { fill: '#0f0' })
                 .setFontSize(50)
                 .setInteractive({ useHandCursor: true })
                 .on('pointerup',  function () {
-                    let posx=balls[balls.length-1].getPosition().x* this.worldScale;
-                    let posy=balls[balls.length-1].getPosition().y* this.worldScale;
-                    console.log(balls[balls.length-1].getUserData());
-                    balls[balls.length-1].getUserData().clear();
-                    this.world.destroyBody(balls[balls.length-1]);
-                    balls=[];
+                    let posx=this.balls[this.balls.length-1].getPosition().x* this.worldScale;
+                    let posy=this.balls[this.balls.length-1].getPosition().y* this.worldScale;
+                    this.balls[this.balls.length-1].getUserData().clear();
+                    this.world.destroyBody(this.balls[this.balls.length-1]);
+                    this.balls=[];
                     var numRays=10;
                     var DEGTORAD=0.0174532925199432957;
                     for (var i = 0; i < numRays; i++)
@@ -279,8 +279,8 @@
                       let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
                       let part=this.createParticulesExpl(posx, posy,10);
                       part.setLinearVelocity(rayDir);
-                      console.log(rayDir);
                     }
+                    this.cameras.main.stopFollow();
                 }, this);
 
               /// viseur///
