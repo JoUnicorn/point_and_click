@@ -77,14 +77,19 @@
             var cannonHead = this.add.image(100, game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
             var cannon = this.add.image(100, game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
 
+            // bar
+            this.createBar(300, -100, 40, 180, true);
+
             //cursor
             var pointer = this.input.activePointer;
             var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
             var angle = 0;
             var launchVelocity;
+            var squareWidth=200
+            var squareHeight=300
 
             this.input.on('pointermove', function (pointer) {
-                if (pointer.isDown & pointer.y>300 & pointer.x<200) {
+                if (pointer.isDown & pointer.y>squareHeight & pointer.x<squareWidth) {
                   launchVelocity = this.getLaunchVelocity(cannon,pointer);
                   var lastPos = null;
 
@@ -102,45 +107,44 @@
                   }
                   var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 30);
                   var trajectoryPoint2 = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 1);
-                  //angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
                   angle = Phaser.Math.Angle.BetweenPoints(trajectoryPoint2, trajectoryPoint);
-                  //angle=Math.max(angle,-1);
-                  //angle=Math.min(angle,.5);
                   cannonHead.rotation = angle;
-                  //Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
-                  //gfx.clear().strokeLineShape(line);
 
                 }
-                else{
-                  if (!pointer.isDown) return;
-                  this.cameras.main.stopFollow();
-                  cam.scrollX -= (pointer.x - pointer.prevPosition.x) / cam.zoom;
-                }
             }, this);
+
+
+            /// viseur///
+            var graphics = this.add.graphics();
+
+            graphics.fillStyle(0xffffff, .2);
+            graphics.fillRect(0, squareHeight, squareWidth, gameHeight-squareHeight);
+
+            // ball
+            this.balls=[];
+            this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
+              .setFontSize(50)
+              .setInteractive({ useHandCursor: true })
+              .on('pointerup',  function () {
+                  this.balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
+                  let veloci = planck.Vec2(launchVelocity.x/this.worldScale, launchVelocity.y/this.worldScale);
+                  let ud=this.balls[this.balls.length-1].getUserData();
+                  this.balls[this.balls.length-1].setLinearVelocity(veloci);
+                  this.balls[this.balls.length-1].setGravityScale(1/this.worldScale);
+                  this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+              }, this);
+
 
           }
 
           update ()
           {
             this.world.step(1 / worldScaleParam);
-
-            // crearForces  method should be added at the end on each step
             this.world.clearForces();
-
-            // iterate through all bodies
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
-                //console.log(b);
-
-                // get body position
                 let bodyPosition = b.getPosition();
-
-                // get body angle, in radians
                 let bodyAngle = b.getAngle();
-
-                // get body user data, the graphics object
                 let userData = b.getUserData();
-
-                // adjust graphic object position and rotation
                 userData.x = bodyPosition.x * this.worldScale;
                 userData.y = bodyPosition.y * this.worldScale;
                 userData.rotation = bodyAngle;
@@ -166,11 +170,86 @@
 
           createGround(posX, posY, width, height, isDynamic){
               let box = this.createBox(posX, posY, width, height, isDynamic);
-              let userData = this.add.image(0, 0, 'ground').setOrigin(0);
+              let userData = this.add.image(0, 0, 'ground');
 
               box.setUserData(userData);
           }
 
+          createBar(posX, posY, width, height, isDynamic){
+              let box = this.createBox(posX, posY, width, height, isDynamic);
+              var color = new Phaser.Display.Color();
+              color.random();
+              color.brighten(50).saturate(100);
+              let userData = this.add.graphics();
+              userData.fillStyle(color.color, 1);
+              userData.fillRect(- width / 2, - height / 2, width, height);
+              box.setUserData(userData);
+          }
+
+          getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
+              var t = 1 / 60.0; // seconds per time step (at 60fps)
+
+              var stepVelocityX = t *  -velocityX ; // m/s
+              var stepVelocityY = t * -velocityY ;
+
+              var stepGravityX = t * t * -this.world.getGravity().x ; // m/s/s
+              var stepGravityY = t * t * -this.world.getGravity().y ;
+
+              startX = -startX;
+              startY = -startY;
+
+              var tpx = startX + n * stepVelocityX + 0.5 * (n*n+n) * stepGravityX;
+              var tpy = startY + n * stepVelocityY + 0.5 * (n*n+n) * stepGravityY;
+
+              tpx = -tpx;
+              tpy = -tpy;
+
+              return { x: tpx, y: tpy };
+
+          }
+
+          getLaunchVelocity(cannon,pointer) {
+
+              var dx = pointer.x+50 - cannon.x;
+              var dy = pointer.y+50 - cannon.y - 50;
+
+              dx *= 2;//dx=dx*2
+              dy *= 2;
+
+              return { x: dx, y: dy };
+          }
+
+          line(gfx2,x1, y1, x2, y2) {
+              gfx2.beginPath();
+              gfx2.moveTo(x1, y1);
+              gfx2.lineTo(x2, y2);
+              gfx2.stroke();
+          }
+
+          createCircle(posX, posY, width, isDynamic){
+              let circle = this.world.createBody({
+                                                type: 'dynamic',
+                                                //gravityScale: 0,
+                                              });
+              circle.createFixture(planck.Circle(width/ this.worldScale));
+              circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+              circle.setMassData({
+                  mass: 1,
+                  center: planck.Vec2(),
+                  I: 1
+              });
+              var color = new Phaser.Display.Color();
+              color.random();
+              color.brighten(50).saturate(100);
+              let userData = this.add.graphics();
+              userData.fillStyle(color.color, 1);
+              userData.fillCircle(0, 0, width);
+
+              circle.setUserData(userData);
+
+              return circle;
+
+          }
 
       };
     </script>
