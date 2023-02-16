@@ -73,13 +73,40 @@
             this.createGround(0, game.config.height - groundHeight, groundWidth, groundHeight, false);
             this.createGround(groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
             this.createGround(2*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(3*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(4*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
+            for (var i = 2; i < 18; i += 1)
+            {
+              this.createGround(4.5*groundWidth, game.config.height - i*groundHeight, groundWidth, groundHeight, false);
+            }
 
             //cannon
             var cannonHead = this.add.image(100, game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
             var cannon = this.add.image(100, game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
 
             // bar
-            this.createBar(300, -100, 40, 180, true);
+            var decal=300
+            this.createBar(600+decal, -100, 40, 180, true);
+            this.createBar(800+decal, -100, 40, 180, true);
+            this.createBar(1000+decal, -100, 40, 180, true);
+            this.time.addEvent({
+                delay: 1000,
+                callbackScope: this,
+                callback: function(){
+                    this.createBar(800+decal, -100, 500, 30, true);
+                },
+                loop: false
+            });
+            this.time.addEvent({
+                delay: 2000,
+                callbackScope: this,
+                callback: function(){
+                  this.createBar(700+decal, 250, 50, 180, true);
+                  this.createBar(900+decal, 250, 50, 180, true);
+                  this.createBar(800+decal, 150, 300, 30, true);
+                },
+                loop: false
+            });
 
             //cursor
             var pointer = this.input.activePointer;
@@ -112,6 +139,11 @@
                   cannonHead.rotation = angle;
 
                 }
+                else{
+                  if (!pointer.isDown) return;
+                  this.cameras.main.stopFollow();
+                  cam.scrollX -= (pointer.x - pointer.prevPosition.x) / cam.zoom;
+                }
             }, this);
 
 
@@ -132,7 +164,6 @@
                   let ud=this.balls[this.balls.length-1].getUserData();
                   this.balls[this.balls.length-1].setLinearVelocity(veloci);
                   this.cameras.main.startFollow(ud, true, 0.05, 0.05);
-                  console.log(this.balls[this.balls.length-1]);
               }, this);
 
 
@@ -144,6 +175,9 @@
             this.world.clearForces();
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
                 let bodyPosition = b.getPosition();
+                //if(bodyPosition.y>20){ //20 = 600/this.worldScale
+                //  console.log(bodyPosition.y);
+                //}
                 let bodyAngle = b.getAngle();
                 let userData = b.getUserData();
                 userData.x = bodyPosition.x * this.worldScale;
