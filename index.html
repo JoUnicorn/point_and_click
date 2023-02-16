@@ -165,6 +165,27 @@
                   this.balls[this.balls.length-1].setLinearVelocity(veloci);
                   this.cameras.main.startFollow(ud, true, 0.05, 0.05);
               }, this);
+              this.clickButton = this.add.text(300, 100, 'EXPLOSION!', { fill: '#0f0' })
+                .setFontSize(50)
+                .setInteractive({ useHandCursor: true })
+                .on('pointerup',  function () {
+                    let posx=this.balls[this.balls.length-1].getPosition().x* this.worldScale;
+                    let posy=this.balls[this.balls.length-1].getPosition().y* this.worldScale;
+                    this.balls[this.balls.length-1].getUserData().clear();
+                    this.world.destroyBody(this.balls[this.balls.length-1]);
+                    this.balls=[];
+                    var numRays=10;
+                    var DEGTORAD=0.0174532925199432957;
+                    for (var i = 0; i < numRays; i++)
+                    {
+                      var angle = (i / numRays) * 360 * DEGTORAD;
+                      var blastPower =100
+                      let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
+                      let part=this.createParticulesExpl(posx, posy,10);
+                      part.setLinearVelocity(rayDir);
+                    }
+                    this.cameras.main.stopFollow();
+                }, this);
 
 
           }
@@ -282,6 +303,46 @@
               circle.setUserData(userData);
 
               return circle;
+
+          }
+
+          createParticulesExpl(posX, posY, width){
+
+              let part = this.world.createBody({
+                                                type: 'dynamic',
+                                                fixedRotation: true,
+                                                bullet: true,
+                                                linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
+                                                //linearVelocity: rayDir,
+                                                gravityScale: 0,
+                                              });
+
+              let circleShape = planck.Circle(width/ this.worldScale);
+              part.createFixture({
+                shape: circleShape,
+                density: 60,
+                friction: 0,
+                restitution: .99,
+                filterGroupIndex:-1
+              });
+
+              part.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+
+              part.setMassData({
+                  mass: 1,
+                  center: planck.Vec2(),
+                  I: 1
+              });
+              var color = new Phaser.Display.Color();
+              color.random();
+              color.brighten(50).saturate(100);
+              let userData = this.add.graphics();
+              userData.fillStyle(color.color, 1);
+              userData.fillCircle(0, 0, width);
+
+              part.setUserData(userData);
+
+              return part;
 
           }
 
