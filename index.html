@@ -37,6 +37,8 @@
           {
             this.load.image('sky', 'assets/images/sky.png');
             this.load.image('ground', 'assets/images/platform.png');
+            this.load.image('cannon_head', 'assets/images/cannon_head.png');
+            this.load.image('cannon_body', 'assets/images/cannon_body.png');
           }
 
           create ()
@@ -71,6 +73,50 @@
             this.createGround(groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
             this.createGround(2*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
 
+            //cannon
+            var cannonHead = this.add.image(100, game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
+            var cannon = this.add.image(100, game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
+
+            //cursor
+            var pointer = this.input.activePointer;
+            var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            var angle = 0;
+            var launchVelocity;
+
+            this.input.on('pointermove', function (pointer) {
+                if (pointer.isDown & pointer.y>300 & pointer.x<200) {
+                  launchVelocity = this.getLaunchVelocity(cannon,pointer);
+                  var lastPos = null;
+
+                  gfx2.clear();
+                  for (var i = 0; i < 1000; i += 6)
+                  {
+                      var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, i);
+
+                      if (lastPos && i % 12 == 0)
+                      {
+                          this.line(gfx2,lastPos.x, lastPos.y, trajectoryPoint.x, trajectoryPoint.y);
+                      }
+
+                      lastPos = trajectoryPoint;
+                  }
+                  var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 30);
+                  var trajectoryPoint2 = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 1);
+                  //angle = Phaser.Math.Angle.BetweenPoints(cannon, pointer);
+                  angle = Phaser.Math.Angle.BetweenPoints(trajectoryPoint2, trajectoryPoint);
+                  //angle=Math.max(angle,-1);
+                  //angle=Math.min(angle,.5);
+                  cannonHead.rotation = angle;
+                  //Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y - 50, angle, 128);
+                  //gfx.clear().strokeLineShape(line);
+
+                }
+                else{
+                  if (!pointer.isDown) return;
+                  this.cameras.main.stopFollow();
+                  cam.scrollX -= (pointer.x - pointer.prevPosition.x) / cam.zoom;
+                }
+            }, this);
 
           }
 
