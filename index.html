@@ -15,6 +15,7 @@
       var gameWidth=1000
       var gameHeight=600
       var worldScaleParam=30;
+      var worldGravity=3;
 
       let game;
       window.onload = function() {
@@ -62,7 +63,7 @@
             this.worldScale = worldScaleParam;
 
             // world gravity, as a Vec2 object. It's just a x, y vector (x=gravity horizontal, y gravity vertical)
-            let gravity = planck.Vec2(0, 3);
+            let gravity = planck.Vec2(0, worldGravity);
             // this is how we create a Box2D world
             this.world = planck.World(gravity);
 
@@ -127,11 +128,11 @@
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
                   this.balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
-                  let veloci = planck.Vec2(launchVelocity.x/this.worldScale, launchVelocity.y/this.worldScale);
+                  let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
                   let ud=this.balls[this.balls.length-1].getUserData();
                   this.balls[this.balls.length-1].setLinearVelocity(veloci);
-                  this.balls[this.balls.length-1].setGravityScale(1/this.worldScale);
                   this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                  console.log(this.balls[this.balls.length-1]);
               }, this);
 
 
@@ -228,8 +229,7 @@
 
           createCircle(posX, posY, width, isDynamic){
               let circle = this.world.createBody({
-                                                type: 'dynamic',
-                                                //gravityScale: 0,
+                                                type: 'dynamic'
                                               });
               circle.createFixture(planck.Circle(width/ this.worldScale));
               circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
