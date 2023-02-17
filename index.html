@@ -16,6 +16,7 @@
       var gameHeight=600
       var worldScaleParam=30;
       var worldGravity=3;
+      var zout=2.9;
 
       let game;
       window.onload = function() {
@@ -45,9 +46,9 @@
           create ()
           {
             /////// camera /////
-            this.cameras.main.setBounds(0, 0, gameWidth*2, gameHeight);
+            this.cameras.main.setBounds(0, 0, gameWidth*2, game.config.height);
             var cam = this.cameras.main;
-            cam.setZoom(1); //<1 => zoom out
+            cam.setZoom(.34); //<1 => zoom out
             /////// end camera /////
 
             /////// sky ////////////////
@@ -56,8 +57,15 @@
             this.add.image(0, 0, 'sky').setOrigin(0);
             this.add.image(skyWidth, 0, 'sky').setOrigin(0);
             this.add.image(2*skyWidth, 0, 'sky').setOrigin(0);
+            this.add.image(3*skyWidth, 0, 'sky').setOrigin(0);
+            this.add.image(0, skyHeight, 'sky').setOrigin(0);
             this.add.image(skyWidth, skyHeight, 'sky').setOrigin(0);
             this.add.image(2*skyWidth, skyHeight, 'sky').setOrigin(0);
+            this.add.image(3*skyWidth, skyHeight, 'sky').setOrigin(0);
+            this.add.image(0, 2*skyHeight, 'sky').setOrigin(0);
+            this.add.image(skyWidth, 2*skyHeight, 'sky').setOrigin(0);
+            this.add.image(2*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
+            this.add.image(3*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
             /////// end sky ////////////////
 
             //////// planck.js box2d /////////////
@@ -73,19 +81,21 @@
             //ground
             var groundHeight=this.textures.get('ground').source[0].height;
             var groundWidth=this.textures.get('ground').source[0].width;
-            this.createGround(0, game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(2*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(3*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(4*groundWidth, game.config.height - groundHeight, groundWidth, groundHeight, false);
-            for (var i = 2; i < 18; i += 1)
+            this.createGround(0, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(2*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(3*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(4*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(5*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            this.createGround(6*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            for (var i = 1; i < 30; i += 1)
             {
-              this.createGround(4.5*groundWidth, game.config.height - i*groundHeight, groundWidth, groundHeight, false);
+              this.createGround(7*groundWidth, zout*game.config.height - i*groundHeight, groundWidth, groundHeight, false);
             }
 
             //cannon
-            var cannonHead = this.add.image(100, game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
-            var cannon = this.add.image(100, game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
+            var cannonHead = this.add.image(100, zout*game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
+            var cannon = this.add.image(100, zout*game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
 
             // bar
             var decal=300
@@ -120,7 +130,7 @@
             var squareHeight=300
 
             this.input.on('pointermove', function (pointer) {
-                if (pointer.isDown & pointer.y>squareHeight & pointer.x<squareWidth) {
+                if (pointer.isDown & zout*pointer.y>zout*game.config.height-squareHeight & zout*pointer.x<squareWidth) {
                   launchVelocity = this.getLaunchVelocity(cannon,pointer);
                   var lastPos = null;
 
@@ -154,7 +164,7 @@
             var graphics = this.add.graphics();
 
             graphics.fillStyle(0xffffff, .2);
-            graphics.fillRect(0, squareHeight, squareWidth, gameHeight-squareHeight);
+            graphics.fillRect(0, zout*game.config.height-squareHeight, squareWidth, squareHeight);
 
             // ball
             this.balls=[];
@@ -269,8 +279,8 @@
 
           getLaunchVelocity(cannon,pointer) {
 
-              var dx = pointer.x+50 - cannon.x;
-              var dy = pointer.y+50 - cannon.y - 50;
+              var dx = zout*pointer.x+50 - cannon.x;
+              var dy = zout*pointer.y+50 - cannon.y - 50;
 
               dx *= 2;//dx=dx*2
               dy *= 2;
