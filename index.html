@@ -308,8 +308,8 @@
 
           getLaunchVelocity(cannon,pointer) {
 
-              var dx = zout*pointer.x-200 - cannon.x;
-              var dy = zout*pointer.y+150 - cannon.y - 50;
+              var dx = (zout*pointer.x - cannon.x)/6;
+              var dy = (zout*pointer.y - cannon.y - 50)/6;
 
               dx *= 2;//dx=dx*2
               dy *= 2;
