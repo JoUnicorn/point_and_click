@@ -182,7 +182,7 @@
             // ball
             this.balls=[];
             this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
-              .setFontSize(50)
+              .setFontSize(100)
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
                   this.balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
@@ -191,8 +191,8 @@
                   this.balls[this.balls.length-1].setLinearVelocity(veloci);
                   this.cameras.main.startFollow(ud, true, 0.05, 0.05);
               }, this);
-              this.clickButton = this.add.text(400, 100, 'EXPLOSION!', { fill: '#0f0' })
-                .setFontSize(50)
+            this.clickButton = this.add.text(500, 100, 'EXPLOSION!', { fill: '#0f0' })
+                .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .on('pointerup',  function () {
                     let posx=this.balls[this.balls.length-1].getPosition().x* this.worldScale;
@@ -229,6 +229,12 @@
 
                 }, this);
 
+            this.clickButton = this.add.text(1500, 100, 'RESET!', { fill: '#0f0' })
+                .setFontSize(100)
+                .setInteractive({ useHandCursor: true })
+                .on('pointerup',  function () {
+                    this.scene.restart();
+                }, this);
 
           }
 
