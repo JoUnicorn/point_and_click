@@ -119,8 +119,8 @@
             var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
             var angle = 0;
             var launchVelocity;
-            var squareWidth=200
-            var squareHeight=300
+            var squareWidth=400
+            var squareHeight=500
 
             this.input.on('pointermove', function (pointer) {
                 if (pointer.isDown & zout*pointer.y>zout*game.config.height-squareHeight & zout*pointer.x<squareWidth) {
@@ -288,8 +288,8 @@
 
           getLaunchVelocity(cannon,pointer) {
 
-              var dx = zout*pointer.x+50 - cannon.x;
-              var dy = zout*pointer.y+50 - cannon.y - 50;
+              var dx = zout*pointer.x-200 - cannon.x;
+              var dy = zout*pointer.y+150 - cannon.y - 50;
 
               dx *= 2;//dx=dx*2
               dy *= 2;
@@ -308,7 +308,8 @@
               let circle = this.world.createBody({
                                                 type: 'dynamic'
                                               });
-              circle.createFixture(planck.Circle(width/ this.worldScale));
+              circle.createFixture({shape: planck.Circle(width/ this.worldScale),
+                density:1.0,friction:.2,restitution:.4});
               circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
               circle.setMassData({
                   mass: 1,
