@@ -92,6 +92,7 @@
             {
               this.createGround(7*groundWidth, zout*game.config.height - i*groundHeight, groundWidth, groundHeight, false);
             }
+            this.createGround(1200, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
 
             //cannon
             var cannonHead = this.add.image(100, zout*game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
@@ -99,6 +100,7 @@
 
             // bar
             var decal=1000
+            this.createBar(1300, zout*game.config.height - 20*groundHeight-180, 40, 180, true);
             this.createBar(600+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(800+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(1000+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
