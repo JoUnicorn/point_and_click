@@ -98,7 +98,7 @@
             var cannon = this.add.image(100, zout*game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
 
             // bar
-            var decal=300
+            var decal=1000
             this.createBar(600+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(800+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(1000+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
@@ -180,14 +180,14 @@
                     this.balls[this.balls.length-1].getUserData().clear();
                     this.world.destroyBody(this.balls[this.balls.length-1]);
                     this.balls=[];
-                    var numRays=10;
+                    var numRays=32;
                     var DEGTORAD=0.0174532925199432957;
                     for (var i = 0; i < numRays; i++)
                     {
                       var angle = (i / numRays) * 360 * DEGTORAD;
-                      var blastPower =100
+                      var blastPower =30
                       let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
-                      let part=this.createParticulesExpl(posx, posy,10);
+                      let part=this.createParticulesExpl(posx, posy,5);
                       part.setLinearVelocity(rayDir);
                     }
                     this.cameras.main.stopFollow();
@@ -318,7 +318,7 @@
                                                 type: 'dynamic',
                                                 fixedRotation: true,
                                                 bullet: true,
-                                                linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
+                                                linearDamping: 2, // arrete le mvt des que le rayon de projection est atteint
                                                 //linearVelocity: rayDir,
                                                 gravityScale: 0,
                                               });
