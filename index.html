@@ -24,6 +24,13 @@
               type: Phaser.AUTO,
               width: gameWidth,
               height: gameHeight,
+              //pixelArt: true,
+              fps: {
+                forceSetTimeOut: true,
+                // panicMax: 0,
+                // smoothStep: false,
+                target: 60
+              },
               scene: playGame
           }
           game = new Phaser.Game(gameConfig);
@@ -222,6 +229,9 @@
               }
             }, this);
 
+
+            // actualFps
+            this.myfps=this.add.text(2000, 100, 'FPS', { fill: '#0f0' }).setFontSize(100)
           }
 
           update ()
@@ -243,9 +253,9 @@
                 }
             }
 
-
+            var loop = this.sys.game.loop;
+            this.myfps.setText('actualFps  ' + loop.actualFps.toFixed(0));
           }
-
 
           explosion(ball){
             let posx=ball.getPosition().x* this.worldScale;
