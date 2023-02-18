@@ -368,7 +368,7 @@
                 restitution:.4});
               circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
               var color = new Phaser.Display.Color();
-              color.random();
+              color.setTo(255, 0, 0);
               color.brighten(50).saturate(100);
               let userData = this.add.graphics();
               userData.fillStyle(color.color, 1);
