@@ -101,7 +101,7 @@
             // bar
             var decal=1000
             this.createBar(1300, zout*game.config.height - 20*groundHeight-180, 40, 180, true);
-            this.createBar(300+decal, zout*game.config.height- groundHeight-180, 180, 180, true);
+            //this.createBar(300+decal, zout*game.config.height- groundHeight-180, 180, 180, true);
             this.createBar(600+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(800+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(1000+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
@@ -355,7 +355,7 @@
                                                 type: 'dynamic'
                                               });
               circle.createFixture({shape: planck.Circle(width/ this.worldScale),
-                density:1.0,
+                density:100.0,
                 friction:.2,
                 filterGroupIndex:8,
                 restitution:.4});
@@ -387,7 +387,7 @@
               let circleShape = planck.Circle(width/ this.worldScale);
               part.createFixture({
                 shape: circleShape,
-                density: 60,
+                density: 100,
                 friction: 0,
                 restitution: .99,
                 filterGroupIndex:-1
