@@ -286,13 +286,9 @@
               if(isDynamic){
                   box.setDynamic();
               }
-              box.createFixture(planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale));
+              box.createFixture({shape: planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale),
+                density:10.0});
               box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
-              box.setMassData({
-                  mass: 1,
-                  center: planck.Vec2(),
-                  I: 1
-              });
               return box;
           }
 
@@ -364,11 +360,6 @@
                 filterGroupIndex:8,
                 restitution:.4});
               circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
-              circle.setMassData({
-                  mass: 1,
-                  center: planck.Vec2(),
-                  I: 1
-              });
               var color = new Phaser.Display.Color();
               color.random();
               color.brighten(50).saturate(100);
@@ -403,12 +394,6 @@
               });
 
               part.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
-
-              part.setMassData({
-                  mass: 1,
-                  center: planck.Vec2(),
-                  I: 1
-              });
               var color = new Phaser.Display.Color();
               color.random();
               color.brighten(50).saturate(100);
