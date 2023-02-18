@@ -197,7 +197,7 @@
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .on('pointerup',  function () {
-                  this.explosion(balls);
+                  this.explosion(balls[balls.length-1]);
                   balls.pop();
                 }, this);
 
@@ -212,8 +212,8 @@
               let bodyA=contact.getFixtureA().getBody();
               let bodyB=contact.getFixtureB().getBody();
               if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
-                balls[balls.length-1].setFilterGroupIndex(9);
-                console.log(balls[balls.length-1].getFixtureList());
+                balls[balls.length-1].getFixtureList().m_filterGroupIndex=9;
+                balls.pop();
               }
             }, this);
 
@@ -233,20 +233,23 @@
                 userData.x = bodyPosition.x * this.worldScale;
                 userData.y = bodyPosition.y * this.worldScale;
                 userData.rotation = bodyAngle;
+                if(b.getFixtureList().getFilterGroupIndex()==9){
+                  this.explosion(b);
+                }
             }
 
 
           }
 
 
-          explosion(balls){
-            let posx=balls[balls.length-1].getPosition().x* this.worldScale;
-            let posy=balls[balls.length-1].getPosition().y* this.worldScale;
-            balls[balls.length-1].getUserData().clear();
-            this.world.destroyBody(balls[balls.length-1]);
+          explosion(ball){
+            let posx=ball.getPosition().x* this.worldScale;
+            let posy=ball.getPosition().y* this.worldScale;
+            ball.getUserData().clear();
+            this.world.destroyBody(ball);
             var numRays=32;
             var DEGTORAD=0.0174532925199432957;
-            this.parts=[];
+            let parts=[];
             for (var i = 0; i < numRays; i++)
             {
               var angle = (i / numRays) * 360 * DEGTORAD;
@@ -254,19 +257,19 @@
               let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
               let part=this.createParticulesExpl(posx, posy,5);
               part.setLinearVelocity(rayDir);
-              this.parts.push(part);
+              parts.push(part);
             }
             this.cameras.main.stopFollow();
             this.time.addEvent({
                 delay: 200,
                 callbackScope: this,
                 callback: function(){
-                  for (var i = 0; i < this.parts.length; i++)
+                  for (var i = 0; i < parts.length; i++)
                   {
-                    this.parts[i].getUserData().clear();
-                    this.world.destroyBody(this.parts[i]);
+                    parts[i].getUserData().clear();
+                    this.world.destroyBody(parts[i]);
                   }
-                  this.parts=[];
+                  parts=[];
                 },
                 loop: false
             });
