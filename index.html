@@ -273,7 +273,7 @@
             }
             this.cameras.main.stopFollow();
             this.time.addEvent({
-                delay: 200,
+                delay: 100,
                 callbackScope: this,
                 callback: function(){
                   for (var i = 0; i < parts.length; i++)
@@ -386,7 +386,7 @@
                                                 type: 'dynamic',
                                                 fixedRotation: true,
                                                 bullet: true,
-                                                linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
+                                                //linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
                                                 //linearVelocity: rayDir,
                                                 gravityScale: 0,
                                               });
@@ -394,7 +394,7 @@
               let circleShape = planck.Circle(width/ this.worldScale);
               part.createFixture({
                 shape: circleShape,
-                density: 500,
+                density: 30,
                 friction: 0,
                 restitution: .99,
                 filterGroupIndex:-1
