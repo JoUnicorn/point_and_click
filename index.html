@@ -208,48 +208,12 @@
                     this.scene.restart();
                 }, this);
 
-            explosion(balls){
-              let posx=balls[balls.length-1].getPosition().x* this.worldScale;
-              let posy=balls[balls.length-1].getPosition().y* this.worldScale;
-              balls[balls.length-1].getUserData().clear();
-              this.world.destroyBody(balls[balls.length-1]);
-              var numRays=32;
-              var DEGTORAD=0.0174532925199432957;
-              this.parts=[];
-              for (var i = 0; i < numRays; i++)
-              {
-                var angle = (i / numRays) * 360 * DEGTORAD;
-                var blastPower =30
-                let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
-                let part=this.createParticulesExpl(posx, posy,5);
-                part.setLinearVelocity(rayDir);
-                this.parts.push(part);
-              }
-              this.cameras.main.stopFollow();
-              this.time.addEvent({
-                  delay: 200,
-                  callbackScope: this,
-                  callback: function(){
-                    for (var i = 0; i < this.parts.length; i++)
-                    {
-                      this.parts[i].getUserData().clear();
-                      this.world.destroyBody(this.parts[i]);
-                    }
-                    this.parts=[];
-                  },
-                  loop: false
-              });
-
-            }
-
-
             this.world.on('begin-contact', function(contact) {
               let bodyA=contact.getFixtureA().getBody();
               let bodyB=contact.getFixtureB().getBody();
               if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
-                console.log(balls);
-                explosion(balls);
-                balls.pop();
+                balls[balls.length-1].setFilterGroupIndex(9);
+                console.log(balls[balls.length-1].getFixtureList());
               }
             }, this);
 
