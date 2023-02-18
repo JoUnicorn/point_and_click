@@ -101,6 +101,7 @@
             // bar
             var decal=1000
             this.createBar(1300, zout*game.config.height - 20*groundHeight-180, 40, 180, true);
+            this.createBar(300+decal, zout*game.config.height- groundHeight-180, 180, 180, true);
             this.createBar(600+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(800+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(1000+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
@@ -187,11 +188,13 @@
               .setFontSize(100)
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
-                  let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
-                  let ud=balls[balls.length-1].getUserData();
-                  balls[balls.length-1].setLinearVelocity(veloci);
-                  this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                  if(launchVelocity!=undefined){
+                    balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
+                    let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
+                    let ud=balls[balls.length-1].getUserData();
+                    balls[balls.length-1].setLinearVelocity(veloci);
+                    this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                  }
               }, this);
             this.clickButton = this.add.text(500, 100, 'EXPLOSION!', { fill: '#0f0' })
                 .setFontSize(100)
