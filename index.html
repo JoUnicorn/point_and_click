@@ -151,7 +151,7 @@
                   var lastPos = null;
 
                   gfx2.clear();
-                  for (var i = 0; i < 2000; i += 6)
+                  for (var i = 0; i < 180; i += 6)
                   {
                       var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, i);
 
@@ -252,7 +252,7 @@
             let posy=ball.getPosition().y* this.worldScale;
             ball.getUserData().clear();
             this.world.destroyBody(ball);
-            var numRays=32;
+            var numRays=48;
             var DEGTORAD=0.0174532925199432957;
             let parts=[];
             for (var i = 0; i < numRays; i++)
@@ -311,7 +311,7 @@
           }
 
           getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
-              var t = 1 / 60.0; // seconds per time step (at 60fps)
+              var t = 1 / 5.0; // seconds per time step (at 60fps)
 
               var stepVelocityX = t *  -velocityX ; // m/s
               var stepVelocityY = t * -velocityY ;
