@@ -95,8 +95,8 @@
             this.createGround(1200, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
 
             //cannon
-            var cannonHead = this.add.image(100, zout*game.config.height - groundHeight-100, 'cannon_head').setDepth(1);
-            var cannon = this.add.image(100, zout*game.config.height - groundHeight-50, 'cannon_body').setDepth(1);
+            var cannonHead = this.add.image(130, zout*game.config.height - groundHeight-210, 'cannon_head').setDepth(1).setScale(2);
+            var cannon = this.add.image(130, zout*game.config.height - groundHeight-110, 'cannon_body').setDepth(1).setScale(2);
 
             // bar
             var decal=1000
@@ -138,7 +138,7 @@
 
             //cursor
             var pointer = this.input.activePointer;
-            var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+            var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 40, color: 0xffdd00, alpha: 0.5 } });
             var angle = 0;
             var launchVelocity;
             var squareWidth=400
@@ -152,7 +152,7 @@
                   gfx2.clear();
                   for (var i = 0; i < 1000; i += 6)
                   {
-                      var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, i);
+                      var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, i);
 
                       if (lastPos && i % 12 == 0)
                       {
@@ -161,8 +161,8 @@
 
                       lastPos = trajectoryPoint;
                   }
-                  var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 30);
-                  var trajectoryPoint2 = this.getTrajectoryPoint(cannon.x, cannon.y - 50, launchVelocity.x, launchVelocity.y, 1);
+                  var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, 30);
+                  var trajectoryPoint2 = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, 1);
                   angle = Phaser.Math.Angle.BetweenPoints(trajectoryPoint2, trajectoryPoint);
                   cannonHead.rotation = angle;
 
@@ -187,7 +187,7 @@
               .setFontSize(100)
               .setInteractive({ useHandCursor: true })
               .on('pointerup',  function () {
-                  balls.push(this.createCircle(cannon.x, cannon.y - 50, 15, true));
+                  balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
                   let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
                   let ud=balls[balls.length-1].getUserData();
                   balls[balls.length-1].setLinearVelocity(veloci);
@@ -197,8 +197,10 @@
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .on('pointerup',  function () {
-                  this.explosion(balls[balls.length-1]);
-                  balls.pop();
+                  if(balls.length>0){
+                    this.explosion(balls[balls.length-1]);
+                    balls.pop();
+                  }
                 }, this);
 
             this.clickButton = this.add.text(1500, 100, 'RESET!', { fill: '#0f0' })
@@ -334,7 +336,7 @@
           getLaunchVelocity(cannon,pointer) {
 
               var dx = (zout*pointer.x - cannon.x)/3;
-              var dy = (zout*pointer.y+110 - cannon.y - 50)/3;
+              var dy = (zout*pointer.y+210 - cannon.y - 100)/3;
 
               //dx *= 2;//dx=dx*2
               //dy *= 2;
