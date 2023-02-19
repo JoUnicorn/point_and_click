@@ -18,6 +18,8 @@
       var worldGravity=3;
       var zout=2.9;
       var gamesteps=10; // the lower the faster the game is
+      var densityPart=300; // the bigger the more impactful the particule is
+      var partpropagationtime=150; // the longer the bigger the bomb propagate particules
 
       let game;
       window.onload = function() {
@@ -276,7 +278,7 @@
             }
             this.cameras.main.stopFollow();
             this.time.addEvent({
-                delay: 150,
+                delay: partpropagationtime,
                 callbackScope: this,
                 callback: function(){
                   for (var i = 0; i < parts.length; i++)
@@ -397,7 +399,7 @@
               let circleShape = planck.Circle(width/ this.worldScale);
               part.createFixture({
                 shape: circleShape,
-                density: 300,
+                density: densityPart,
                 friction: 0,
                 restitution: .99,
                 filterGroupIndex:-1
