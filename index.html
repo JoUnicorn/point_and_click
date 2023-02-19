@@ -159,7 +159,7 @@
                   var lastPos = null;
 
                   gfx2.clear();
-                  for (var i = 0; i < 180; i += 6)
+                  for (var i = 0; i < 240; i += 6)
                   {
                       var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, i);
 
@@ -276,7 +276,7 @@
             }
             this.cameras.main.stopFollow();
             this.time.addEvent({
-                delay: 100,
+                delay: 150,
                 callbackScope: this,
                 callback: function(){
                   for (var i = 0; i < parts.length; i++)
@@ -397,7 +397,7 @@
               let circleShape = planck.Circle(width/ this.worldScale);
               part.createFixture({
                 shape: circleShape,
-                density: 30,
+                density: 300,
                 friction: 0,
                 restitution: .99,
                 filterGroupIndex:-1
