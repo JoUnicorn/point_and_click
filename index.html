@@ -200,7 +200,7 @@
               .setStyle({ backgroundColor: '#111' })
               .on('pointerup',  function () {
                   if(launchVelocity!=undefined){
-                    if(balls.length<10){
+                    if(balls.length<6){
                       balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
                       let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
                       let ud=balls[balls.length-1].getUserData();
