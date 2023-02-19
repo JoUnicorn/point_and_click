@@ -200,11 +200,13 @@
               .setStyle({ backgroundColor: '#111' })
               .on('pointerup',  function () {
                   if(launchVelocity!=undefined){
-                    balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
-                    let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
-                    let ud=balls[balls.length-1].getUserData();
-                    balls[balls.length-1].setLinearVelocity(veloci);
-                    this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                    if(balls.length<10){
+                      balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
+                      let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
+                      let ud=balls[balls.length-1].getUserData();
+                      balls[balls.length-1].setLinearVelocity(veloci);
+                      this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                    }
                   }
               }, this);
             this.clickButton = this.add.text(zout*game.config.width-350, zout*game.config.height-200, 'EXP', { fill: '#0f0' })
