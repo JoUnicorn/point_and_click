@@ -17,6 +17,9 @@
       var worldScaleParam=30;
       var worldGravity=3;
       var zout=2.9;
+      var gamesteps=10; // the lower the faster the game is
+      var densityPart=300; // the bigger the more impactful the particule is
+      var partpropagationtime=150; // the longer the bigger the bomb propagate particules
 
       let game;
       window.onload = function() {
@@ -29,7 +32,7 @@
                 forceSetTimeOut: true,
                 // panicMax: 0,
                 // smoothStep: false,
-                target: 60
+                target: 61
               },
               scene: playGame
           }
@@ -158,7 +161,7 @@
                   var lastPos = null;
 
                   gfx2.clear();
-                  for (var i = 0; i < 180; i += 6)
+                  for (var i = 0; i < 240; i += 6)
                   {
                       var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, i);
 
@@ -191,21 +194,25 @@
 
             // ball
             let balls=[];
-            this.clickButton = this.add.text(100, 100, 'FIRE!', { fill: '#0f0' })
-              .setFontSize(100)
+            this.clickButton = this.add.text(20, 1000, 'FIR', { fill: '#0f0' })
+              .setFontSize(200)
               .setInteractive({ useHandCursor: true })
+              .setStyle({ backgroundColor: '#111' })
               .on('pointerup',  function () {
                   if(launchVelocity!=undefined){
-                    balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
-                    let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
-                    let ud=balls[balls.length-1].getUserData();
-                    balls[balls.length-1].setLinearVelocity(veloci);
-                    this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                    if(balls.length<6){
+                      balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
+                      let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
+                      let ud=balls[balls.length-1].getUserData();
+                      balls[balls.length-1].setLinearVelocity(veloci);
+                      this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+                    }
                   }
               }, this);
-            this.clickButton = this.add.text(500, 100, 'EXPLOSION!', { fill: '#0f0' })
-                .setFontSize(100)
+            this.clickButton = this.add.text(zout*game.config.width-350, zout*game.config.height-200, 'EXP', { fill: '#0f0' })
+                .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
                 .on('pointerup',  function () {
                   if(balls.length>0){
                     this.explosion(balls[balls.length-1]);
@@ -213,9 +220,10 @@
                   }
                 }, this);
 
-            this.clickButton = this.add.text(1400, 100, 'RESET!', { fill: '#0f0' })
+            this.clickButton = this.add.text(50, 100, 'RESET!', { fill: '#0f0' })
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
                 .on('pointerup',  function () {
                     this.scene.restart();
                 }, this);
@@ -236,18 +244,20 @@
 
           update ()
           {
-            this.world.step(1 / this.worldScale);
+            // speed of the game (lower = faster)
+            this.world.step(1 / gamesteps);
+
             this.world.clearForces();
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
-                let bodyPosition = b.getPosition();
-                let bodyAngle = b.getAngle();
-                let userData = b.getUserData();
-                userData.x = bodyPosition.x * this.worldScale;
-                userData.y = bodyPosition.y * this.worldScale;
-                userData.rotation = bodyAngle;
-                if(b.getFixtureList().getFilterGroupIndex()==9){
-                  this.explosion(b);
-                }
+              if(b.getFixtureList().getFilterGroupIndex()==9){
+                this.explosion(b);
+              }
+              let bodyPosition = b.getPosition();
+              let bodyAngle = b.getAngle();
+              let userData = b.getUserData();
+              userData.x = bodyPosition.x * this.worldScale;
+              userData.y = bodyPosition.y * this.worldScale;
+              userData.rotation = bodyAngle;
             }
 
             var loop = this.sys.game.loop;
@@ -259,7 +269,7 @@
             let posy=ball.getPosition().y* this.worldScale;
             ball.getUserData().clear();
             this.world.destroyBody(ball);
-            var numRays=48;
+            var numRays=32;
             var DEGTORAD=0.0174532925199432957;
             let parts=[];
             for (var i = 0; i < numRays; i++)
@@ -273,7 +283,7 @@
             }
             this.cameras.main.stopFollow();
             this.time.addEvent({
-                delay: 200,
+                delay: partpropagationtime,
                 callbackScope: this,
                 callback: function(){
                   for (var i = 0; i < parts.length; i++)
@@ -318,7 +328,7 @@
           }
 
           getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
-              var t = 1 / 5.0; // seconds per time step (at 60fps)
+              var t = 1 / gamesteps; // seconds per time step (at 60fps)
 
               var stepVelocityX = t *  -velocityX ; // m/s
               var stepVelocityY = t * -velocityY ;
@@ -386,7 +396,7 @@
                                                 type: 'dynamic',
                                                 fixedRotation: true,
                                                 bullet: true,
-                                                linearDamping: 1.5, // arrete le mvt des que le rayon de projection est atteint
+                                                //linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
                                                 //linearVelocity: rayDir,
                                                 gravityScale: 0,
                                               });
@@ -394,7 +404,7 @@
               let circleShape = planck.Circle(width/ this.worldScale);
               part.createFixture({
                 shape: circleShape,
-                density: 500,
+                density: densityPart,
                 friction: 0,
                 restitution: .99,
                 filterGroupIndex:-1
