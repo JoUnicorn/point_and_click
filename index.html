@@ -17,6 +17,7 @@
       var worldScaleParam=30;
       var worldGravity=3;
       var zout=2.9;
+      var gamesteps=10; // the lower the faster the game is
 
       let game;
       window.onload = function() {
@@ -236,7 +237,9 @@
 
           update ()
           {
-            this.world.step(1 / this.worldScale);
+            // speed of the game (lower = faster)
+            this.world.step(1 / gamesteps);
+
             this.world.clearForces();
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
                 let bodyPosition = b.getPosition();
@@ -259,7 +262,7 @@
             let posy=ball.getPosition().y* this.worldScale;
             ball.getUserData().clear();
             this.world.destroyBody(ball);
-            var numRays=48;
+            var numRays=40;
             var DEGTORAD=0.0174532925199432957;
             let parts=[];
             for (var i = 0; i < numRays; i++)
@@ -318,7 +321,7 @@
           }
 
           getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
-              var t = 1 / 5.0; // seconds per time step (at 60fps)
+              var t = 1 / gamesteps; // seconds per time step (at 60fps)
 
               var stepVelocityX = t *  -velocityX ; // m/s
               var stepVelocityY = t * -velocityY ;
