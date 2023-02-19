@@ -16,10 +16,13 @@
       var gameHeight=600
       var worldScaleParam=30;
       var worldGravity=3;
-      var zout=2.9;
+      var zoomapplied=.34;
+      var zout=1/zoomapplied;
       var gamesteps=10; // the lower the faster the game is
       var densityPart=300; // the bigger the more impactful the particule is
       var partpropagationtime=150; // the longer the bigger the bomb propagate particules
+      var limiteVerticalJeu=zout;
+      var limiteHoriJeu=2*zout;
 
       let game;
       window.onload = function() {
@@ -56,9 +59,8 @@
           create ()
           {
             /////// camera /////
-            this.cameras.main.setBounds(0, 0, gameWidth*2, game.config.height);
-            var cam = this.cameras.main;
-            cam.setZoom(.34); //<1 => zoom out
+            this.cameras.main.setBounds(0, 0, gameWidth*limiteHoriJeu, game.config.height*limiteVerticalJeu);
+            this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
 
             /////// sky ////////////////
@@ -68,14 +70,23 @@
             this.add.image(skyWidth, 0, 'sky').setOrigin(0);
             this.add.image(2*skyWidth, 0, 'sky').setOrigin(0);
             this.add.image(3*skyWidth, 0, 'sky').setOrigin(0);
+            this.add.image(4*skyWidth, 0, 'sky').setOrigin(0);
+            this.add.image(5*skyWidth, 0, 'sky').setOrigin(0);
+            this.add.image(6*skyWidth, 0, 'sky').setOrigin(0);
             this.add.image(0, skyHeight, 'sky').setOrigin(0);
             this.add.image(skyWidth, skyHeight, 'sky').setOrigin(0);
             this.add.image(2*skyWidth, skyHeight, 'sky').setOrigin(0);
             this.add.image(3*skyWidth, skyHeight, 'sky').setOrigin(0);
+            this.add.image(4*skyWidth, skyHeight, 'sky').setOrigin(0);
+            this.add.image(5*skyWidth, skyHeight, 'sky').setOrigin(0);
+            this.add.image(6*skyWidth, skyHeight, 'sky').setOrigin(0);
             this.add.image(0, 2*skyHeight, 'sky').setOrigin(0);
             this.add.image(skyWidth, 2*skyHeight, 'sky').setOrigin(0);
             this.add.image(2*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
             this.add.image(3*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
+            this.add.image(4*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
+            this.add.image(5*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
+            this.add.image(6*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
             /////// end sky ////////////////
 
             //////// planck.js box2d /////////////
@@ -91,69 +102,46 @@
             //ground
             var groundHeight=this.textures.get('ground').source[0].height;
             var groundWidth=this.textures.get('ground').source[0].width;
-            this.createGround(0, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(2*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(3*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(4*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(5*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            this.createGround(6*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            for (var i = 0; i < 15; i += 1)
+            {
+              this.createGround(i*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
+            }
             for (var i = 1; i < 30; i += 1)
             {
-              this.createGround(7*groundWidth, zout*game.config.height - i*groundHeight, groundWidth, groundHeight, false);
+              this.createGround(14*groundWidth, zout*game.config.height - i*groundHeight, groundWidth, groundHeight, false);
             }
-            this.createGround(1200, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
+            this.createGround(3500, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
+            this.createGround(4500, zout*game.config.height - 30*groundHeight, groundWidth, groundHeight, false);
 
             //cannon
             var cannonHead = this.add.image(130, zout*game.config.height - groundHeight-210, 'cannon_head').setDepth(1).setScale(2);
             var cannon = this.add.image(130, zout*game.config.height - groundHeight-110, 'cannon_body').setDepth(1).setScale(2);
 
             // bar
-            var decal=1000
-            this.createBar(1300, zout*game.config.height - 20*groundHeight-180, 40, 180, true);
-            //this.createBar(300+decal, zout*game.config.height- groundHeight-180, 180, 180, true);
-            this.createBar(600+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
-            this.createBar(800+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
-            this.createBar(1000+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
-            this.createBar(1200+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
-            this.createBar(900+decal, zout*game.config.height- groundHeight-180-80, 700, 30, true);
-            this.time.addEvent({
-                delay: 1000,
-                callbackScope: this,
-                callback: function(){
-                  this.createBar(700+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
-                  this.createBar(1100+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-100-110, 500, 30, true);
-                },
-                loop: false
-            });
-            this.time.addEvent({
-                delay: 3000,
-                callbackScope: this,
-                callback: function(){
-                  this.createBar(800+decal, zout*game.config.height- groundHeight-180-50-300, 50, 180, true);
-                  this.createBar(1000+decal, zout*game.config.height- groundHeight-180-50-300, 50, 180, true);
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-300-110, 500, 30, true);
-                },
-                loop: false
-            });
-            this.time.addEvent({
-                delay: 5000,
-                callbackScope: this,
-                callback: function(){
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-500, 50, 180, true);
-                },
-                loop: false
-            });
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(3500, zout*game.config.height - 20*groundHeight-180-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(4500, zout*game.config.height - 20*groundHeight-520-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(4200, zout*game.config.height - 20*groundHeight-100-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(4800, zout*game.config.height - 20*groundHeight-100-i*120, 100, 120, true);
+            }
 
             //cursor
             var pointer = this.input.activePointer;
             var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 40, color: 0xffdd00, alpha: 0.5 } });
             var angle = 0;
             var launchVelocity;
-            var squareWidth=400
-            var squareHeight=500
+            var squareWidth=500
+            var squareHeight=600
 
             this.input.on('pointermove', function (pointer) {
                 if (pointer.isDown & zout*pointer.y>zout*game.config.height-squareHeight & zout*pointer.x<squareWidth) {
@@ -181,7 +169,7 @@
                 else{
                   if (!pointer.isDown) return;
                   this.cameras.main.stopFollow();
-                  cam.scrollX -= (pointer.x - pointer.prevPosition.x) / cam.zoom;
+                  this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
                 }
             }, this);
 
@@ -209,10 +197,11 @@
                     }
                   }
               }, this);
-            this.clickButton = this.add.text(zout*game.config.width-350, zout*game.config.height-200, 'EXP', { fill: '#0f0' })
+            this.clickButton = this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
+                .setScrollFactor(0)
                 .on('pointerup',  function () {
                   if(balls.length>0){
                     this.explosion(balls[balls.length-1]);
@@ -238,7 +227,6 @@
                   {
                     balls[i].getFixtureList().m_filterGroupIndex=9;
                     balls.splice(i, 1);
-                    console.log(balls);
                     break;
                   }
                 }
@@ -248,7 +236,7 @@
 
 
             // actualFps
-            this.myfps=this.add.text(2000, 100, 'FPS', { fill: '#0f0' }).setFontSize(100)
+            this.myfps=this.add.text(2000, 100, 'FPS', { fill: '#0f0' }).setFontSize(100);
           }
 
           update ()
