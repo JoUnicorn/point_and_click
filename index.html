@@ -117,35 +117,14 @@
             this.createBar(1000+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(1200+decal, zout*game.config.height- groundHeight-180, 40, 180, true);
             this.createBar(900+decal, zout*game.config.height- groundHeight-180-80, 700, 30, true);
-            this.time.addEvent({
-                delay: 1000,
-                callbackScope: this,
-                callback: function(){
-                  this.createBar(700+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
-                  this.createBar(1100+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-100-110, 500, 30, true);
-                },
-                loop: false
-            });
-            this.time.addEvent({
-                delay: 3000,
-                callbackScope: this,
-                callback: function(){
-                  this.createBar(800+decal, zout*game.config.height- groundHeight-180-50-300, 50, 180, true);
-                  this.createBar(1000+decal, zout*game.config.height- groundHeight-180-50-300, 50, 180, true);
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-300-110, 500, 30, true);
-                },
-                loop: false
-            });
-            this.time.addEvent({
-                delay: 5000,
-                callbackScope: this,
-                callback: function(){
-                  this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-500, 50, 180, true);
-                },
-                loop: false
-            });
+            this.createBar(700+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
+            this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
+            this.createBar(1100+decal, zout*game.config.height- groundHeight-180-50-100, 50, 180, true);
+            this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-100-110, 500, 30, true);
+            this.createBar(800+decal, zout*game.config.height- groundHeight-180-50-330, 50, 180, true);
+            this.createBar(1000+decal, zout*game.config.height- groundHeight-180-50-330, 50, 180, true);
+            this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-300-140, 500, 30, true);
+            this.createBar(900+decal, zout*game.config.height- groundHeight-180-50-570, 50, 180, true);
 
             //cursor
             var pointer = this.input.activePointer;
