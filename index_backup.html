@@ -232,10 +232,19 @@
               let bodyA=contact.getFixtureA().getBody();
               let bodyB=contact.getFixtureB().getBody();
               if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
-                balls[balls.length-1].getFixtureList().m_filterGroupIndex=9;
-                balls.pop();
+                for (var i = 0; i < balls.length; i++)
+                {
+                  if(balls[i].getPosition().x==bodyA.getPosition().x)
+                  {
+                    balls[i].getFixtureList().m_filterGroupIndex=9;
+                    balls.splice(i, 1);
+                    console.log(balls);
+                    break;
+                  }
+                }
+
               }
-            }, this);
+            }.bind(this));
 
 
             // actualFps
