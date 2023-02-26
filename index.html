@@ -124,8 +124,15 @@
                 this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
             }, this);
 
+            var pospointerdown=0
+            this.input.on('pointerdown', function (pointer) {
+                pospointerdown=pointer.x;
+            }, this);
+
             this.input.on('pointerup', function (pointer) {
-                console.log(pointer.x);
+              if(pospointerdown==pointer.x){
+                balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
+              }
             }, this);
 
             // ball
@@ -294,17 +301,6 @@
 
           }
 
-          getLaunchVelocity(cannon,pointer) {
-
-              var dx = (zout*pointer.x - cannon.x)/3;
-              var dy = (zout*pointer.y+210 - cannon.y - 100)/3;
-
-              //dx *= 2;//dx=dx*2
-              //dy *= 2;
-
-              return { x: dx, y: dy };
-          }
-
           line(gfx2,x1, y1, x2, y2) {
               gfx2.beginPath();
               gfx2.moveTo(x1, y1);
@@ -314,7 +310,8 @@
 
           createCircle(posX, posY, width, isDynamic){
               let circle = this.world.createBody({
-                                                type: 'dynamic'
+                                                type: 'dynamic',
+                                                gravityScale: 0,
                                               });
               circle.createFixture({shape: planck.Circle(width/ this.worldScale),
                 density:100.0,
