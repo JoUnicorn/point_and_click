@@ -57,7 +57,7 @@
           create ()
           {
             /////// camera /////
-            this.cameras.main.setBounds(0, 0, gameWidth*limiteHoriJeu, game.config.height*limiteVerticalJeu);
+            this.cameras.main.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
             this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
 
@@ -125,14 +125,16 @@
             }, this);
 
             var pospointerdown=0
+            var explobut=0
             this.input.on('pointerdown', function (pointer) {
                 pospointerdown=pointer.x;
             }, this);
 
             this.input.on('pointerup', function (pointer) {
-              if(pospointerdown==pointer.x){
+              if((pospointerdown==pointer.x) & (explobut==0)){
                 balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
               }
+              explobut=0;
             }, this);
 
             // ball
@@ -159,6 +161,7 @@
                 .setScrollFactor(0)
                 .on('pointerup',  function () {
                   if(balls.length>0){
+                    explobut=1;
                     this.explosion(balls[balls.length-1]);
                     balls.pop();
                   }
