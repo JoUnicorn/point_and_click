@@ -130,6 +130,8 @@
                 pospointerdown=pointer.x;
             }, this);
 
+            // ball
+            let balls=[];
             this.input.on('pointerup', function (pointer) {
               if((pospointerdown==pointer.x) & (explobut==0)){
                 balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
@@ -137,23 +139,6 @@
               explobut=0;
             }, this);
 
-            // ball
-            let balls=[];
-            this.clickButton = this.add.text(20, 1000, 'FIR', { fill: '#0f0' })
-              .setFontSize(200)
-              .setInteractive({ useHandCursor: true })
-              .setStyle({ backgroundColor: '#111' })
-              .on('pointerup',  function () {
-                  if(launchVelocity!=undefined){
-                    if(balls.length<6){
-                      balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
-                      let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
-                      let ud=balls[balls.length-1].getUserData();
-                      balls[balls.length-1].setLinearVelocity(veloci);
-                      this.cameras.main.startFollow(ud, true, 0.05, 0.05);
-                    }
-                  }
-              }, this);
             this.clickButton = this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
