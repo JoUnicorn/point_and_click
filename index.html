@@ -156,6 +156,7 @@
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
+                .setScrollFactor(0)
                 .on('pointerup',  function () {
                     this.scene.restart();
                 }, this);
@@ -179,7 +180,7 @@
 
 
             // actualFps
-            this.myfps=this.add.text(2000, 100, 'FPS', { fill: '#0f0' }).setFontSize(100);
+            this.myfps=this.add.text(1000, 100, 'FPS', { fill: '#0f0' }).setFontSize(100).setScrollFactor(0);
           }
 
           update ()
