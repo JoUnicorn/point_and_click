@@ -174,7 +174,7 @@
             // ball
             let balls=[];
             this.input.on('pointerup', function (pointer) {
-              if((pospointerdown==pointer.x) & (explobut==0)){
+              if((pospointerdown>=pointer.x-5) &(pospointerdown<=pointer.x+5) & (explobut==0)){
                 balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
               }
               explobut=0;
