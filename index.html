@@ -67,7 +67,6 @@
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
             var refcamerazoom=camera.zoom;
-            var refcamerazoombool=0;
             dragScale
                 .on('drag1', function (dragScale) {
                     var drag1Vector = dragScale.drag1Vector;
@@ -76,13 +75,9 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    if(refcamerazoombool=0){
-                      refcamerazoom=camera.zoom;
-                      refcamerazoombool=1;
-                    }
                     this.add.text(50, 500, "ref="+refcamerazoom, { fill: '#0f0' }).setFontSize(100);
                     this.add.text(50, 200, camera.zoom, { fill: '#0f0' }).setFontSize(100);
-                    if(camera.zoom>=refcamerazoom){
+                    if(camera.zoom<=refcamerazoom){
                       camera.zoom *= scaleFactor;
                     }
                 }, this)
