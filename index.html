@@ -23,7 +23,7 @@
       var partpropagationtime=150; // the longer the bigger the bomb propagate particules
       var limiteVerticalJeu=zout;
       var limiteHoriJeu=2*zout;
-      var versiongame=2;
+      var versiongame=3;
 
       let game;
       window.onload = function() {
@@ -75,7 +75,9 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    camera.zoom *= scaleFactor;
+                    if(){
+                      camera.zoom *= scaleFactor;
+                    }
                 }, this)
             /// end zoom/////
 
@@ -173,12 +175,13 @@
             //cursor
             var pointer = this.input.activePointer;
 
+            /*
             this.input.on('pointermove', function (pointer) {
                 if (!pointer.isDown) return;
                 this.cameras.main.stopFollow();
                 this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
             }, this);
-
+            */
             var pospointerdown=0
             var explobut=0
             this.input.on('pointerdown', function (pointer) {
