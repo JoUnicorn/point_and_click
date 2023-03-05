@@ -75,7 +75,7 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    if(){
+                    if(camera.zoom>.99){
                       camera.zoom *= scaleFactor;
                     }
                 }, this)
@@ -175,13 +175,6 @@
             //cursor
             var pointer = this.input.activePointer;
 
-            /*
-            this.input.on('pointermove', function (pointer) {
-                if (!pointer.isDown) return;
-                this.cameras.main.stopFollow();
-                this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
-            }, this);
-            */
             var pospointerdown=0
             var explobut=0
             this.input.on('pointerdown', function (pointer) {
