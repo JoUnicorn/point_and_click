@@ -75,7 +75,7 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    this.add.text(200, 200, "ref="+refcamerazoom, { fill: '#0f0' }).setFontSize(100);
+                    this.add.text(50, 500, "ref="+refcamerazoom, { fill: '#0f0' }).setFontSize(100);
                     this.add.text(50, 200, camera.zoom, { fill: '#0f0' }).setFontSize(100);
                     if(camera.zoom>.99){
                       camera.zoom *= scaleFactor;
