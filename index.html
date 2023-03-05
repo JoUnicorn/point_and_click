@@ -79,6 +79,8 @@
                     this.add.text(50, 200, camera.zoom, { fill: '#0f0' }).setFontSize(100);
                     if(camera.zoom<=refcamerazoom){
                       camera.zoom *= scaleFactor;
+                      this.add.text(50, 500, "ref="+refcamerazoom, { fill: '#0f0' }).setFontSize(100);
+                      this.add.text(50, 200, camera.zoom, { fill: '#0f0' }).setFontSize(100);
                     }
                 }, this)
             /// end zoom/////
