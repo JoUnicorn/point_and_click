@@ -62,9 +62,10 @@
 
           create ()
           {
-
+            /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
+            console.log(camera.zoom);
             dragScale
                 .on('drag1', function (dragScale) {
                     var drag1Vector = dragScale.drag1Vector;
@@ -73,9 +74,12 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    camera.zoom *= scaleFactor;
+                    if (camera.zoom<1){
+                      camera.zoom *= scaleFactor;                      
+                    }
                 }, this)
-            
+            /// end zoom/////
+
             /////// camera /////
             this.cameras.main.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
             this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
