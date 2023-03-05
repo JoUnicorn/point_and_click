@@ -23,7 +23,7 @@
       var partpropagationtime=150; // the longer the bigger the bomb propagate particules
       var limiteVerticalJeu=zout;
       var limiteHoriJeu=2*zout;
-      var versiongame=3;
+      var versiongame=4;
 
       let game;
       window.onload = function() {
@@ -75,6 +75,7 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
+                    this.add.text(50, 200, camera.zoom, { fill: '#0f0' }).setFontSize(100);
                     if(camera.zoom>.99){
                       camera.zoom *= scaleFactor;
                     }
