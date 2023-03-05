@@ -65,7 +65,6 @@
             /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
-            console.log(camera.zoom);
             dragScale
                 .on('drag1', function (dragScale) {
                     var drag1Vector = dragScale.drag1Vector;
@@ -75,7 +74,7 @@
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
                     if (camera.zoom<1){
-                      camera.zoom *= scaleFactor;                      
+                      camera.zoom *= scaleFactor;
                     }
                 }, this)
             /// end zoom/////
@@ -122,6 +121,24 @@
             this.createGround(4500, zout*game.config.height - 30*groundHeight, groundWidth, groundHeight, false);
 
             // bar
+            this.createBar(1750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(2000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1500, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
+            }
+            this.createBar(750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(500, zout*game.config.height -groundHeight-100-i*120, 100, 120, true);
+            }
             for (var i = 0; i < 4; i += 1)
             {
               this.createBar(3500, zout*game.config.height - 20*groundHeight-180-i*120, 100, 120, true);
