@@ -73,7 +73,7 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    if (camera.zoom>=1){
+                    if (camera.zoom>=.8){
                       camera.zoom *= scaleFactor;
                     }
                 }, this)
