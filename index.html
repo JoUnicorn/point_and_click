@@ -73,7 +73,7 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    if (camera.zoom>1){
+                    if (camera.zoom>=1){
                       camera.zoom *= scaleFactor;
                     }
                 }, this)
@@ -148,6 +148,10 @@
               this.createBar(1650, zout*game.config.height -groundHeight-800-i*120, 100, 120, true);
             }
             this.createBar(1250, zout*game.config.height - groundHeight-800-4.5*120, 1000, 100, true);
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1250, zout*game.config.height -groundHeight-1500-i*120, 100, 120, true);
+            }
 
             for (var i = 0; i < 4; i += 1)
             {
