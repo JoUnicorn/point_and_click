@@ -69,9 +69,11 @@
             var refcamerazoom=camera.zoom;
             dragScale
                 .on('drag1', function (dragScale) {
-                    var drag1Vector = dragScale.drag1Vector;
-                    camera.scrollX -= drag1Vector.x / camera.zoom;
-                    camera.scrollY -= drag1Vector.y / camera.zoom;
+                    if(!bombbool){
+                      var drag1Vector = dragScale.drag1Vector;
+                      camera.scrollX -= drag1Vector.x / camera.zoom;
+                      camera.scrollY -= drag1Vector.y / camera.zoom;
+                    }
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
