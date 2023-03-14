@@ -316,7 +316,7 @@
                   box.setDynamic();
               }
               box.createFixture({shape: planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale),
-                density:10.0});
+                density:10.0,filterGroupIndex:8});
               box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
               return box;
           }
