@@ -76,10 +76,10 @@
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
                     this.myzoom.setText('zoom: '+camera.zoom);
-                    if(camera.zoom>=.33){
+                    if(camera.zoom>=.34){
                       camera.zoom *= scaleFactor;
                     }else{
-                      camera.zoom =.330000001;
+                      camera.zoom =.340000001;
                     }
                 }, this)
             /// end zoom/////
