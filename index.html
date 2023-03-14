@@ -179,7 +179,6 @@
             var pointer = this.input.activePointer;
 
             var pospointerdown=0
-            var explobut=0
             this.input.on('pointerdown', function (pointer) {
                 pospointerdown=pointer.x;
             }, this);
@@ -191,7 +190,6 @@
               if(bombbool){
                 balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
               }
-              explobut=0;
             }, this);
 
             this.add.text(-600, 100, 'MOVE', { fill: '#0f0' })
@@ -210,7 +208,6 @@
                 .setScrollFactor(0)
                 .on('pointerup',  function () {
                   if(balls.length>0){
-                    explobut=1;
                     this.explosion(balls[balls.length-1]);
                     balls.pop();
                   }
