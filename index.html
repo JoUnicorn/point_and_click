@@ -186,8 +186,9 @@
             // ball
             let balls=[];
             let bombbool=false;
+            let bombexception=true;
             this.input.on('pointerup', function (pointer) {
-              if(bombbool){
+              if(bombbool & bombexception){
                 balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
               }
             }, this);
