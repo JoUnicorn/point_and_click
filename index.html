@@ -79,7 +79,7 @@
                     if(camera.zoom>=.33){
                       camera.zoom *= scaleFactor;
                     }else{
-                      camera.zoom =.330000001;                      
+                      camera.zoom =.330000001;
                     }
                 }, this)
             /// end zoom/////
@@ -193,7 +193,7 @@
               explobut=0;
             }, this);
 
-            this.clickButton = this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
+            this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
@@ -206,7 +206,7 @@
                   }
                 }, this);
 
-            this.clickButton = this.add.text(50, 100, 'RESET!'+versiongame, { fill: '#0f0' })
+            this.add.text(50, 100, 'RESET!'+versiongame, { fill: '#0f0' })
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
