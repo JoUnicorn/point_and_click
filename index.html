@@ -76,6 +76,7 @@
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
                     this.myzoom.setText('zoom: '+refcamerazoom);
+                    this.add.text(100, 300, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100);
                     if(camera.zoom<=1){
                       camera.zoom *= scaleFactor;
                     }
@@ -233,7 +234,7 @@
 
             // actualFps
             this.myfps=this.add.text(1000, 100, 'FPS', { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
-            this.myzoom=this.add.text(-800, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
+            this.myzoom=this.add.text(100, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100);
           }
 
           update ()
