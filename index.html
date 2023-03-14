@@ -23,7 +23,7 @@
       var partpropagationtime=150; // the longer the bigger the bomb propagate particules
       var limiteVerticalJeu=zout;
       var limiteHoriJeu=2*zout;
-      var versiongame=6;
+      var versiongame=Date.now();
 
       let game;
       window.onload = function() {
@@ -193,6 +193,15 @@
               explobut=0;
             }, this);
 
+            this.add.text(-600, 100, 'MOVE', { fill: '#0f0' })
+                .setFontSize(100)
+                .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
+                .setScrollFactor(0)
+                .on('pointerup',  function () {
+                    this.scene.restart();
+                }, this);
+
             this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
@@ -206,7 +215,7 @@
                   }
                 }, this);
 
-            this.add.text(50, 100, 'RESET!'+versiongame, { fill: '#0f0' })
+            this.add.text(50, -300, 'RESET!'+versiongame, { fill: '#0f0' })
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
