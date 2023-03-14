@@ -198,7 +198,11 @@
                 .setStyle({ backgroundColor: '#111' })
                 .setScrollFactor(0)
                 .on('pointerup',  function () {
-                    this.scene.restart();
+                    if(bombbool){
+                      bombbool=false;
+                    }else{
+                      bombbool=false;
+                    }
                 }, this);
 
             this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
@@ -213,7 +217,7 @@
                   }
                 }, this);
 
-            this.add.text(50, -300, 'RESET!'+versiongame, { fill: '#0f0' })
+            this.add.text(50, -200, 'RESET!'+versiongame, { fill: '#0f0' })
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
