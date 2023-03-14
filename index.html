@@ -75,8 +75,7 @@
                 })
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
-                    //this.add.text(50, 500, "ref="+refcamerazoom, { fill: '#0f0' }).setFontSize(100);
-                    //this.add.text(50, 200, camera.zoom, { fill: '#0f0' }).setFontSize(100);
+                    this.myzoom.setText('zoom: '+refcamerazoom);
                     if(camera.zoom<=1){
                       camera.zoom *= scaleFactor;
                     }
@@ -234,7 +233,7 @@
 
             // actualFps
             this.myfps=this.add.text(1000, 100, 'FPS', { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
-            this.add.text(-800, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
+            this.myzoom=this.add.text(-800, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
           }
 
           update ()
