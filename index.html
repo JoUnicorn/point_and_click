@@ -25,6 +25,36 @@
       var limiteHoriJeu=2*zout;
       var versiongame=Date.now();
 
+      // constants to store block types
+      const TERRAIN = 0;
+      const IDOL = 1;
+      const BREAKABLE = 2;
+      const UNBREAKABLE = 3;
+      
+      // constant to store all block types imported from Tiled
+      const BLOCKTYPES = {
+          "Terrain": {
+              color: 0x049b15,
+              dynamic: false,
+              type: TERRAIN
+          },
+          "Breakable": {
+              color: 0x6e5d42,
+              dynamic: true,
+              type: BREAKABLE
+          },
+          "Unbreakable": {
+              color: 0x3b3b3b,
+              dynamic: true,
+              type: UNBREAKABLE
+          },
+          "Idol": {
+              color: 0xfff43a,
+              dynamic: true,
+              type: IDOL
+          }
+      }      
+
       let game;
       window.onload = function() {
           let gameConfig = {
@@ -59,6 +89,7 @@
 
             url = 'js/rexpinchplugin.min.js';
             this.load.plugin('rexpinchplugin', url, true);
+            this.load.tilemapTiledJSON("level1", "assets/maps/level1.json");
           }
 
           create ()
@@ -91,18 +122,6 @@
             this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
 
-            /////// sky ////////////////
-            var skyWidth=this.textures.get('sky').source[0].width;
-            var skyHeight=this.textures.get('sky').source[0].height;
-            for (var i = 0; i < 7; i += 1)
-            {
-              for (var j = 0; j < 5; j += 1)
-              {
-                this.add.image(i*skyWidth, j*skyHeight, 'sky').setOrigin(0);
-              }
-            }
-            /////// end sky ////////////////
-
             //////// planck.js box2d /////////////
             // Box2D works with meters. We need to convert meters to pixels.
             // let's say 30 pixels = 1 meter.
@@ -113,70 +132,14 @@
             // this is how we create a Box2D world
             this.world = planck.World(gravity);
 
-            //ground
-            var groundHeight=this.textures.get('ground').source[0].height;
-            var groundWidth=this.textures.get('ground').source[0].width;
-            for (var i = 0; i < 15; i += 1)
-            {
-              this.createGround(i*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            }
-            for (var i = 1; i < 30; i += 1)
-            {
-              this.createGround(14*groundWidth, zout*game.config.height - i*groundHeight, groundWidth, groundHeight, false);
-            }
-            this.createGround(3500, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
-            this.createGround(4500, zout*game.config.height - 30*groundHeight, groundWidth, groundHeight, false);
-
-            // bar
-            this.createBar(1750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(2000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1500, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
-            }
-            this.createBar(750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(500, zout*game.config.height -groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(850, zout*game.config.height - groundHeight-800-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1650, zout*game.config.height -groundHeight-800-i*120, 100, 120, true);
-            }
-            this.createBar(1250, zout*game.config.height - groundHeight-800-4.5*120, 1000, 100, true);
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1250, zout*game.config.height -groundHeight-1500-i*120, 100, 120, true);
-            }
-
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(3500, zout*game.config.height - 20*groundHeight-180-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(4500, zout*game.config.height - 20*groundHeight-520-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(4200, zout*game.config.height - 20*groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(4800, zout*game.config.height - 20*groundHeight-100-i*120, 100, 120, true);
-            }
-
+            // add the tilemap
+            let map = this.make.tilemap({key: 'level1'});
+            // select all objects in Object Layer zero, the first - and only, at the moment - level
+            let blocks = map.objects[0].objects;
+    
+            // looping through all blocks and execute addBlock method
+            blocks.forEach(blocks => this.addBlock(blocks));
+            
             //cursor
             var pointer = this.input.activePointer;
 
@@ -324,6 +287,20 @@
 
           }
 
+          // method to add a totem block
+          addBlock(block) {
+
+              // get block object
+              let blockObject = BLOCKTYPES[block.type];
+
+              // we store block coordinates inside a Phaser Rectangle just to get its center
+              let rectangle = new Phaser.Geom.Rectangle(block.x, block.y, block.width, block.height);
+
+              // create the Box2D block with old createBox method
+              let box2DBlock = this.createBar(rectangle.centerX, rectangle.centerY, block.width, 
+              block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+          }
+
           createBox(posX, posY, width, height, isDynamic){
               let box = this.world.createBody();
               if(isDynamic){
@@ -342,14 +319,16 @@
               box.setUserData(userData);
           }
 
-          createBar(posX, posY, width, height, isDynamic){
+          createBar(posX, posY, width, height, isDynamic, blockType, color){
               let box = this.createBox(posX, posY, width, height, isDynamic);
-              var color = new Phaser.Display.Color();
-              color.random();
-              color.brighten(50).saturate(100);
+              let borderColor = Phaser.Display.Color.IntegerToColor(color);
+              borderColor.darken(20);
+
               let userData = this.add.graphics();
-              userData.fillStyle(color.color, 1);
+              userData.fillStyle(color, 1);
               userData.fillRect(- width / 2, - height / 2, width, height);
+              userData.lineStyle(4, borderColor.color)
+              userData.strokeRect(- width / 2 + 2, - height / 2 + 2, width - 4, height - 4);
               box.setUserData(userData);
           }
 

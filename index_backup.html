@@ -13,7 +13,7 @@
       // http://localhost:8080/
 
       var gameWidth=1000
-      var gameHeight=600
+      var gameHeight=1000
       var worldScaleParam=30;
       var worldGravity=3;
       var zoomapplied=.34;
@@ -23,6 +23,7 @@
       var partpropagationtime=150; // the longer the bigger the bomb propagate particules
       var limiteVerticalJeu=zout;
       var limiteHoriJeu=2*zout;
+      var versiongame=Date.now();
 
       let game;
       window.onload = function() {
@@ -52,41 +53,54 @@
           {
             this.load.image('sky', 'assets/images/sky.png');
             this.load.image('ground', 'assets/images/platform.png');
-            this.load.image('cannon_head', 'assets/images/cannon_head.png');
-            this.load.image('cannon_body', 'assets/images/cannon_body.png');
+
+            var url;
+            //url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexpinchplugin.min.js';
+
+            url = 'js/rexpinchplugin.min.js';
+            this.load.plugin('rexpinchplugin', url, true);
           }
 
           create ()
           {
+            /// zoom/////
+            var dragScale = this.plugins.get('rexpinchplugin').add(this);
+            var camera = this.cameras.main;
+            var refcamerazoom=camera.zoom;
+            dragScale
+                .on('drag1', function (dragScale) {
+                    if(!bombbool){
+                      var drag1Vector = dragScale.drag1Vector;
+                      camera.scrollX -= drag1Vector.x / camera.zoom;
+                      camera.scrollY -= drag1Vector.y / camera.zoom;
+                    }
+                })
+                .on('pinch', function (dragScale) {
+                    var scaleFactor = dragScale.scaleFactor;
+                    this.myzoom.setText('zoom: '+camera.zoom);
+                    if(camera.zoom>=.34){
+                      camera.zoom *= scaleFactor;
+                    }else{
+                      camera.zoom =.340000001;
+                    }
+                }, this)
+            /// end zoom/////
+
             /////// camera /////
-            this.cameras.main.setBounds(0, 0, gameWidth*limiteHoriJeu, game.config.height*limiteVerticalJeu);
+            this.cameras.main.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
             this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
 
             /////// sky ////////////////
             var skyWidth=this.textures.get('sky').source[0].width;
             var skyHeight=this.textures.get('sky').source[0].height;
-            this.add.image(0, 0, 'sky').setOrigin(0);
-            this.add.image(skyWidth, 0, 'sky').setOrigin(0);
-            this.add.image(2*skyWidth, 0, 'sky').setOrigin(0);
-            this.add.image(3*skyWidth, 0, 'sky').setOrigin(0);
-            this.add.image(4*skyWidth, 0, 'sky').setOrigin(0);
-            this.add.image(5*skyWidth, 0, 'sky').setOrigin(0);
-            this.add.image(6*skyWidth, 0, 'sky').setOrigin(0);
-            this.add.image(0, skyHeight, 'sky').setOrigin(0);
-            this.add.image(skyWidth, skyHeight, 'sky').setOrigin(0);
-            this.add.image(2*skyWidth, skyHeight, 'sky').setOrigin(0);
-            this.add.image(3*skyWidth, skyHeight, 'sky').setOrigin(0);
-            this.add.image(4*skyWidth, skyHeight, 'sky').setOrigin(0);
-            this.add.image(5*skyWidth, skyHeight, 'sky').setOrigin(0);
-            this.add.image(6*skyWidth, skyHeight, 'sky').setOrigin(0);
-            this.add.image(0, 2*skyHeight, 'sky').setOrigin(0);
-            this.add.image(skyWidth, 2*skyHeight, 'sky').setOrigin(0);
-            this.add.image(2*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
-            this.add.image(3*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
-            this.add.image(4*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
-            this.add.image(5*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
-            this.add.image(6*skyWidth, 2*skyHeight, 'sky').setOrigin(0);
+            for (var i = 0; i < 7; i += 1)
+            {
+              for (var j = 0; j < 5; j += 1)
+              {
+                this.add.image(i*skyWidth, j*skyHeight, 'sky').setOrigin(0);
+              }
+            }
             /////// end sky ////////////////
 
             //////// planck.js box2d /////////////
@@ -113,11 +127,39 @@
             this.createGround(3500, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
             this.createGround(4500, zout*game.config.height - 30*groundHeight, groundWidth, groundHeight, false);
 
-            //cannon
-            var cannonHead = this.add.image(130, zout*game.config.height - groundHeight-210, 'cannon_head').setDepth(1).setScale(2);
-            var cannon = this.add.image(130, zout*game.config.height - groundHeight-110, 'cannon_body').setDepth(1).setScale(2);
-
             // bar
+            this.createBar(1750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(2000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1500, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
+            }
+            this.createBar(750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(500, zout*game.config.height -groundHeight-100-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(850, zout*game.config.height - groundHeight-800-i*120, 100, 120, true);
+            }
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1650, zout*game.config.height -groundHeight-800-i*120, 100, 120, true);
+            }
+            this.createBar(1250, zout*game.config.height - groundHeight-800-4.5*120, 1000, 100, true);
+            for (var i = 0; i < 4; i += 1)
+            {
+              this.createBar(1250, zout*game.config.height -groundHeight-1500-i*120, 100, 120, true);
+            }
+
             for (var i = 0; i < 4; i += 1)
             {
               this.createBar(3500, zout*game.config.height - 20*groundHeight-180-i*120, 100, 120, true);
@@ -137,67 +179,40 @@
 
             //cursor
             var pointer = this.input.activePointer;
-            var gfx2 = this.add.graphics().setDefaultStyles({ lineStyle: { width: 40, color: 0xffdd00, alpha: 0.5 } });
-            var angle = 0;
-            var launchVelocity;
-            var squareWidth=500
-            var squareHeight=600
 
-            this.input.on('pointermove', function (pointer) {
-                if (pointer.isDown & zout*pointer.y>zout*game.config.height-squareHeight & zout*pointer.x<squareWidth) {
-                  launchVelocity = this.getLaunchVelocity(cannon,pointer);
-                  var lastPos = null;
-
-                  gfx2.clear();
-                  for (var i = 0; i < 240; i += 6)
-                  {
-                      var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, i);
-
-                      if (lastPos && i % 12 == 0)
-                      {
-                          this.line(gfx2,lastPos.x, lastPos.y, trajectoryPoint.x, trajectoryPoint.y);
-                      }
-
-                      lastPos = trajectoryPoint;
-                  }
-                  var trajectoryPoint = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, 30);
-                  var trajectoryPoint2 = this.getTrajectoryPoint(cannon.x, cannon.y - 100, launchVelocity.x, launchVelocity.y, 1);
-                  angle = Phaser.Math.Angle.BetweenPoints(trajectoryPoint2, trajectoryPoint);
-                  cannonHead.rotation = angle;
-
-                }
-                else{
-                  if (!pointer.isDown) return;
-                  this.cameras.main.stopFollow();
-                  this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
-                }
+            var pospointerdown=0
+            this.input.on('pointerdown', function (pointer) {
+                pospointerdown=pointer.x;
             }, this);
-
-
-            /// viseur///
-            var graphics = this.add.graphics();
-
-            graphics.fillStyle(0xffffff, .2);
-            graphics.fillRect(0, zout*game.config.height-squareHeight, squareWidth, squareHeight);
 
             // ball
             let balls=[];
-            this.clickButton = this.add.text(20, 1000, 'FIR', { fill: '#0f0' })
-              .setFontSize(200)
-              .setInteractive({ useHandCursor: true })
-              .setStyle({ backgroundColor: '#111' })
-              .on('pointerup',  function () {
-                  if(launchVelocity!=undefined){
-                    if(balls.length<6){
-                      balls.push(this.createCircle(cannon.x, cannon.y - 100, 15, true));
-                      let veloci = planck.Vec2(launchVelocity.x/(this.worldScale**(1/2)), launchVelocity.y/(this.worldScale**(1/2)));
-                      let ud=balls[balls.length-1].getUserData();
-                      balls[balls.length-1].setLinearVelocity(veloci);
-                      this.cameras.main.startFollow(ud, true, 0.05, 0.05);
+            let bombbool=false;
+            let bombexception=true;
+            this.input.on('pointerup', function (pointer) {
+              if(bombbool & bombexception){
+                balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
+              }
+              bombexception=true;
+            }, this);
+
+            this.userActions=this.add.text(-600, 100, 'MOVE', { fill: '#0f0' })
+                .setFontSize(200)
+                .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
+                .setScrollFactor(0)
+            this.userActions.on('pointerup',  function () {
+                    if(bombbool){
+                      bombbool=false;
+                      this.userActions.setText('MOVE');
+                    }else{
+                      bombbool=true;
+                      this.userActions.setText('BOMB');
                     }
-                  }
-              }, this);
-            this.clickButton = this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
+                    bombexception=false;
+                }, this);
+
+            this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
@@ -207,14 +222,17 @@
                     this.explosion(balls[balls.length-1]);
                     balls.pop();
                   }
+                  bombexception=false;
                 }, this);
 
-            this.clickButton = this.add.text(50, 100, 'RESET!', { fill: '#0f0' })
+            this.add.text(50, -200, 'RESET!'+versiongame, { fill: '#0f0' })
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
+                .setScrollFactor(0)
                 .on('pointerup',  function () {
                     this.scene.restart();
+                    bombexception=false;
                 }, this);
 
             this.world.on('begin-contact', function(contact) {
@@ -226,17 +244,28 @@
                   if(balls[i].getPosition().x==bodyA.getPosition().x)
                   {
                     balls[i].getFixtureList().m_filterGroupIndex=9;
-                    balls.splice(i, 1);
+                    balls.splice(i, 1);// remove the ith ball
                     break;
                   }
                 }
-
+              }
+              if((bodyA.getFixtureList().getFilterGroupIndex()==11)&(bodyB.getFixtureList().getFilterGroupIndex()==8)){
+                for (var i = 0; i < balls.length; i++)
+                {
+                  if(balls[i].getPosition().x==bodyB.getPosition().x)
+                  {
+                    balls[i].getFixtureList().m_filterGroupIndex=9;
+                    balls.splice(i, 1);// remove the ith ball
+                    break;
+                  }
+                }
               }
             }.bind(this));
 
 
             // actualFps
-            this.myfps=this.add.text(2000, 100, 'FPS', { fill: '#0f0' }).setFontSize(100);
+            this.myfps=this.add.text(1000, 100, 'FPS', { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
+            this.myzoom=this.add.text(100, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100);
           }
 
           update ()
@@ -301,7 +330,7 @@
                   box.setDynamic();
               }
               box.createFixture({shape: planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale),
-                density:10.0});
+                density:10.0,filterGroupIndex:11});
               box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
               return box;
           }
@@ -346,17 +375,6 @@
 
           }
 
-          getLaunchVelocity(cannon,pointer) {
-
-              var dx = (zout*pointer.x - cannon.x)/3;
-              var dy = (zout*pointer.y+210 - cannon.y - 100)/3;
-
-              //dx *= 2;//dx=dx*2
-              //dy *= 2;
-
-              return { x: dx, y: dy };
-          }
-
           line(gfx2,x1, y1, x2, y2) {
               gfx2.beginPath();
               gfx2.moveTo(x1, y1);
@@ -366,7 +384,8 @@
 
           createCircle(posX, posY, width, isDynamic){
               let circle = this.world.createBody({
-                                                type: 'dynamic'
+                                                type: 'dynamic',
+                                                gravityScale: 0,
                                               });
               circle.createFixture({shape: planck.Circle(width/ this.worldScale),
                 density:100.0,
