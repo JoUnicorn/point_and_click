@@ -94,6 +94,7 @@
 
           create ()
           {
+            const UICam = this.cameras.add(0, 0, 800, 800);
             /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
@@ -109,17 +110,18 @@
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
                     this.myzoom.setText('zoom: '+camera.zoom);
-                    if(camera.zoom>=.34){
+                    if(camera.zoom>=zoomapplied){
                       camera.zoom *= scaleFactor;
                     }else{
-                      camera.zoom =.340000001;
+                      camera.zoom =zoomapplied+.000000001;
                     }
                 }, this)
             /// end zoom/////
 
             /////// camera /////
-            this.cameras.main.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
-            this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
+            camera.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
+            camera.setZoom(zoomapplied); //<1 => zoom out
+            UICam.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
 
             //////// planck.js box2d /////////////
@@ -131,6 +133,19 @@
             let gravity = planck.Vec2(0, worldGravity);
             // this is how we create a Box2D world
             this.world = planck.World(gravity);
+
+            /////// sky ////////////////
+            var skyWidth=this.textures.get('sky').source[0].width;
+            var skyHeight=this.textures.get('sky').source[0].height;
+            for (var i = 0; i < 7; i += 1)
+            {
+              for (var j = 0; j < 5; j += 1)
+              {
+                this.add.image(i*skyWidth, j*skyHeight, 'sky').setOrigin(0);
+              }
+            }
+            /////// end sky ////////////////
+
 
             // add the tilemap
             let map = this.make.tilemap({key: 'level1'});
@@ -163,7 +178,7 @@
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
-                .setScrollFactor(0)
+                //.setScrollFactor(0)
             this.userActions.on('pointerup',  function () {
                     if(bombbool){
                       bombbool=false;
@@ -175,6 +190,8 @@
                     bombexception=false;
                 }, this);
 
+            camera.ignore([ this.userActions]);
+            
             this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
                 .setFontSize(200)
                 .setInteractive({ useHandCursor: true })
@@ -270,7 +287,7 @@
               part.setLinearVelocity(rayDir);
               parts.push(part);
             }
-            this.cameras.main.stopFollow();
+            camera.stopFollow();
             this.time.addEvent({
                 delay: partpropagationtime,
                 callbackScope: this,
