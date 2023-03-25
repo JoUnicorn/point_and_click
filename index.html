@@ -94,7 +94,7 @@
 
           create ()
           {
-            const UICam = this.cameras.add(0, 0, 800, 800);
+            const UICam = this.cameras.add(0, 0, gameWidth, gameHeight);
             /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
@@ -121,7 +121,6 @@
             /////// camera /////
             camera.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
             camera.setZoom(zoomapplied); //<1 => zoom out
-            UICam.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
 
             //////// planck.js box2d /////////////
@@ -135,15 +134,7 @@
             this.world = planck.World(gravity);
 
             /////// sky ////////////////
-            var skyWidth=this.textures.get('sky').source[0].width;
-            var skyHeight=this.textures.get('sky').source[0].height;
-            for (var i = 0; i < 7; i += 1)
-            {
-              for (var j = 0; j < 5; j += 1)
-              {
-                this.add.image(i*skyWidth, j*skyHeight, 'sky').setOrigin(0);
-              }
-            }
+            this.sky=this.add.image(0, 0, 'sky').setOrigin(0);
             /////// end sky ////////////////
 
 
@@ -174,11 +165,10 @@
               bombexception=true;
             }, this);
 
-            this.userActions=this.add.text(-600, 100, 'MOVE', { fill: '#0f0' })
-                .setFontSize(200)
+            this.userActions=this.add.text(0, game.config.height-100, 'MOVE', { fill: '#0f0' })
+                .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
-                //.setScrollFactor(0)
             this.userActions.on('pointerup',  function () {
                     if(bombbool){
                       bombbool=false;
@@ -189,11 +179,9 @@
                     }
                     bombexception=false;
                 }, this);
-
-            camera.ignore([ this.userActions]);
             
-            this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
-                .setFontSize(200)
+            this.explosionText=this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
+                .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
                 .setScrollFactor(0)
@@ -205,7 +193,7 @@
                   bombexception=false;
                 }, this);
 
-            this.add.text(50, -200, 'RESET!'+versiongame, { fill: '#0f0' })
+              this.resetText=this.add.text(50, -200, 'RESET!'+versiongame, { fill: '#0f0' })
                 .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
@@ -246,6 +234,8 @@
             // actualFps
             this.myfps=this.add.text(1000, 100, 'FPS', { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
             this.myzoom=this.add.text(100, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100);
+            UICam.ignore([ this.sky,map]);
+            camera.ignore([ this.userActions,this.explosionText,this.resetText,this.myfps,this.myzoom]);
           }
 
           update ()
@@ -287,7 +277,7 @@
               part.setLinearVelocity(rayDir);
               parts.push(part);
             }
-            camera.stopFollow();
+            this.cameras.main.stopFollow();
             this.time.addEvent({
                 delay: partpropagationtime,
                 callbackScope: this,
