@@ -94,7 +94,7 @@
 
           create ()
           {
-            const UICam = this.cameras.add(0, 0, gameWidth, gameHeight);
+            this.UICam = this.cameras.add(0, 0, gameWidth, gameHeight);
             /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
@@ -234,7 +234,7 @@
             // actualFps
             this.myfps=this.add.text(10, 40, 'FPS', { fill: '#000000' }).setFontSize(30).setScrollFactor(0);
             this.myzoom=this.add.text(10, 10, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(30);
-            UICam.ignore([ this.sky,map]);
+            this.UICam.ignore([ this.sky,map]);
             camera.ignore([ this.userActions,this.explosionText,this.resetText,this.myfps,this.myzoom]);
           }
 
@@ -306,6 +306,7 @@
               // create the Box2D block with old createBox method
               let box2DBlock = this.createBar(rectangle.centerX, rectangle.centerY, block.width, 
               block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              this.UICam.ignore([ box2DBlock]);
           }
 
           createBox(posX, posY, width, height, isDynamic){
@@ -324,6 +325,7 @@
               let userData = this.add.image(0, 0, 'ground');
 
               box.setUserData(userData);
+              return box;
           }
 
           createBar(posX, posY, width, height, isDynamic, blockType, color){
@@ -337,6 +339,7 @@
               userData.lineStyle(4, borderColor.color)
               userData.strokeRect(- width / 2 + 2, - height / 2 + 2, width - 4, height - 4);
               box.setUserData(userData);
+              return box;
           }
 
           getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
