@@ -94,7 +94,7 @@
 
           create ()
           {
-            this.UICam = this.cameras.add(0, 0, gameWidth, gameHeight);
+            const UICam = this.cameras.add(0, 0, gameWidth, gameHeight);
             /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
@@ -234,8 +234,17 @@
             // actualFps
             this.myfps=this.add.text(10, 40, 'FPS', { fill: '#000000' }).setFontSize(30).setScrollFactor(0);
             this.myzoom=this.add.text(10, 10, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(30);
-            this.UICam.ignore([ this.sky,map]);
-            camera.ignore([ this.userActions,this.explosionText,this.resetText,this.myfps,this.myzoom]);
+            this.itemText=[]
+            this.itemNonText=[]
+            this.children.list.forEach(function (item) {
+                  if(item.type=="Text"){
+                    this.itemText.push(item);
+                  }else{
+                    this.itemNonText.push(item);
+                  }
+                }, this);
+            UICam.ignore(this.itemNonText);
+            camera.ignore(this.itemText);
           }
 
           update ()
@@ -306,7 +315,6 @@
               // create the Box2D block with old createBox method
               let box2DBlock = this.createBar(rectangle.centerX, rectangle.centerY, block.width, 
               block.height, blockObject.dynamic, blockObject.type, blockObject.color);
-              this.UICam.ignore([ box2DBlock]);
           }
 
           createBox(posX, posY, width, height, isDynamic){
