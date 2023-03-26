@@ -95,6 +95,7 @@
             url = 'js/rexpinchplugin.min.js';
             this.load.plugin('rexpinchplugin', url, true);
             this.load.tilemapTiledJSON("level1", "assets/maps/level1.json");
+            this.load.atlas('explosion', 'assets/particles/explosion.png', 'assets/particles/explosion.json');
           }
 
           create ()
@@ -237,35 +238,9 @@
                 if(bodyB.getLinearVelocity().x!=0){
                   bodyB.getFixtureList().m_filterGroupIndex=13;
                   // create a particle manager with the same image used for the ball
-                  let particleEmitter = this.add.particles('ball');
+                  let particleEmitter = this.emitterExplosion();
+                  particleEmitter.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
 
-                  // create a particle emitter
-                  let emitter = particleEmitter.createEmitter({
-                        
-                      // particle life span, in milliseconds
-                      lifespan : 1500,
-
-                      // particle speed range
-                      speed : {
-                          min : 200,
-                          max : 400
-                      },
-
-                      // particle alpha tweening
-                      alpha : {
-                          start : 0.7,
-                          end : 0.2
-                      },
-
-                      // particle scale tweening
-                      scale : {
-                          start : 0.5,
-                          end : 0.25
-                      }
-                  });
-
-                  // let the emitter fire 100 particles at ball position
-                  emitter.explode(100, bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
 
                 }
               }
@@ -306,6 +281,58 @@
 
             var loop = this.sys.game.loop;
             this.myfps.setText('actualFps: ' + loop.actualFps.toFixed(0));
+          }
+
+          emitterExplosion(){
+              var particles = this.add.particles('explosion');
+
+              //  Setting { min: x, max: y } will pick a random value between min and max
+              //  Setting { start: x, end: y } will ease between start and end
+
+              particles.createEmitter({
+                  frame: [ 'smoke-puff', 'cloud', 'smoke-puff' ],
+                  angle: { min: 240, max: 300 },
+                  speed: { min: 200, max: 300 },
+                  quantity: 6,
+                  lifespan: 2000,
+                  alpha: { start: 1, end: 0 },
+                  scale: { start: 1.5, end: 0.5 },
+                  on: false
+              });
+
+              particles.createEmitter({
+                  frame: 'red',
+                  angle: { start: 0, end: 360, steps: 32 },
+                  lifespan: 1000,
+                  speed: 400,
+                  quantity: 32,
+                  scale: { start: 0.3, end: 0 },
+                  on: false
+              });
+
+              particles.createEmitter({
+                  frame: 'stone',
+                  angle: { min: 240, max: 300 },
+                  speed: { min: 400, max: 600 },
+                  quantity: { min: 2, max: 10 },
+                  lifespan: 4000,
+                  alpha: { start: 1, end: 0 },
+                  scale: { min: 0.05, max: 0.4 },
+                  rotate: { start: 0, end: 360, ease: 'Back.easeOut' },
+                  gravityY: 800,
+                  on: false
+              });
+
+              particles.createEmitter({
+                  frame: 'muzzleflash2',
+                  lifespan: 200,
+                  scale: { start: 2, end: 0 },
+                  rotate: { start: 0, end: 180 },
+                  on: false
+              });
+
+              return particles;
+
           }
 
           explosion(ball){
