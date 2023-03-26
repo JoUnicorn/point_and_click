@@ -38,7 +38,12 @@
               dynamic: false,
               type: TERRAIN
           },
-          "Breakable": {
+          "BreakableRect": {
+              color: 0x6e5d42,
+              dynamic: true,
+              type: BREAKABLE
+          },
+          "BreakableCircle": {
               color: 0x6e5d42,
               dynamic: true,
               type: BREAKABLE
@@ -160,7 +165,7 @@
             let bombexception=true;
             this.input.on('pointerup', function (pointer) {
               if(bombbool & bombexception){
-                balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
+                balls.push(this.createBomb(pointer.worldX, pointer.worldY, 30, true));
               }
               bombexception=true;
             }, this);
@@ -228,6 +233,42 @@
                   }
                 }
               }
+              if((bodyA.getFixtureList().getFilterGroupIndex()==12)&(bodyB.getFixtureList().getFilterGroupIndex()==11)){
+                if(bodyB.getLinearVelocity().x!=0){
+                  bodyB.getFixtureList().m_filterGroupIndex=13;
+                  // create a particle manager with the same image used for the ball
+                  let particleEmitter = this.add.particles('ball');
+
+                  // create a particle emitter
+                  let emitter = particleEmitter.createEmitter({
+                        
+                      // particle life span, in milliseconds
+                      lifespan : 1500,
+
+                      // particle speed range
+                      speed : {
+                          min : 200,
+                          max : 400
+                      },
+
+                      // particle alpha tweening
+                      alpha : {
+                          start : 0.7,
+                          end : 0.2
+                      },
+
+                      // particle scale tweening
+                      scale : {
+                          start : 0.5,
+                          end : 0.25
+                      }
+                  });
+
+                  // let the emitter fire 100 particles at ball position
+                  emitter.explode(100, bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
+
+                }
+              }
             }.bind(this));
 
 
@@ -245,15 +286,22 @@
 
             this.world.clearForces();
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
-              if(b.getFixtureList().getFilterGroupIndex()==9){
+              var filtergrpindex=b.getFixtureList().getFilterGroupIndex();
+              if(filtergrpindex==9){
                 this.explosion(b);
               }
-              let bodyPosition = b.getPosition();
-              let bodyAngle = b.getAngle();
-              let userData = b.getUserData();
-              userData.x = bodyPosition.x * this.worldScale;
-              userData.y = bodyPosition.y * this.worldScale;
-              userData.rotation = bodyAngle;
+              if(filtergrpindex==13){
+                b.getUserData().clear();
+                this.world.destroyBody(b);
+              }
+              if(filtergrpindex!=9 & filtergrpindex!=13){
+                let bodyPosition = b.getPosition();
+                let bodyAngle = b.getAngle();
+                let userData = b.getUserData();
+                userData.x = bodyPosition.x * this.worldScale;
+                userData.y = bodyPosition.y * this.worldScale;
+                userData.rotation = bodyAngle;
+              }
             }
 
             var loop = this.sys.game.loop;
@@ -304,31 +352,33 @@
               let rectangle = new Phaser.Geom.Rectangle(block.x, block.y, block.width, block.height);
 
               // create the Box2D block with old createBox method
-              let box2DBlock = this.createBar(rectangle.centerX, rectangle.centerY, block.width, 
-              block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              if(block.type=="Terrain"){
+                let box2DBlock = this.createGround(rectangle.centerX, rectangle.centerY, block.width, 
+                block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              }
+              if(block.type=="BreakableRect"){
+                let box2DBlock = this.createBar(rectangle.centerX, rectangle.centerY, block.width, 
+                block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              }
+              if(block.type=="BreakableCircle"){
+                let box2DBlock = this.createCircle(rectangle.centerX, rectangle.centerY, block.width, 
+                block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              }
           }
 
-          createBox(posX, posY, width, height, isDynamic){
+          createBox(posX, posY, width, height, isDynamic,filterGroupIndex){
               let box = this.world.createBody();
               if(isDynamic){
                   box.setDynamic();
               }
               box.createFixture({shape: planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale),
-                density:10.0,filterGroupIndex:11});
+                density:10.0,filterGroupIndex:filterGroupIndex});
               box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
               return box;
           }
 
-          createGround(posX, posY, width, height, isDynamic){
-              let box = this.createBox(posX, posY, width, height, isDynamic);
-              let userData = this.add.image(0, 0, 'ground');
-
-              box.setUserData(userData);
-              return box;
-          }
-
-          createBar(posX, posY, width, height, isDynamic, blockType, color){
-              let box = this.createBox(posX, posY, width, height, isDynamic);
+          createGround(posX, posY, width, height, isDynamic, blockType, color){
+              let box = this.createBox(posX, posY, width, height, isDynamic,12);
               let borderColor = Phaser.Display.Color.IntegerToColor(color);
               borderColor.darken(20);
 
@@ -337,6 +387,41 @@
               userData.fillRect(- width / 2, - height / 2, width, height);
               userData.lineStyle(4, borderColor.color)
               userData.strokeRect(- width / 2 + 2, - height / 2 + 2, width - 4, height - 4);
+              box.setUserData(userData);
+              return box;
+          }
+
+          createBar(posX, posY, width, height, isDynamic, blockType, color){
+              let box = this.createBox(posX, posY, width, height, isDynamic,11);
+              let borderColor = Phaser.Display.Color.IntegerToColor(color);
+              borderColor.darken(20);
+
+              let userData = this.add.graphics();
+              userData.fillStyle(color, 1);
+              userData.fillRect(- width / 2, - height / 2, width, height);
+              userData.lineStyle(4, borderColor.color)
+              userData.strokeRect(- width / 2 + 2, - height / 2 + 2, width - 4, height - 4);
+              box.setUserData(userData);
+              return box;
+          }
+
+          createCircle(posX, posY, width, height, isDynamic, blockType, color){
+              let box = this.world.createBody();
+              if(isDynamic){
+                  box.setDynamic();
+              }
+              box.createFixture({shape: planck.Circle(width/2/ this.worldScale),
+                density:10.0,filterGroupIndex:11});
+              box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+
+              let borderColor = Phaser.Display.Color.IntegerToColor(color);
+              borderColor.darken(20);
+
+              let userData = this.add.graphics();
+              userData.fillStyle(color, 1);
+              userData.fillCircle(0, 0, width/2);
+              userData.lineStyle(4, borderColor.color)
+              userData.strokeCircle(0, 0, width/2 - 4);
               box.setUserData(userData);
               return box;
           }
@@ -370,7 +455,7 @@
               gfx2.stroke();
           }
 
-          createCircle(posX, posY, width, isDynamic){
+          createBomb(posX, posY, width, isDynamic){
               let circle = this.world.createBody({
                                                 type: 'dynamic',
                                                 gravityScale: 0,
