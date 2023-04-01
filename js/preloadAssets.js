@@ -10,6 +10,7 @@ export class PreloadAssets extends Phaser.Scene{
     var url = 'js/rexpinchplugin.min.js';
     this.load.plugin('rexpinchplugin', url, true);
     this.load.tilemapTiledJSON("level1", "assets/maps/level1.json");
+    this.load.tilemapTiledJSON("level2", "assets/maps/level2.json");
     this.load.atlas('explosion', 'assets/particles/explosion.png', 'assets/particles/explosion.json');
   }
 

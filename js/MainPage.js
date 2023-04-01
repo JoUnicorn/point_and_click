@@ -13,14 +13,30 @@ export class MainPage extends Phaser.Scene{
         this.sky=this.add.image(0, 0, 'sky').setOrigin(0);
         /////// end sky ////////////////
 
-        this.startPlay=this.add.text(GameOptions.gameWidth/2-100, GameOptions.gameHeight/2, 'MOVE', { fill: '#0f0' })
-        .setFontSize(100)
+        this.startPlay=this.add.text(GameOptions.gameWidth/4, GameOptions.gameHeight-100, 'STAGE 1', { fill: '#0f0' })
+        .setFontSize(50)
         .setInteractive({ useHandCursor: true })
         .setStyle({ backgroundColor: '#111' })
         this.startPlay.on('pointerup',  function () {
-                this.scene.start('PlayGame');
+                this.scene.start('PlayGame',{ level: "level1" });
+            }, this);
+        
+        this.startPlay=this.add.text(GameOptions.gameWidth/4*2, GameOptions.gameHeight-100*2, 'STAGE 2', { fill: '#0f0' })
+        .setFontSize(50)
+        .setInteractive({ useHandCursor: true })
+        .setStyle({ backgroundColor: '#111' })
+        this.startPlay.on('pointerup',  function () {
+                this.scene.start('PlayGame',{ level: "level2" });
             }, this);
 
+        this.startPlay=this.add.text(GameOptions.gameWidth/4, GameOptions.gameHeight-100*3, 'STAGE 3', { fill: '#0f0' })
+        .setFontSize(50)
+        .setInteractive({ useHandCursor: true })
+        .setStyle({ backgroundColor: '#111' })
+        this.startPlay.on('pointerup',  function () {
+                this.scene.start('PlayGame',{ level: "level2" });
+            }, this);
+    
     }
   
     update ()

@@ -8,7 +8,11 @@ export class PlayGame extends Phaser.Scene{
     constructor(){
         super("PlayGame");
     }
-    
+
+    init(data){
+      this.levelChosen=data.level;
+    }
+
     create ()
     {
       const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
@@ -56,7 +60,7 @@ export class PlayGame extends Phaser.Scene{
   
   
       // add the tilemap
-      let map = this.make.tilemap({key: 'level1'});
+      let map = this.make.tilemap({key: this.levelChosen});
       // select all objects in Object Layer zero, the first - and only, at the moment - level
       let blocks = map.objects[0].objects;
   
@@ -157,7 +161,7 @@ export class PlayGame extends Phaser.Scene{
         .setStyle({ backgroundColor: '#111' })
         .setScrollFactor(0)
         .on('pointerup',  function () {
-            this.scene.restart();
+            this.scene.start('MainPage');
             bombexception=false;
         }, this);
     
@@ -189,7 +193,7 @@ export class PlayGame extends Phaser.Scene{
           this.box2DBlock.shift();
           if(this.box2DBlock.length==0){
              this.scene.start('MainPage');
-           }
+          }
         }
         if(filtergrpindex!=9 & filtergrpindex!=13){
           let bodyPosition = b.getPosition();
