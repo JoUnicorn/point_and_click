@@ -15,7 +15,7 @@ export class PreloadAssets extends Phaser.Scene{
 
   create ()
   {
-    this.scene.start('PlayGame');
+    this.scene.start('MainPage');
   }
 
 };

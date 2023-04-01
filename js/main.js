@@ -3,6 +3,7 @@
 // http://localhost:8080/
 
 import { PreloadAssets } from './preloadAssets.js';
+import { MainPage } from './MainPage.js';
 import { PlayGame } from './playGame.js';
 import { GameOptions } from './gameOptions.js';
 
@@ -19,7 +20,7 @@ window.onload = function() {
           // smoothStep: false,
           target: GameOptions.fps
         },
-        scene: [PreloadAssets, PlayGame]
+        scene: [PreloadAssets, MainPage, PlayGame]
     }
     game = new Phaser.Game(gameConfig);
     window.focus();

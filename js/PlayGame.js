@@ -163,6 +163,8 @@ export class PlayGame extends Phaser.Scene{
       // actualFps
       this.myfps=this.add.text(10, 40, 'FPS', { fill: '#000000' }).setFontSize(30).setScrollFactor(0);
       this.myzoom=this.add.text(10, 10, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(30);
+
+      // camera scope
       UICam.ignore(this.children.list.filter(function (item){return item.type!="Text"}));
       camera.ignore(this.children.list.filter(function (item){return item.type=="Text"}));
     }
