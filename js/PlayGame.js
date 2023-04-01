@@ -31,10 +31,10 @@ export class PlayGame extends Phaser.Scene{
           .on('pinch', function (dragScale) {
               var scaleFactor = dragScale.scaleFactor;
               this.myzoom.setText('zoom: '+camera.zoom);
-              if(camera.zoom>=zoomapplied){
+              if(camera.zoom>=GameOptions.zoomapplied){
                 camera.zoom *= scaleFactor;
               }else{
-                camera.zoom =zoomapplied+.000000001;
+                camera.zoom =GameOptions.zoomapplied+.000000001;
               }
           }, this)
       /// end zoom/////
