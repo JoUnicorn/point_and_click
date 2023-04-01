@@ -4,7 +4,7 @@
 
 import { PreloadAssets } from './preloadAssets.js';
 import { MainPage } from './MainPage.js';
-import { PlayGame } from './playGame.js';
+import { PlayGame } from './PlayGame.js';
 import { GameOptions } from './gameOptions.js';
 
 let game;
