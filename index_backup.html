@@ -25,6 +25,41 @@
       var limiteHoriJeu=2*zout;
       var versiongame=Date.now();
 
+      // constants to store block types
+      const TERRAIN = 0;
+      const IDOL = 1;
+      const BREAKABLE = 2;
+      const UNBREAKABLE = 3;
+      
+      // constant to store all block types imported from Tiled
+      const BLOCKTYPES = {
+          "Terrain": {
+              color: 0x049b15,
+              dynamic: false,
+              type: TERRAIN
+          },
+          "BreakableRect": {
+              color: 0x6e5d42,
+              dynamic: true,
+              type: BREAKABLE
+          },
+          "BreakableCircle": {
+              color: 0x6e5d42,
+              dynamic: true,
+              type: BREAKABLE
+          },
+          "Unbreakable": {
+              color: 0x3b3b3b,
+              dynamic: true,
+              type: UNBREAKABLE
+          },
+          "Idol": {
+              color: 0xfff43a,
+              dynamic: true,
+              type: IDOL
+          }
+      }      
+
       let game;
       window.onload = function() {
           let gameConfig = {
@@ -59,10 +94,13 @@
 
             url = 'js/rexpinchplugin.min.js';
             this.load.plugin('rexpinchplugin', url, true);
+            this.load.tilemapTiledJSON("level1", "assets/maps/level1.json");
+            this.load.atlas('explosion', 'assets/particles/explosion.png', 'assets/particles/explosion.json');
           }
 
           create ()
           {
+            const UICam = this.cameras.add(0, 0, gameWidth, gameHeight);
             /// zoom/////
             var dragScale = this.plugins.get('rexpinchplugin').add(this);
             var camera = this.cameras.main;
@@ -78,30 +116,18 @@
                 .on('pinch', function (dragScale) {
                     var scaleFactor = dragScale.scaleFactor;
                     this.myzoom.setText('zoom: '+camera.zoom);
-                    if(camera.zoom>=.34){
+                    if(camera.zoom>=zoomapplied){
                       camera.zoom *= scaleFactor;
                     }else{
-                      camera.zoom =.340000001;
+                      camera.zoom =zoomapplied+.000000001;
                     }
                 }, this)
             /// end zoom/////
 
             /////// camera /////
-            this.cameras.main.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
-            this.cameras.main.setZoom(zoomapplied); //<1 => zoom out
+            camera.setBounds(0, 0, game.config.width*limiteHoriJeu, game.config.height*limiteVerticalJeu);
+            camera.setZoom(zoomapplied); //<1 => zoom out
             /////// end camera /////
-
-            /////// sky ////////////////
-            var skyWidth=this.textures.get('sky').source[0].width;
-            var skyHeight=this.textures.get('sky').source[0].height;
-            for (var i = 0; i < 7; i += 1)
-            {
-              for (var j = 0; j < 5; j += 1)
-              {
-                this.add.image(i*skyWidth, j*skyHeight, 'sky').setOrigin(0);
-              }
-            }
-            /////// end sky ////////////////
 
             //////// planck.js box2d /////////////
             // Box2D works with meters. We need to convert meters to pixels.
@@ -113,70 +139,19 @@
             // this is how we create a Box2D world
             this.world = planck.World(gravity);
 
-            //ground
-            var groundHeight=this.textures.get('ground').source[0].height;
-            var groundWidth=this.textures.get('ground').source[0].width;
-            for (var i = 0; i < 15; i += 1)
-            {
-              this.createGround(i*groundWidth, zout*game.config.height - groundHeight, groundWidth, groundHeight, false);
-            }
-            for (var i = 1; i < 30; i += 1)
-            {
-              this.createGround(14*groundWidth, zout*game.config.height - i*groundHeight, groundWidth, groundHeight, false);
-            }
-            this.createGround(3500, zout*game.config.height - 20*groundHeight, groundWidth, groundHeight, false);
-            this.createGround(4500, zout*game.config.height - 30*groundHeight, groundWidth, groundHeight, false);
+            /////// sky ////////////////
+            this.sky=this.add.image(0, 0, 'sky').setOrigin(0);
+            /////// end sky ////////////////
 
-            // bar
-            this.createBar(1750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(2000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1500, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
-            }
-            this.createBar(750, zout*game.config.height - groundHeight-100-4.5*120, 800, 100, true);
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1000, zout*game.config.height - groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(500, zout*game.config.height -groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(850, zout*game.config.height - groundHeight-800-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1650, zout*game.config.height -groundHeight-800-i*120, 100, 120, true);
-            }
-            this.createBar(1250, zout*game.config.height - groundHeight-800-4.5*120, 1000, 100, true);
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(1250, zout*game.config.height -groundHeight-1500-i*120, 100, 120, true);
-            }
 
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(3500, zout*game.config.height - 20*groundHeight-180-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(4500, zout*game.config.height - 20*groundHeight-520-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(4200, zout*game.config.height - 20*groundHeight-100-i*120, 100, 120, true);
-            }
-            for (var i = 0; i < 4; i += 1)
-            {
-              this.createBar(4800, zout*game.config.height - 20*groundHeight-100-i*120, 100, 120, true);
-            }
-
+            // add the tilemap
+            let map = this.make.tilemap({key: 'level1'});
+            // select all objects in Object Layer zero, the first - and only, at the moment - level
+            let blocks = map.objects[0].objects;
+    
+            // looping through all blocks and execute addBlock method
+            blocks.forEach(blocks => this.addBlock(blocks));
+            
             //cursor
             var pointer = this.input.activePointer;
 
@@ -191,16 +166,15 @@
             let bombexception=true;
             this.input.on('pointerup', function (pointer) {
               if(bombbool & bombexception){
-                balls.push(this.createCircle(pointer.worldX, pointer.worldY, 30, true));
+                balls.push(this.createBomb(pointer.worldX, pointer.worldY, 30, true));
               }
               bombexception=true;
             }, this);
 
-            this.userActions=this.add.text(-600, 100, 'MOVE', { fill: '#0f0' })
-                .setFontSize(200)
+            this.userActions=this.add.text(20, game.config.height-100, 'MOVE', { fill: '#0f0' })
+                .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
-                .setScrollFactor(0)
             this.userActions.on('pointerup',  function () {
                     if(bombbool){
                       bombbool=false;
@@ -211,9 +185,9 @@
                     }
                     bombexception=false;
                 }, this);
-
-            this.add.text(game.config.width+600, game.config.height+400, 'EXP', { fill: '#0f0' })
-                .setFontSize(200)
+            
+            this.explosionText=this.add.text(game.config.width-200, game.config.height-100, 'EXP', { fill: '#0f0' })
+                .setFontSize(100)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
                 .setScrollFactor(0)
@@ -225,8 +199,8 @@
                   bombexception=false;
                 }, this);
 
-            this.add.text(50, -200, 'RESET!'+versiongame, { fill: '#0f0' })
-                .setFontSize(100)
+              this.resetText=this.add.text(game.config.width-370, 50, 'RESET!'+versiongame, { fill: '#0f0' })
+                .setFontSize(30)
                 .setInteractive({ useHandCursor: true })
                 .setStyle({ backgroundColor: '#111' })
                 .setScrollFactor(0)
@@ -260,12 +234,24 @@
                   }
                 }
               }
+              if((bodyA.getFixtureList().getFilterGroupIndex()==12)&(bodyB.getFixtureList().getFilterGroupIndex()==11)){
+                if(bodyB.getLinearVelocity().x!=0){
+                  bodyB.getFixtureList().m_filterGroupIndex=13;
+                  // create a particle manager with the same image used for the ball
+                  let particleEmitter = this.emitterExplosion();
+                  particleEmitter.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
+
+
+                }
+              }
             }.bind(this));
 
 
             // actualFps
-            this.myfps=this.add.text(1000, 100, 'FPS', { fill: '#000000' }).setFontSize(100).setScrollFactor(0);
-            this.myzoom=this.add.text(100, 100, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(100);
+            this.myfps=this.add.text(10, 40, 'FPS', { fill: '#000000' }).setFontSize(30).setScrollFactor(0);
+            this.myzoom=this.add.text(10, 10, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(30);
+            UICam.ignore(this.children.list.filter(function (item){return item.type!="Text"}));
+            camera.ignore(this.children.list.filter(function (item){return item.type=="Text"}));
           }
 
           update ()
@@ -275,19 +261,78 @@
 
             this.world.clearForces();
             for (let b = this.world.getBodyList(); b; b = b.getNext()){
-              if(b.getFixtureList().getFilterGroupIndex()==9){
+              var filtergrpindex=b.getFixtureList().getFilterGroupIndex();
+              if(filtergrpindex==9){
                 this.explosion(b);
               }
-              let bodyPosition = b.getPosition();
-              let bodyAngle = b.getAngle();
-              let userData = b.getUserData();
-              userData.x = bodyPosition.x * this.worldScale;
-              userData.y = bodyPosition.y * this.worldScale;
-              userData.rotation = bodyAngle;
+              if(filtergrpindex==13){
+                b.getUserData().clear();
+                this.world.destroyBody(b);
+              }
+              if(filtergrpindex!=9 & filtergrpindex!=13){
+                let bodyPosition = b.getPosition();
+                let bodyAngle = b.getAngle();
+                let userData = b.getUserData();
+                userData.x = bodyPosition.x * this.worldScale;
+                userData.y = bodyPosition.y * this.worldScale;
+                userData.rotation = bodyAngle;
+              }
             }
 
             var loop = this.sys.game.loop;
             this.myfps.setText('actualFps: ' + loop.actualFps.toFixed(0));
+          }
+
+          emitterExplosion(){
+              var particles = this.add.particles('explosion');
+
+              //  Setting { min: x, max: y } will pick a random value between min and max
+              //  Setting { start: x, end: y } will ease between start and end
+
+              particles.createEmitter({
+                  frame: [ 'smoke-puff', 'cloud', 'smoke-puff' ],
+                  angle: { min: 240, max: 300 },
+                  speed: { min: 200, max: 300 },
+                  quantity: 6,
+                  lifespan: 2000,
+                  alpha: { start: 1, end: 0 },
+                  scale: { start: 1.5, end: 0.5 },
+                  on: false
+              });
+
+              particles.createEmitter({
+                  frame: 'red',
+                  angle: { start: 0, end: 360, steps: 32 },
+                  lifespan: 1000,
+                  speed: 400,
+                  quantity: 32,
+                  scale: { start: 0.3, end: 0 },
+                  on: false
+              });
+
+              particles.createEmitter({
+                  frame: 'stone',
+                  angle: { min: 240, max: 300 },
+                  speed: { min: 400, max: 600 },
+                  quantity: { min: 2, max: 10 },
+                  lifespan: 4000,
+                  alpha: { start: 1, end: 0 },
+                  scale: { min: 0.05, max: 0.4 },
+                  rotate: { start: 0, end: 360, ease: 'Back.easeOut' },
+                  gravityY: 800,
+                  on: false
+              });
+
+              particles.createEmitter({
+                  frame: 'muzzleflash2',
+                  lifespan: 200,
+                  scale: { start: 2, end: 0 },
+                  rotate: { start: 0, end: 180 },
+                  on: false
+              });
+
+              return particles;
+
           }
 
           explosion(ball){
@@ -324,33 +369,88 @@
 
           }
 
-          createBox(posX, posY, width, height, isDynamic){
+          // method to add a totem block
+          addBlock(block) {
+
+              // get block object
+              let blockObject = BLOCKTYPES[block.type];
+
+              // we store block coordinates inside a Phaser Rectangle just to get its center
+              let rectangle = new Phaser.Geom.Rectangle(block.x, block.y, block.width, block.height);
+
+              // create the Box2D block with old createBox method
+              if(block.type=="Terrain"){
+                let box2DBlock = this.createGround(rectangle.centerX, rectangle.centerY, block.width, 
+                block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              }
+              if(block.type=="BreakableRect"){
+                let box2DBlock = this.createBar(rectangle.centerX, rectangle.centerY, block.width, 
+                block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              }
+              if(block.type=="BreakableCircle"){
+                let box2DBlock = this.createCircle(rectangle.centerX, rectangle.centerY, block.width, 
+                block.height, blockObject.dynamic, blockObject.type, blockObject.color);
+              }
+          }
+
+          createBox(posX, posY, width, height, isDynamic,filterGroupIndex){
               let box = this.world.createBody();
               if(isDynamic){
                   box.setDynamic();
               }
               box.createFixture({shape: planck.Box(width / 2 / this.worldScale, height / 2 / this.worldScale),
-                density:10.0,filterGroupIndex:11});
+                density:10.0,filterGroupIndex:filterGroupIndex});
               box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
               return box;
           }
 
-          createGround(posX, posY, width, height, isDynamic){
-              let box = this.createBox(posX, posY, width, height, isDynamic);
-              let userData = this.add.image(0, 0, 'ground');
+          createGround(posX, posY, width, height, isDynamic, blockType, color){
+              let box = this.createBox(posX, posY, width, height, isDynamic,12);
+              let borderColor = Phaser.Display.Color.IntegerToColor(color);
+              borderColor.darken(20);
 
+              let userData = this.add.graphics();
+              userData.fillStyle(color, 1);
+              userData.fillRect(- width / 2, - height / 2, width, height);
+              userData.lineStyle(4, borderColor.color)
+              userData.strokeRect(- width / 2 + 2, - height / 2 + 2, width - 4, height - 4);
               box.setUserData(userData);
+              return box;
           }
 
-          createBar(posX, posY, width, height, isDynamic){
-              let box = this.createBox(posX, posY, width, height, isDynamic);
-              var color = new Phaser.Display.Color();
-              color.random();
-              color.brighten(50).saturate(100);
+          createBar(posX, posY, width, height, isDynamic, blockType, color){
+              let box = this.createBox(posX, posY, width, height, isDynamic,11);
+              let borderColor = Phaser.Display.Color.IntegerToColor(color);
+              borderColor.darken(20);
+
               let userData = this.add.graphics();
-              userData.fillStyle(color.color, 1);
+              userData.fillStyle(color, 1);
               userData.fillRect(- width / 2, - height / 2, width, height);
+              userData.lineStyle(4, borderColor.color)
+              userData.strokeRect(- width / 2 + 2, - height / 2 + 2, width - 4, height - 4);
               box.setUserData(userData);
+              return box;
+          }
+
+          createCircle(posX, posY, width, height, isDynamic, blockType, color){
+              let box = this.world.createBody();
+              if(isDynamic){
+                  box.setDynamic();
+              }
+              box.createFixture({shape: planck.Circle(width/2/ this.worldScale),
+                density:10.0,filterGroupIndex:11});
+              box.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+
+              let borderColor = Phaser.Display.Color.IntegerToColor(color);
+              borderColor.darken(20);
+
+              let userData = this.add.graphics();
+              userData.fillStyle(color, 1);
+              userData.fillCircle(0, 0, width/2);
+              userData.lineStyle(4, borderColor.color)
+              userData.strokeCircle(0, 0, width/2 - 4);
+              box.setUserData(userData);
+              return box;
           }
 
           getTrajectoryPoint(startX, startY, velocityX, velocityY, n) {
@@ -382,7 +482,7 @@
               gfx2.stroke();
           }
 
-          createCircle(posX, posY, width, isDynamic){
+          createBomb(posX, posY, width, isDynamic){
               let circle = this.world.createBody({
                                                 type: 'dynamic',
                                                 gravityScale: 0,

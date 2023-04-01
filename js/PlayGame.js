@@ -1,0 +1,354 @@
+import { GameOptions } from './gameOptions.js';
+import { BLOCKTYPES } from './BLOCKTYPES.js';
+import { createComponent } from './createComponent.js';
+
+export class PlayGame extends Phaser.Scene{
+    constructor(){
+        super("PlayGame");
+    }
+    
+    create ()
+    {
+      const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
+      /// zoom/////
+      var dragScale = this.plugins.get('rexpinchplugin').add(this);
+      var camera = this.cameras.main;
+      var refcamerazoom=camera.zoom;
+      dragScale
+          .on('drag1', function (dragScale) {
+              if(!bombbool){
+                var drag1Vector = dragScale.drag1Vector;
+                camera.scrollX -= drag1Vector.x / camera.zoom;
+                camera.scrollY -= drag1Vector.y / camera.zoom;
+              }
+          })
+          .on('pinch', function (dragScale) {
+              var scaleFactor = dragScale.scaleFactor;
+              this.myzoom.setText('zoom: '+camera.zoom);
+              if(camera.zoom>=zoomapplied){
+                camera.zoom *= scaleFactor;
+              }else{
+                camera.zoom =zoomapplied+.000000001;
+              }
+          }, this)
+      /// end zoom/////
+  
+      /////// camera /////
+      camera.setBounds(0, 0, GameOptions.gameWidth*GameOptions.limiteHoriJeu, GameOptions.gameHeight*GameOptions.limiteVerticalJeu);
+      camera.setZoom(GameOptions.zoomapplied); //<1 => zoom out
+      /////// end camera /////
+  
+      //////// planck.js box2d /////////////
+      // Box2D works with meters. We need to convert meters to pixels.
+      // let's say 30 pixels = 1 meter.
+      this.worldScale = GameOptions.worldScaleParam;
+  
+      // world gravity, as a Vec2 object. It's just a x, y vector (x=gravity horizontal, y gravity vertical)
+      let gravity = planck.Vec2(0, GameOptions.worldGravity);
+      // this is how we create a Box2D world
+      this.world = planck.World(gravity);
+  
+      /////// sky ////////////////
+      this.sky=this.add.image(0, 0, 'sky').setOrigin(0);
+      /////// end sky ////////////////
+  
+  
+      // add the tilemap
+      let map = this.make.tilemap({key: 'level1'});
+      // select all objects in Object Layer zero, the first - and only, at the moment - level
+      let blocks = map.objects[0].objects;
+  
+      // looping through all blocks and execute addBlock method
+      blocks.forEach(blocks => this.addBlock(blocks));
+      
+      //cursor
+      var pointer = this.input.activePointer;
+  
+      var pospointerdown=0
+      this.input.on('pointerdown', function (pointer) {
+          pospointerdown=pointer.x;
+      }, this);
+  
+      // ball
+      let balls=[];
+      let bombbool=false;
+      let bombexception=true;
+      this.input.on('pointerup', function (pointer) {
+        if(bombbool & bombexception){
+          balls.push(this.createBomb(pointer.worldX, pointer.worldY, 30, true));
+        }
+        bombexception=true;
+      }, this);
+  
+      this.userActions=this.add.text(20, GameOptions.gameHeight-100, 'MOVE', { fill: '#0f0' })
+          .setFontSize(100)
+          .setInteractive({ useHandCursor: true })
+          .setStyle({ backgroundColor: '#111' })
+      this.userActions.on('pointerup',  function () {
+              if(bombbool){
+                bombbool=false;
+                this.userActions.setText('MOVE');
+              }else{
+                bombbool=true;
+                this.userActions.setText('BOMB');
+              }
+              bombexception=false;
+          }, this);
+      
+      this.explosionText=this.add.text(GameOptions.gameWidth-200, GameOptions.gameHeight-100, 'EXP', { fill: '#0f0' })
+          .setFontSize(100)
+          .setInteractive({ useHandCursor: true })
+          .setStyle({ backgroundColor: '#111' })
+          .setScrollFactor(0)
+          .on('pointerup',  function () {
+            if(balls.length>0){
+              this.explosion(balls[balls.length-1]);
+              balls.pop();
+            }
+            bombexception=false;
+          }, this);
+  
+      this.resetText=this.add.text(GameOptions.gameWidth -370, 50, 'RESET!'+GameOptions.versiongame, { fill: '#0f0' })
+        .setFontSize(30)
+        .setInteractive({ useHandCursor: true })
+        .setStyle({ backgroundColor: '#111' })
+        .setScrollFactor(0)
+        .on('pointerup',  function () {
+            this.scene.restart();
+            bombexception=false;
+        }, this);
+  
+      this.world.on('begin-contact', function(contact) {
+        let bodyA=contact.getFixtureA().getBody();
+        let bodyB=contact.getFixtureB().getBody();
+        if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
+          for (var i = 0; i < balls.length; i++)
+          {
+            if(balls[i].getPosition().x==bodyA.getPosition().x)
+            {
+              balls[i].getFixtureList().m_filterGroupIndex=9;
+              balls.splice(i, 1);// remove the ith ball
+              break;
+            }
+          }
+        }
+        if((bodyA.getFixtureList().getFilterGroupIndex()==11)&(bodyB.getFixtureList().getFilterGroupIndex()==8)){
+          for (var i = 0; i < balls.length; i++)
+          {
+            if(balls[i].getPosition().x==bodyB.getPosition().x)
+            {
+              balls[i].getFixtureList().m_filterGroupIndex=9;
+              balls.splice(i, 1);// remove the ith ball
+              break;
+            }
+          }
+        }
+        if((bodyA.getFixtureList().getFilterGroupIndex()==12)&(bodyB.getFixtureList().getFilterGroupIndex()==11)){
+          if(bodyB.getLinearVelocity().x!=0){
+            bodyB.getFixtureList().m_filterGroupIndex=13;
+            // create a particle manager with the same image used for the ball
+            let particleEmitter = this.emitterExplosion();
+            particleEmitter.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
+  
+  
+          }
+        }
+      }.bind(this));
+  
+  
+      // actualFps
+      this.myfps=this.add.text(10, 40, 'FPS', { fill: '#000000' }).setFontSize(30).setScrollFactor(0);
+      this.myzoom=this.add.text(10, 10, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(30);
+      UICam.ignore(this.children.list.filter(function (item){return item.type!="Text"}));
+      camera.ignore(this.children.list.filter(function (item){return item.type=="Text"}));
+    }
+  
+    update ()
+    {
+      // speed of the game (lower = faster)
+      this.world.step(1 / GameOptions.gamesteps);
+  
+      this.world.clearForces();
+      for (let b = this.world.getBodyList(); b; b = b.getNext()){
+        var filtergrpindex=b.getFixtureList().getFilterGroupIndex();
+        if(filtergrpindex==9){
+          this.explosion(b);
+        }
+        if(filtergrpindex==13){
+          b.getUserData().clear();
+          this.world.destroyBody(b);
+        }
+        if(filtergrpindex!=9 & filtergrpindex!=13){
+          let bodyPosition = b.getPosition();
+          let bodyAngle = b.getAngle();
+          let userData = b.getUserData();
+          userData.x = bodyPosition.x * this.worldScale;
+          userData.y = bodyPosition.y * this.worldScale;
+          userData.rotation = bodyAngle;
+        }
+      }
+  
+      var loop = this.sys.game.loop;
+      this.myfps.setText('actualFps: ' + loop.actualFps.toFixed(0));
+    }
+  
+    emitterExplosion(){
+        var particles = this.add.particles('explosion');
+  
+        //  Setting { min: x, max: y } will pick a random value between min and max
+        //  Setting { start: x, end: y } will ease between start and end
+  
+        particles.createEmitter({
+            frame: [ 'smoke-puff', 'cloud', 'smoke-puff' ],
+            angle: { min: 240, max: 300 },
+            speed: { min: 200, max: 300 },
+            quantity: 6,
+            lifespan: 2000,
+            alpha: { start: 1, end: 0 },
+            scale: { start: 1.5, end: 0.5 },
+            on: false
+        });
+  
+        particles.createEmitter({
+            frame: 'red',
+            angle: { start: 0, end: 360, steps: 32 },
+            lifespan: 1000,
+            speed: 400,
+            quantity: 32,
+            scale: { start: 0.3, end: 0 },
+            on: false
+        });
+  
+        particles.createEmitter({
+            frame: 'stone',
+            angle: { min: 240, max: 300 },
+            speed: { min: 400, max: 600 },
+            quantity: { min: 2, max: 10 },
+            lifespan: 4000,
+            alpha: { start: 1, end: 0 },
+            scale: { min: 0.05, max: 0.4 },
+            rotate: { start: 0, end: 360, ease: 'Back.easeOut' },
+            gravityY: 800,
+            on: false
+        });
+  
+        particles.createEmitter({
+            frame: 'muzzleflash2',
+            lifespan: 200,
+            scale: { start: 2, end: 0 },
+            rotate: { start: 0, end: 180 },
+            on: false
+        });
+  
+        return particles;
+  
+    }
+  
+    explosion(ball){
+      let posx=ball.getPosition().x* this.worldScale;
+      let posy=ball.getPosition().y* this.worldScale;
+      ball.getUserData().clear();
+      this.world.destroyBody(ball);
+      var numRays=32;
+      var DEGTORAD=0.0174532925199432957;
+      let parts=[];
+      for (var i = 0; i < numRays; i++)
+      {
+        var angle = (i / numRays) * 360 * DEGTORAD;
+        var blastPower =90
+        let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
+        let part=this.createParticulesExpl(posx, posy,5);
+        part.setLinearVelocity(rayDir);
+        parts.push(part);
+      }
+      this.cameras.main.stopFollow();
+      this.time.addEvent({
+          delay: GameOptions.partpropagationtime,
+          callbackScope: this,
+          callback: function(){
+            for (var i = 0; i < parts.length; i++)
+            {
+              parts[i].getUserData().clear();
+              this.world.destroyBody(parts[i]);
+            }
+            parts=[];
+          },
+          loop: false
+      });
+  
+    }
+  
+    // method to add a totem block
+    addBlock(block) {
+  
+        // get block object
+        let blockObject = BLOCKTYPES[block.type];
+  
+        // we store block coordinates inside a Phaser Rectangle just to get its center
+        let rectangle = new Phaser.Geom.Rectangle(block.x, block.y, block.width, block.height);
+  
+        // create the Box2D block with old createBox method
+        let box2DBlock = new createComponent(block.type,this,rectangle.centerX, rectangle.centerY, block.width, 
+        block.height, blockObject.dynamic, blockObject.color);
+    }
+      
+    createBomb(posX, posY, width, isDynamic){
+        let circle = this.world.createBody({
+                                          type: 'dynamic',
+                                          gravityScale: 0,
+                                        });
+        circle.createFixture({shape: planck.Circle(width/ this.worldScale),
+          density:100.0,
+          friction:.2,
+          filterGroupIndex:8,
+          restitution:.4});
+        circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+        var color = new Phaser.Display.Color();
+        color.setTo(255, 0, 0);
+        color.brighten(50).saturate(100);
+        let userData = this.add.graphics();
+        userData.fillStyle(color.color, 1);
+        userData.fillCircle(0, 0, width);
+  
+        circle.setUserData(userData);
+  
+        return circle;
+  
+    }
+  
+    createParticulesExpl(posX, posY, width){
+  
+        let part = this.world.createBody({
+                                          type: 'dynamic',
+                                          fixedRotation: true,
+                                          bullet: true,
+                                          //linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
+                                          //linearVelocity: rayDir,
+                                          gravityScale: 0,
+                                        });
+  
+        let circleShape = planck.Circle(width/ this.worldScale);
+        part.createFixture({
+          shape: circleShape,
+          density: GameOptions.densityPart,
+          friction: 0,
+          restitution: .99,
+          filterGroupIndex:-1
+        });
+  
+        part.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+        var color = new Phaser.Display.Color();
+        color.random();
+        color.brighten(50).saturate(100);
+        let userData = this.add.graphics();
+        userData.fillStyle(color.color, 1);
+        userData.fillCircle(0, 0, width);
+  
+        part.setUserData(userData);
+  
+        return part;
+  
+    }
+  
+  };
+  
