@@ -83,6 +83,45 @@ export class PlayGame extends Phaser.Scene{
         bombexception=true;
       }, this);
   
+      // events
+      this.world.on('begin-contact', function(contact) {
+        let bodyA=contact.getFixtureA().getBody();
+        let bodyB=contact.getFixtureB().getBody();
+        if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
+          for (var i = 0; i < balls.length; i++)
+          {
+            if(balls[i].bomb.getPosition().x==bodyA.getPosition().x)
+            {
+              this.bombToExplose.push(balls[i]);
+              balls.splice(i, 1);// remove the ith ball
+              break;
+            }
+          }
+        }
+        if((bodyA.getFixtureList().getFilterGroupIndex()==11)&(bodyB.getFixtureList().getFilterGroupIndex()==8)){
+          for (var i = 0; i < balls.length; i++)
+          {
+            if(balls[i].bomb.getPosition().x==bodyB.getPosition().x)
+            {
+              this.bombToExplose.push(balls[i]);
+              balls.splice(i, 1);// remove the ith ball
+              break;
+            }
+          }
+        }
+        if((bodyA.getFixtureList().getFilterGroupIndex()==12)&(bodyB.getFixtureList().getFilterGroupIndex()==11)){
+          if(bodyB.getLinearVelocity().x!=0){
+            bodyB.getFixtureList().m_filterGroupIndex=13;
+            // create a particle manager with the same image used for the ball
+            let particleEmitter = new createExplosion(this);
+            particleEmitter.explosion.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
+          }
+        }
+      }.bind(this));
+  
+
+
+      /////// UI
       this.userActions=this.add.text(20, GameOptions.gameHeight-100, 'MOVE', { fill: '#0f0' })
           .setFontSize(100)
           .setInteractive({ useHandCursor: true })
@@ -120,43 +159,7 @@ export class PlayGame extends Phaser.Scene{
             this.scene.restart();
             bombexception=false;
         }, this);
-  
-      this.world.on('begin-contact', function(contact) {
-        let bodyA=contact.getFixtureA().getBody();
-        let bodyB=contact.getFixtureB().getBody();
-        if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
-          for (var i = 0; i < balls.length; i++)
-          {
-            if(balls[i].bomb.getPosition().x==bodyA.getPosition().x)
-            {
-              this.bombToExplose.push(balls[i]);
-              balls.splice(i, 1);// remove the ith ball
-              break;
-            }
-          }
-        }
-        if((bodyA.getFixtureList().getFilterGroupIndex()==11)&(bodyB.getFixtureList().getFilterGroupIndex()==8)){
-          for (var i = 0; i < balls.length; i++)
-          {
-            if(balls[i].bomb.getPosition().x==bodyB.getPosition().x)
-            {
-              this.bombToExplose.push(balls[i]);
-              balls.splice(i, 1);// remove the ith ball
-              break;
-            }
-          }
-        }
-        if((bodyA.getFixtureList().getFilterGroupIndex()==12)&(bodyB.getFixtureList().getFilterGroupIndex()==11)){
-          if(bodyB.getLinearVelocity().x!=0){
-            bodyB.getFixtureList().m_filterGroupIndex=13;
-            // create a particle manager with the same image used for the ball
-            let particleEmitter = new createExplosion(this);
-            particleEmitter.explosion.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
-          }
-        }
-      }.bind(this));
-  
-  
+    
       // actualFps
       this.myfps=this.add.text(10, 40, 'FPS', { fill: '#000000' }).setFontSize(30).setScrollFactor(0);
       this.myzoom=this.add.text(10, 10, 'zoom: '+refcamerazoom, { fill: '#000000' }).setFontSize(30);
