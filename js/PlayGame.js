@@ -61,6 +61,7 @@ export class PlayGame extends Phaser.Scene{
       let blocks = map.objects[0].objects;
   
       // looping through all blocks and execute addBlock method
+      this.box2DBlock=[]
       blocks.forEach(blocks => this.addBlock(blocks));
       
       //cursor
@@ -185,6 +186,10 @@ export class PlayGame extends Phaser.Scene{
         if(filtergrpindex==13){
           b.getUserData().clear();
           this.world.destroyBody(b);
+          this.box2DBlock.shift();
+          if(this.box2DBlock.length==0){
+             this.scene.start('MainPage');
+           }
         }
         if(filtergrpindex!=9 & filtergrpindex!=13){
           let bodyPosition = b.getPosition();
@@ -210,8 +215,11 @@ export class PlayGame extends Phaser.Scene{
         let rectangle = new Phaser.Geom.Rectangle(block.x, block.y, block.width, block.height);
   
         // create the Box2D block with old createBox method
-        let box2DBlock = new createComponent(block.type,this,rectangle.centerX, rectangle.centerY, block.width, 
-        block.height, blockObject.dynamic, blockObject.color);
+        let output=new createComponent(block.type,this,rectangle.centerX, rectangle.centerY, block.width, 
+        block.height, blockObject.dynamic, blockObject.color).Component;
+        if(output=="Breakable"){
+          this.box2DBlock.push("Breakable");
+        }
     }
         
   };

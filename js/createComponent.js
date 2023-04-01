@@ -1,13 +1,17 @@
 export class createComponent{
   constructor(componentType,scene,posX, posY, width, height, isDynamic, color){
+    this.Component=null;
     if(componentType=="Terrain"){
       this.createGround(scene,posX, posY, width, height, isDynamic, color,12)
+      this.Component="Terrain"
     }
     if(componentType=="BreakableRect"){
       this.createRect(scene,posX, posY, width, height, isDynamic, color,11)
+      this.Component="Breakable"
     }
     if(componentType=="BreakableCircle"){
       this.createCircle(scene,posX, posY, width, isDynamic, color,11)
+      this.Component="Breakable"
     }
   }
 
