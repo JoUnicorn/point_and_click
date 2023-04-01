@@ -72,6 +72,6 @@ export class createComponent{
     userData.strokeCircle(0, 0, width/2 - 4);
     box.setUserData(userData);
     return box;
-}
+  }
 
 }

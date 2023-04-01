@@ -1,6 +1,7 @@
 import { GameOptions } from './gameOptions.js';
 import { BLOCKTYPES } from './BLOCKTYPES.js';
 import { createComponent } from './createComponent.js';
+import { createBomb } from './createBomb.js';
 
 export class PlayGame extends Phaser.Scene{
     constructor(){
@@ -75,7 +76,7 @@ export class PlayGame extends Phaser.Scene{
       let bombexception=true;
       this.input.on('pointerup', function (pointer) {
         if(bombbool & bombexception){
-          balls.push(this.createBomb(pointer.worldX, pointer.worldY, 30, true));
+          balls.push(new createBomb(pointer.worldX, pointer.worldY, 30));
         }
         bombexception=true;
       }, this);
@@ -102,7 +103,7 @@ export class PlayGame extends Phaser.Scene{
           .setScrollFactor(0)
           .on('pointerup',  function () {
             if(balls.length>0){
-              this.explosion(balls[balls.length-1]);
+              balls[balls.length-1].explosion();
               balls.pop();
             }
             bombexception=false;
@@ -149,8 +150,6 @@ export class PlayGame extends Phaser.Scene{
             // create a particle manager with the same image used for the ball
             let particleEmitter = this.emitterExplosion();
             particleEmitter.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
-  
-  
           }
         }
       }.bind(this));
@@ -172,7 +171,7 @@ export class PlayGame extends Phaser.Scene{
       for (let b = this.world.getBodyList(); b; b = b.getNext()){
         var filtergrpindex=b.getFixtureList().getFilterGroupIndex();
         if(filtergrpindex==9){
-          this.explosion(b);
+          b.explosion();
         }
         if(filtergrpindex==13){
           b.getUserData().clear();
@@ -243,41 +242,7 @@ export class PlayGame extends Phaser.Scene{
         return particles;
   
     }
-  
-    explosion(ball){
-      let posx=ball.getPosition().x* this.worldScale;
-      let posy=ball.getPosition().y* this.worldScale;
-      ball.getUserData().clear();
-      this.world.destroyBody(ball);
-      var numRays=32;
-      var DEGTORAD=0.0174532925199432957;
-      let parts=[];
-      for (var i = 0; i < numRays; i++)
-      {
-        var angle = (i / numRays) * 360 * DEGTORAD;
-        var blastPower =90
-        let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
-        let part=this.createParticulesExpl(posx, posy,5);
-        part.setLinearVelocity(rayDir);
-        parts.push(part);
-      }
-      this.cameras.main.stopFollow();
-      this.time.addEvent({
-          delay: GameOptions.partpropagationtime,
-          callbackScope: this,
-          callback: function(){
-            for (var i = 0; i < parts.length; i++)
-            {
-              parts[i].getUserData().clear();
-              this.world.destroyBody(parts[i]);
-            }
-            parts=[];
-          },
-          loop: false
-      });
-  
-    }
-  
+    
     // method to add a totem block
     addBlock(block) {
   
@@ -291,64 +256,6 @@ export class PlayGame extends Phaser.Scene{
         let box2DBlock = new createComponent(block.type,this,rectangle.centerX, rectangle.centerY, block.width, 
         block.height, blockObject.dynamic, blockObject.color);
     }
-      
-    createBomb(posX, posY, width, isDynamic){
-        let circle = this.world.createBody({
-                                          type: 'dynamic',
-                                          gravityScale: 0,
-                                        });
-        circle.createFixture({shape: planck.Circle(width/ this.worldScale),
-          density:100.0,
-          friction:.2,
-          filterGroupIndex:8,
-          restitution:.4});
-        circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
-        var color = new Phaser.Display.Color();
-        color.setTo(255, 0, 0);
-        color.brighten(50).saturate(100);
-        let userData = this.add.graphics();
-        userData.fillStyle(color.color, 1);
-        userData.fillCircle(0, 0, width);
-  
-        circle.setUserData(userData);
-  
-        return circle;
-  
-    }
-  
-    createParticulesExpl(posX, posY, width){
-  
-        let part = this.world.createBody({
-                                          type: 'dynamic',
-                                          fixedRotation: true,
-                                          bullet: true,
-                                          //linearDamping: 10, // arrete le mvt des que le rayon de projection est atteint
-                                          //linearVelocity: rayDir,
-                                          gravityScale: 0,
-                                        });
-  
-        let circleShape = planck.Circle(width/ this.worldScale);
-        part.createFixture({
-          shape: circleShape,
-          density: GameOptions.densityPart,
-          friction: 0,
-          restitution: .99,
-          filterGroupIndex:-1
-        });
-  
-        part.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
-        var color = new Phaser.Display.Color();
-        color.random();
-        color.brighten(50).saturate(100);
-        let userData = this.add.graphics();
-        userData.fillStyle(color.color, 1);
-        userData.fillCircle(0, 0, width);
-  
-        part.setUserData(userData);
-  
-        return part;
-  
-    }
-  
+        
   };
   
