@@ -2,6 +2,7 @@ import { GameOptions } from './gameOptions.js';
 import { BLOCKTYPES } from './BLOCKTYPES.js';
 import { createComponent } from './createComponent.js';
 import { createBomb } from './createBomb.js';
+import { createExplosion } from './createExplosion.js';
 
 export class PlayGame extends Phaser.Scene{
     constructor(){
@@ -74,9 +75,10 @@ export class PlayGame extends Phaser.Scene{
       let balls=[];
       let bombbool=false;
       let bombexception=true;
+      this.bombToExplose=[];
       this.input.on('pointerup', function (pointer) {
         if(bombbool & bombexception){
-          balls.push(new createBomb(pointer.worldX, pointer.worldY, 30));
+          balls.push(new createBomb(this,pointer.worldX, pointer.worldY, 30));
         }
         bombexception=true;
       }, this);
@@ -103,7 +105,7 @@ export class PlayGame extends Phaser.Scene{
           .setScrollFactor(0)
           .on('pointerup',  function () {
             if(balls.length>0){
-              balls[balls.length-1].explosion();
+              balls[balls.length-1].explosion(this);
               balls.pop();
             }
             bombexception=false;
@@ -125,9 +127,9 @@ export class PlayGame extends Phaser.Scene{
         if((bodyB.getFixtureList().getFilterGroupIndex()==-1)&(bodyA.getFixtureList().getFilterGroupIndex()==8)){
           for (var i = 0; i < balls.length; i++)
           {
-            if(balls[i].getPosition().x==bodyA.getPosition().x)
+            if(balls[i].bomb.getPosition().x==bodyA.getPosition().x)
             {
-              balls[i].getFixtureList().m_filterGroupIndex=9;
+              this.bombToExplose.push(balls[i]);
               balls.splice(i, 1);// remove the ith ball
               break;
             }
@@ -136,9 +138,9 @@ export class PlayGame extends Phaser.Scene{
         if((bodyA.getFixtureList().getFilterGroupIndex()==11)&(bodyB.getFixtureList().getFilterGroupIndex()==8)){
           for (var i = 0; i < balls.length; i++)
           {
-            if(balls[i].getPosition().x==bodyB.getPosition().x)
+            if(balls[i].bomb.getPosition().x==bodyB.getPosition().x)
             {
-              balls[i].getFixtureList().m_filterGroupIndex=9;
+              this.bombToExplose.push(balls[i]);
               balls.splice(i, 1);// remove the ith ball
               break;
             }
@@ -148,8 +150,8 @@ export class PlayGame extends Phaser.Scene{
           if(bodyB.getLinearVelocity().x!=0){
             bodyB.getFixtureList().m_filterGroupIndex=13;
             // create a particle manager with the same image used for the ball
-            let particleEmitter = this.emitterExplosion();
-            particleEmitter.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
+            let particleEmitter = new createExplosion(this);
+            particleEmitter.explosion.emitParticleAt(bodyB.getPosition().x* this.worldScale, bodyB.getPosition().y* this.worldScale);
           }
         }
       }.bind(this));
@@ -166,13 +168,15 @@ export class PlayGame extends Phaser.Scene{
     {
       // speed of the game (lower = faster)
       this.world.step(1 / GameOptions.gamesteps);
+
+      if(this.bombToExplose.length>0){
+        this.bombToExplose[0].explosion(this);
+        this.bombToExplose.shift();
+      }
   
       this.world.clearForces();
       for (let b = this.world.getBodyList(); b; b = b.getNext()){
         var filtergrpindex=b.getFixtureList().getFilterGroupIndex();
-        if(filtergrpindex==9){
-          b.explosion();
-        }
         if(filtergrpindex==13){
           b.getUserData().clear();
           this.world.destroyBody(b);
@@ -190,59 +194,7 @@ export class PlayGame extends Phaser.Scene{
       var loop = this.sys.game.loop;
       this.myfps.setText('actualFps: ' + loop.actualFps.toFixed(0));
     }
-  
-    emitterExplosion(){
-        var particles = this.add.particles('explosion');
-  
-        //  Setting { min: x, max: y } will pick a random value between min and max
-        //  Setting { start: x, end: y } will ease between start and end
-  
-        particles.createEmitter({
-            frame: [ 'smoke-puff', 'cloud', 'smoke-puff' ],
-            angle: { min: 240, max: 300 },
-            speed: { min: 200, max: 300 },
-            quantity: 6,
-            lifespan: 2000,
-            alpha: { start: 1, end: 0 },
-            scale: { start: 1.5, end: 0.5 },
-            on: false
-        });
-  
-        particles.createEmitter({
-            frame: 'red',
-            angle: { start: 0, end: 360, steps: 32 },
-            lifespan: 1000,
-            speed: 400,
-            quantity: 32,
-            scale: { start: 0.3, end: 0 },
-            on: false
-        });
-  
-        particles.createEmitter({
-            frame: 'stone',
-            angle: { min: 240, max: 300 },
-            speed: { min: 400, max: 600 },
-            quantity: { min: 2, max: 10 },
-            lifespan: 4000,
-            alpha: { start: 1, end: 0 },
-            scale: { min: 0.05, max: 0.4 },
-            rotate: { start: 0, end: 360, ease: 'Back.easeOut' },
-            gravityY: 800,
-            on: false
-        });
-  
-        particles.createEmitter({
-            frame: 'muzzleflash2',
-            lifespan: 200,
-            scale: { start: 2, end: 0 },
-            rotate: { start: 0, end: 180 },
-            on: false
-        });
-  
-        return particles;
-  
-    }
-    
+      
     // method to add a totem block
     addBlock(block) {
   

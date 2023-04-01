@@ -1,23 +1,25 @@
+import { GameOptions } from './gameOptions.js';
+
 export class createBomb{
-  constructor(posX, posY, width){
-    this.bomb=this.createGround(posX, posY, width)
+  constructor(scene,posX, posY, width){
+    this.bomb=this.createBomb(scene,posX, posY, width)
   }
 
-  createBomb(posX, posY, width){
-    let circle = this.world.createBody({
+  createBomb(scene,posX, posY, width){
+    let circle = scene.world.createBody({
                                       type: 'dynamic',
                                       gravityScale: 0,
                                     });
-    circle.createFixture({shape: planck.Circle(width/ this.worldScale),
+    circle.createFixture({shape: planck.Circle(width/ scene.worldScale),
       density:100.0,
       friction:.2,
       filterGroupIndex:8,
       restitution:.4});
-    circle.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+    circle.setPosition(planck.Vec2(posX / scene.worldScale, posY / scene.worldScale));
     var color = new Phaser.Display.Color();
     color.setTo(255, 0, 0);
     color.brighten(50).saturate(100);
-    let userData = this.add.graphics();
+    let userData = scene.add.graphics();
     userData.fillStyle(color.color, 1);
     userData.fillCircle(0, 0, width);
 
@@ -27,32 +29,30 @@ export class createBomb{
 
   }
 
-  explosion(){
-    let posx=this.bomb.getPosition().x* this.worldScale;
-    let posy=this.bomb.getPosition().y* this.worldScale;
+  explosion(scene){
+    let posx=this.bomb.getPosition().x* scene.worldScale;
+    let posy=this.bomb.getPosition().y* scene.worldScale;
     this.bomb.getUserData().clear();
-    this.world.destroyBody(this.bomb);
-    var numRays=32;
-    var DEGTORAD=0.0174532925199432957;
+    scene.world.destroyBody(this.bomb);
     let parts=[];
-    for (var i = 0; i < numRays; i++)
+    for (var i = 0; i < GameOptions.numRays; i++)
     {
-      var angle = (i / numRays) * 360 * DEGTORAD;
+      var angle = (i / GameOptions.numRays) * 360 * GameOptions.DEGTORAD;
       var blastPower =90
       let rayDir = planck.Vec2(Math.sin(angle)*blastPower, Math.cos(angle)*blastPower);
-      let part=this.createParticulesExpl(posx, posy,5);
+      let part=this.createParticulesExpl(scene,posx, posy,5);
       part.setLinearVelocity(rayDir);
       parts.push(part);
     }
-    this.cameras.main.stopFollow();
-    this.time.addEvent({
+    scene.cameras.main.stopFollow();
+    scene.time.addEvent({
         delay: GameOptions.partpropagationtime,
-        callbackScope: this,
+        callbackScope: scene,
         callback: function(){
           for (var i = 0; i < parts.length; i++)
           {
             parts[i].getUserData().clear();
-            this.world.destroyBody(parts[i]);
+            scene.world.destroyBody(parts[i]);
           }
           parts=[];
         },
@@ -61,9 +61,9 @@ export class createBomb{
 
   }
 
-  createParticulesExpl(posX, posY, width){
+  createParticulesExpl(scene,posX, posY, width){
   
-    let part = this.world.createBody({
+    let part = scene.world.createBody({
                                       type: 'dynamic',
                                       fixedRotation: true,
                                       bullet: true,
@@ -72,7 +72,7 @@ export class createBomb{
                                       gravityScale: 0,
                                     });
 
-    let circleShape = planck.Circle(width/ this.worldScale);
+    let circleShape = planck.Circle(width/ scene.worldScale);
     part.createFixture({
       shape: circleShape,
       density: GameOptions.densityPart,
@@ -81,11 +81,11 @@ export class createBomb{
       filterGroupIndex:-1
     });
 
-    part.setPosition(planck.Vec2(posX / this.worldScale, posY / this.worldScale));
+    part.setPosition(planck.Vec2(posX / scene.worldScale, posY / scene.worldScale));
     var color = new Phaser.Display.Color();
     color.random();
     color.brighten(50).saturate(100);
-    let userData = this.add.graphics();
+    let userData = scene.add.graphics();
     userData.fillStyle(color.color, 1);
     userData.fillCircle(0, 0, width);
 

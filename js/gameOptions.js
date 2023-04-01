@@ -16,6 +16,9 @@ export const GameOptions = {
   limiteVerticalJeu:1/zoomapplied,
   limiteHoriJeu:2*1/zoomapplied,
   fps:61,
-  versiongame:Date.now()
+  versiongame:Date.now(),
   
+  numRays:32,
+  DEGTORAD:0.0174532925199432957
+
 }
