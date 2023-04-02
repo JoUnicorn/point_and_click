@@ -1,3 +1,5 @@
+import { GameOptions } from './gameOptions.js';
+
 export class PreloadAssets extends Phaser.Scene{
   constructor(){
       super("PreloadAssets");
@@ -9,8 +11,10 @@ export class PreloadAssets extends Phaser.Scene{
     this.load.image('ground', 'assets/images/platform.png');
     var url = 'js/rexpinchplugin.min.js';
     this.load.plugin('rexpinchplugin', url, true);
-    this.load.tilemapTiledJSON("level1", "assets/maps/level1.json");
-    this.load.tilemapTiledJSON("level2", "assets/maps/level2.json");
+    for (var i = 1; i < GameOptions.numberOfLevels+1; i++)
+    {
+      this.load.tilemapTiledJSON("level"+i, "assets/maps/level"+i+".json");
+    }
     this.load.atlas('explosion', 'assets/particles/explosion.png', 'assets/particles/explosion.json');
   }
 

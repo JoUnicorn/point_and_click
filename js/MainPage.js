@@ -18,7 +18,7 @@ export class MainPage extends Phaser.Scene{
         .setInteractive({ useHandCursor: true })
         .setStyle({ backgroundColor: '#111' })
         this.startPlay.on('pointerup',  function () {
-                this.scene.start('PlayGame',{ level: "level1" });
+                this.scene.start('PlayGame',{ level: "level1",maxBomb:3 });
             }, this);
         
         this.startPlay=this.add.text(GameOptions.gameWidth/4*2, GameOptions.gameHeight-100*2, 'STAGE 2', { fill: '#0f0' })
@@ -26,7 +26,7 @@ export class MainPage extends Phaser.Scene{
         .setInteractive({ useHandCursor: true })
         .setStyle({ backgroundColor: '#111' })
         this.startPlay.on('pointerup',  function () {
-                this.scene.start('PlayGame',{ level: "level2" });
+                this.scene.start('PlayGame',{ level: "level2",maxBomb:6 });
             }, this);
 
         this.startPlay=this.add.text(GameOptions.gameWidth/4, GameOptions.gameHeight-100*3, 'STAGE 3', { fill: '#0f0' })
@@ -34,7 +34,7 @@ export class MainPage extends Phaser.Scene{
         .setInteractive({ useHandCursor: true })
         .setStyle({ backgroundColor: '#111' })
         this.startPlay.on('pointerup',  function () {
-                this.scene.start('PlayGame',{ level: "level2" });
+                this.scene.start('PlayGame',{ level: "level3",maxBomb:6 });
             }, this);
     
     }

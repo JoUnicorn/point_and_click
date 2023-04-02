@@ -11,10 +11,19 @@ export class PlayGame extends Phaser.Scene{
 
     init(data){
       this.levelChosen=data.level;
+      this.levelMaxBomb=data.maxBomb;
     }
 
     create ()
     {
+
+      // get the number of tiles height
+      let map = this.make.tilemap({key: this.levelChosen});
+      var zoomappliedwidth=(window.innerWidth/(map.width*GameOptions.tiledHeightSize));
+      var zoomapplied=(window.innerHeight/(map.height*GameOptions.tiledHeightSize));
+      var limiteHoriJeu=(zoomapplied/zoomappliedwidth)/zoomapplied;
+      var limiteVerticalJeu=1/zoomapplied;
+
       const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
       /// zoom/////
       var dragScale = this.plugins.get('rexpinchplugin').add(this);
@@ -31,17 +40,17 @@ export class PlayGame extends Phaser.Scene{
           .on('pinch', function (dragScale) {
               var scaleFactor = dragScale.scaleFactor;
               this.myzoom.setText('zoom: '+camera.zoom);
-              if(camera.zoom>=GameOptions.zoomapplied){
+              if(camera.zoom>=zoomapplied){
                 camera.zoom *= scaleFactor;
               }else{
-                camera.zoom =GameOptions.zoomapplied+.000000001;
+                camera.zoom =zoomapplied+.000000001;
               }
           }, this)
       /// end zoom/////
   
       /////// camera /////
-      camera.setBounds(0, 0, GameOptions.gameWidth*GameOptions.limiteHoriJeu, GameOptions.gameHeight*GameOptions.limiteVerticalJeu);
-      camera.setZoom(GameOptions.zoomapplied); //<1 => zoom out
+      camera.setBounds(0, 0, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
+      camera.setZoom(zoomapplied); //<1 => zoom out
       /////// end camera /////
   
       //////// planck.js box2d /////////////
@@ -59,8 +68,6 @@ export class PlayGame extends Phaser.Scene{
       /////// end sky ////////////////
   
   
-      // add the tilemap
-      let map = this.make.tilemap({key: this.levelChosen});
       // select all objects in Object Layer zero, the first - and only, at the moment - level
       let blocks = map.objects[0].objects;
   
@@ -82,8 +89,10 @@ export class PlayGame extends Phaser.Scene{
       let bombexception=true;
       this.bombToExplose=[];
       this.input.on('pointerup', function (pointer) {
-        if(bombbool & bombexception){
-          balls.push(new createBomb(this,pointer.worldX, pointer.worldY, 30));
+        if(balls.length<this.levelMaxBomb){
+          if(bombbool & bombexception){
+            balls.push(new createBomb(this,pointer.worldX, pointer.worldY, 30));
+          }  
         }
         bombexception=true;
       }, this);

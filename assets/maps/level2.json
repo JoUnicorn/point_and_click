@@ -1,5 +1,5 @@
 { "compressionlevel":-1,
- "height":39,
+ "height":50,
  "infinite":false,
  "layers":[
         {
@@ -14,9 +14,9 @@
                  "rotation":0,
                  "type":"Terrain",
                  "visible":true,
-                 "width":5600,
-                 "x":0,
-                 "y":2660
+                 "width":2100,
+                 "x":1.81818,
+                 "y":3152.64
                 }, 
                 {
                  "height":350,
@@ -26,8 +26,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":70,
-                 "x":420,
-                 "y":2310
+                 "x":421.818,
+                 "y":2802.64
                 }, 
                 {
                  "height":350,
@@ -37,8 +37,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":70,
-                 "x":850,
-                 "y":2310
+                 "x":851.818,
+                 "y":2802.64
                 }, 
                 {
                  "height":70,
@@ -48,8 +48,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":600,
-                 "x":370,
-                 "y":2240
+                 "x":371.818,
+                 "y":2732.64
                 }, 
                 {
                  "height":350,
@@ -59,8 +59,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":70,
-                 "x":1295.48,
-                 "y":2310
+                 "x":1297.3,
+                 "y":2802.64
                 }, 
                 {
                  "height":350,
@@ -70,8 +70,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":70,
-                 "x":1725.48,
-                 "y":2310
+                 "x":1727.3,
+                 "y":2802.64
                 }, 
                 {
                  "height":70,
@@ -81,8 +81,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":600,
-                 "x":1245.48,
-                 "y":2240
+                 "x":1247.3,
+                 "y":2732.64
                 }, 
                 {
                  "height":350,
@@ -92,8 +92,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":70,
-                 "x":874.242,
-                 "y":1890
+                 "x":876.06,
+                 "y":2382.64
                 }, 
                 {
                  "height":350,
@@ -103,8 +103,8 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":70,
-                 "x":1304.24,
-                 "y":1890
+                 "x":1306.06,
+                 "y":2382.64
                 }, 
                 {
                  "height":70,
@@ -114,8 +114,19 @@
                  "type":"BreakableRect",
                  "visible":true,
                  "width":600,
-                 "x":824.242,
-                 "y":1820
+                 "x":826.06,
+                 "y":2312.64
+                }, 
+                {
+                 "height":3121.21,
+                 "id":22,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Terrain",
+                 "visible":true,
+                 "width":36.3636,
+                 "x":-6.06061,
+                 "y":24.2424
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -124,7 +135,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":22,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
@@ -133,5 +144,5 @@
  "tilewidth":70,
  "type":"map",
  "version":"1.10",
- "width":70
+ "width":30
 }
