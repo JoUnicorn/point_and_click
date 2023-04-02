@@ -10,7 +10,7 @@ import { GameOptions } from './gameOptions.js';
 let game;
 window.onload = function() {
     let gameConfig = {
-        type: Phaser.AUTO,
+        type: Phaser.CANVAS,
         width: GameOptions.gameWidth,
         height: GameOptions.gameHeight,
         //pixelArt: true,

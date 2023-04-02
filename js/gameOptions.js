@@ -4,8 +4,8 @@ const zoomapplied=.34;
 
 export const GameOptions = {
  
-  gameWidth:1000,
-  gameHeight:1000,
+  gameWidth:window.innerWidth,
+  gameHeight:window.innerHeight,
   worldScaleParam:30,
   worldGravity:3,
   zoomapplied:zoomapplied,
