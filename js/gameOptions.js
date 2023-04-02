@@ -1,3 +1,5 @@
+//https://www.joshmorony.com/how-to-scale-a-game-for-all-device-sizes-in-phaser/
+
 // CONFIGURABLE GAME OPTIONS
  
 const zoomapplied=.34;

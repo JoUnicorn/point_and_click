@@ -16,11 +16,6 @@ export class PreloadAssets extends Phaser.Scene{
 
   create ()
   {
-    const width = this.scale.gameSize.width;
-    const height = this.scale.gameSize.height;
-    console.log(width,height);
-    console.log(window.innerWidth,window.devicePixelRatio);
-    console.log(window.innerHeight);  
     this.scene.start('MainPage');
   }
 
