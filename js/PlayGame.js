@@ -17,7 +17,7 @@ export class PlayGame extends Phaser.Scene{
     create ()
     {
 
-      // get the number of tiles height
+      // get the number of tiles height and set zoom
       let map = this.make.tilemap({key: this.levelChosen});
       var zoomappliedwidth=(window.innerWidth/(map.width*GameOptions.tiledHeightSize));
       var zoomapplied=(window.innerHeight/(map.height*GameOptions.tiledHeightSize));
@@ -40,12 +40,8 @@ export class PlayGame extends Phaser.Scene{
           .on('pinch', function (dragScale) {
               var scaleFactor = dragScale.scaleFactor;
               this.myzoom.setText('zoom: '+camera.zoom);
-              if(camera.zoom>=zoomapplied){
-                camera.zoom *= scaleFactor;
-              }else{
-                camera.zoom =zoomapplied+.000000001;
-              }
-          }, this)
+              camera.zoom *= scaleFactor;
+            }, this)
       /// end zoom/////
   
       /////// camera /////
