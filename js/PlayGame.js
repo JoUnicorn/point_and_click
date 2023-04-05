@@ -26,9 +26,8 @@ export class PlayGame extends Phaser.Scene{
 
       const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
       /// zoom/////
-      var rect = new Phaser.Geom.Rectangle(0, 0, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
       var dragScale = this.plugins.get('rexpinchplugin').add(this);
-      dragScale.bounds=rect;
+      //dragScale.bounds=rect;
       console.log(dragScale);
       var camera = this.cameras.main;
       var refcamerazoom=camera.zoom;
@@ -49,7 +48,7 @@ export class PlayGame extends Phaser.Scene{
   
       /////// camera /////
       //camera.setOrigin(0.5,0);
-      camera.setBounds(0, 0, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
+      camera.setBounds(-GameOptions.gameWidth*limiteHoriJeu/2, -GameOptions.gameHeight*limiteVerticalJeu/2, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
       camera.setZoom(zoomapplied); //<1 => zoom out
       /////// end camera /////
   
