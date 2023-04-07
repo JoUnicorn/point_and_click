@@ -53,8 +53,8 @@ export class PlayGame extends Phaser.Scene{
       /////// camera /////
       camera.setOrigin(1,0);
       console.log(GameOptions.gameWidth,GameOptions.gameHeight);
-      console.log(GameOptions.gameWidth*limiteHoriJeu,GameOptions.gameHeight*limiteVerticalJeu);
-      camera.setBounds(1000, -1000, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
+      console.log(limiteHoriJeu,limiteVerticalJeu);
+      camera.setBounds(1200, -7000, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
       camera.setZoom(zoomappliedwidth); //<1 => zoom out
       /////// end camera /////
   
