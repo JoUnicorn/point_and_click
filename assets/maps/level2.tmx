@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="23">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="45" height="45" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="26">
  <editorsettings>
   <export target="level2.json" format="json"/>
  </editorsettings>
  <objectgroup id="2" name="Object Layer 1">
-  <object id="1" type="Terrain" x="1.81818" y="3152.64" width="2100" height="70"/>
-  <object id="3" type="BreakableRect" x="421.818" y="2802.64" width="70" height="350"/>
-  <object id="5" type="BreakableRect" x="851.818" y="2802.64" width="70" height="350"/>
-  <object id="6" type="BreakableRect" x="371.818" y="2732.64" width="600" height="70"/>
-  <object id="10" type="BreakableRect" x="1297.3" y="2802.64" width="70" height="350"/>
-  <object id="11" type="BreakableRect" x="1727.3" y="2802.64" width="70" height="350"/>
-  <object id="12" type="BreakableRect" x="1247.3" y="2732.64" width="600" height="70"/>
-  <object id="16" type="BreakableRect" x="876.06" y="2382.64" width="70" height="350"/>
-  <object id="17" type="BreakableRect" x="1306.06" y="2382.64" width="70" height="350"/>
-  <object id="18" type="BreakableRect" x="826.06" y="2312.64" width="600" height="70"/>
-  <object id="22" type="Terrain" x="-6.06061" y="24.2424" width="36.3636" height="3121.21"/>
+  <object id="1" type="Terrain" x="1.81818" y="2682.64" width="3142.42" height="70"/>
+  <object id="3" type="BreakableRect" x="421.818" y="2332.64" width="70" height="350"/>
+  <object id="5" type="BreakableRect" x="851.818" y="2332.64" width="70" height="350"/>
+  <object id="6" type="BreakableRect" x="371.818" y="2262.64" width="600" height="70"/>
+  <object id="10" type="BreakableRect" x="1297.3" y="2332.64" width="70" height="350"/>
+  <object id="11" type="BreakableRect" x="1727.3" y="2332.64" width="70" height="350"/>
+  <object id="12" type="BreakableRect" x="1247.3" y="2262.64" width="600" height="70"/>
+  <object id="16" type="BreakableRect" x="876.06" y="1912.64" width="70" height="350"/>
+  <object id="17" type="BreakableRect" x="1306.06" y="1912.64" width="70" height="350"/>
+  <object id="18" type="BreakableRect" x="826.06" y="1842.64" width="600" height="70"/>
+  <object id="22" type="Terrain" x="-6.06061" y="11.8182" width="36.3636" height="2663.63"/>
+  <object id="23" type="BreakableRect" x="2180.3" y="2328.61" width="70" height="350"/>
+  <object id="24" type="BreakableRect" x="2610.3" y="2328.61" width="70" height="350"/>
+  <object id="25" type="BreakableRect" x="2130.3" y="2258.61" width="600" height="70"/>
  </objectgroup>
 </map>
