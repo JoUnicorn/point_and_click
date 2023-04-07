@@ -25,11 +25,20 @@ export class PlayGame extends Phaser.Scene{
       var limiteVerticalJeu=1/zoomapplied;
 
       const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
+
+      /////// camera /////
+      var camera = this.cameras.main;
+      var refcamerazoom=camera.zoom;
+      camera.setOrigin(1,0);
+      console.log(GameOptions.gameWidth,GameOptions.gameHeight);
+      console.log(limiteHoriJeu,limiteVerticalJeu);
+      camera.setBounds(1200, -7000, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
+      camera.setZoom(zoomappliedwidth); //<1 => zoom out
+      /////// end camera /////
+
       /// zoom/////
       var dragScale = this.plugins.get('rexpinchplugin').add(this);
       //dragScale.bounds=rect;
-      var camera = this.cameras.main;
-      var refcamerazoom=camera.zoom;
       dragScale
           .on('drag1', function (dragScale) {
               if(!bombbool){
@@ -50,13 +59,6 @@ export class PlayGame extends Phaser.Scene{
             }, this)
       /// end zoom/////
   
-      /////// camera /////
-      camera.setOrigin(1,0);
-      console.log(GameOptions.gameWidth,GameOptions.gameHeight);
-      console.log(limiteHoriJeu,limiteVerticalJeu);
-      camera.setBounds(1200, -7000, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
-      camera.setZoom(zoomappliedwidth); //<1 => zoom out
-      /////// end camera /////
   
       //////// planck.js box2d /////////////
       // Box2D works with meters. We need to convert meters to pixels.
