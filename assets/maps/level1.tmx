@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="23">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="23">
  <editorsettings>
   <export target="level1.json" format="json"/>
  </editorsettings>
  <objectgroup id="2" name="Object Layer 1">
-  <object id="1" type="Terrain" x="4.83855" y="3114.82" width="2100" height="70"/>
+  <object id="1" type="Terrain" x="4.83855" y="3114.82" width="3500" height="70"/>
   <object id="3" type="BreakableRect" x="424.839" y="2764.82" width="70" height="350"/>
   <object id="5" type="BreakableRect" x="854.839" y="2764.82" width="70" height="350"/>
   <object id="6" type="BreakableRect" x="374.839" y="2694.82" width="600" height="70"/>

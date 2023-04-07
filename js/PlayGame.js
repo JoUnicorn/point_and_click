@@ -28,7 +28,6 @@ export class PlayGame extends Phaser.Scene{
       /// zoom/////
       var dragScale = this.plugins.get('rexpinchplugin').add(this);
       //dragScale.bounds=rect;
-      console.log(dragScale);
       var camera = this.cameras.main;
       var refcamerazoom=camera.zoom;
       dragScale
@@ -47,9 +46,11 @@ export class PlayGame extends Phaser.Scene{
       /// end zoom/////
   
       /////// camera /////
-      //camera.setOrigin(0.5,0);
-      camera.setBounds(-GameOptions.gameWidth*limiteHoriJeu/2, -GameOptions.gameHeight*limiteVerticalJeu/2, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
-      camera.setZoom(zoomapplied); //<1 => zoom out
+      camera.setOrigin(1);
+      console.log(GameOptions.gameWidth,GameOptions.gameHeight);
+      console.log(GameOptions.gameWidth*limiteHoriJeu,GameOptions.gameHeight*limiteVerticalJeu);
+      camera.setBounds(0, 0, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
+      camera.setZoom(zoomappliedwidth); //<1 => zoom out
       /////// end camera /////
   
       //////// planck.js box2d /////////////

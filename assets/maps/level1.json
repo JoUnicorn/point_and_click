@@ -14,7 +14,7 @@
                  "rotation":0,
                  "type":"Terrain",
                  "visible":true,
-                 "width":2100,
+                 "width":3500,
                  "x":4.83855,
                  "y":3114.82
                 }, 
@@ -156,5 +156,5 @@
  "tilewidth":70,
  "type":"map",
  "version":"1.10",
- "width":30
+ "width":50
 }
