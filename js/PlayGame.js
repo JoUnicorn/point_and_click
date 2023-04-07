@@ -20,24 +20,21 @@ export class PlayGame extends Phaser.Scene{
       // get the number of tiles height and set zoom
       let map = this.make.tilemap({key: this.levelChosen});
       var zoomappliedwidth=(window.innerWidth/(map.width*GameOptions.tiledHeightSize));
-      var zoomapplied=(window.innerHeight/(map.height*GameOptions.tiledHeightSize));
-      var limiteHoriJeu=(zoomapplied/zoomappliedwidth)/zoomapplied;
-      var limiteVerticalJeu=1/zoomapplied;
+      //var zoomapplied=(window.innerHeight/(map.height*GameOptions.tiledHeightSize));
+      var limite=1/zoomappliedwidth;
 
       const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
 
       /////// camera /////
       var camera = this.cameras.main;
-      var refcamerazoom=camera.zoom;
-      camera.setOrigin(1,0);
-      console.log(GameOptions.gameWidth,GameOptions.gameHeight);
-      console.log(limiteHoriJeu,limiteVerticalJeu);
-      camera.setBounds(0, 0, GameOptions.gameWidth*limiteHoriJeu, GameOptions.gameHeight*limiteVerticalJeu);
+      camera.setBounds(0, 0, camera.width*limite, camera.height*limite);
       camera.setZoom(zoomappliedwidth); //<1 => zoom out
+      this.offset=camera.height*limite-map.height*GameOptions.tiledHeightSize;
       /////// end camera /////
 
       /// zoom/////
       var dragScale = this.plugins.get('rexpinchplugin').add(this);
+      var refcamerazoom=camera.zoom;
       //dragScale.bounds=rect;
       dragScale
           .on('drag1', function (dragScale) {
@@ -232,7 +229,7 @@ export class PlayGame extends Phaser.Scene{
         let blockObject = BLOCKTYPES[block.type];
   
         // we store block coordinates inside a Phaser Rectangle just to get its center
-        let rectangle = new Phaser.Geom.Rectangle(block.x, block.y, block.width, block.height);
+        let rectangle = new Phaser.Geom.Rectangle(block.x, block.y+this.offset, block.width, block.height);
   
         // create the Box2D block with old createBox method
         let output=new createComponent(block.type,this,rectangle.centerX, rectangle.centerY, block.width, 

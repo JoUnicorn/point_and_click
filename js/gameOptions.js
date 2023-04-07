@@ -1,11 +1,13 @@
 //https://www.joshmorony.com/how-to-scale-a-game-for-all-device-sizes-in-phaser/
 
 // CONFIGURABLE GAME OPTIONS
- 
+
 export const GameOptions = {
  
   gameWidth:window.innerWidth,
   gameHeight:window.innerHeight,
+  screenGameWidth:3500,
+  screenGameHeight:3500,
   worldScaleParam:30,
   worldGravity:3,
   tiledHeightSize:70,
