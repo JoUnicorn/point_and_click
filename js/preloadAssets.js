@@ -11,6 +11,9 @@ export class PreloadAssets extends Phaser.Scene{
     this.load.image('ground', 'assets/images/platform.png');
     var url = 'js/rexpinchplugin.min.js';
     this.load.plugin('rexpinchplugin', url, true);
+    url = 'js/rexmodalplugin.min.js';
+    this.load.plugin('rexmodalplugin', url, true);
+
     for (var i = 1; i < GameOptions.numberOfLevels+1; i++)
     {
       this.load.tilemapTiledJSON("level"+i, "assets/maps/level"+i+".json");
