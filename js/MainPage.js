@@ -34,14 +34,22 @@ export class MainPage extends Phaser.Scene{
         .on('pointerup',  function () {
 
                 // Create modal game object after click basePanel
-                var modalGameObject = this.add.rectangle(GameOptions.gameWidth/2, GameOptions.gameHeight/2, GameOptions.gameWidth/1.25, GameOptions.gameHeight/2, 0xffffff)
+                var modalGameObject = this.add.rectangle(0, 0, GameOptions.gameWidth/1.25, GameOptions.gameHeight/2, 0xffffff)
                     .on('destroy', function () {
                         console.log('parent destroy');
                     })
                 // button will be destroyed after modal closing
-                camera.ignore(modalGameObject);
+                const closeButton=this.add.text(modalGameObject.width/2-180, -modalGameObject.height/2+10, 'Close', { fill: '#0f0' })
+                .setFontSize(50)
+                .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
+                .on('pointerup',  function () {
+                        modelBehavior.requestClose();
+                    }, this);
+                var container = this.add.container(GameOptions.gameWidth/2, GameOptions.gameHeight/2, [ modalGameObject, closeButton ]);
+                camera.ignore(container);
 
-                var modelBehavior = this.plugins.get('rexmodalplugin').add(modalGameObject, {                    
+                var modelBehavior = this.plugins.get('rexmodalplugin').add(container, {                    
                     touchOutsideClose: true,
                     duration: {
                         in: 500,
