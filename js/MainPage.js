@@ -9,7 +9,7 @@ export class MainPage extends Phaser.Scene{
     {
 
         let menu = this.make.tilemap({key: "menu"});
-        var zoomappliedwidth=(window.innerWidth/(menu.width*GameOptions.tiledMenuHeightSize+200));
+        var zoomappliedwidth=(window.innerWidth/(menu.width*GameOptions.tiledMenuHeightSize+GameOptions.maginmenu));
         var limite=1/zoomappliedwidth;
 
         const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
@@ -34,7 +34,7 @@ export class MainPage extends Phaser.Scene{
 
 
         /////// menu ////////////////
-        let base_menu = this.add.image(100, this.offset, 'base_menu').setOrigin(0);//.setScale(.3)
+        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset, 'base_menu').setOrigin(0);//.setScale(.3)
         console.log(base_menu);
         //let blocks = menu.objects[0].objects;
 
