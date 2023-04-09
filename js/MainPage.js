@@ -119,7 +119,7 @@ export class MainPage extends Phaser.Scene{
   
         var data = [ 0,20, 84,20, 84,0, 120,50, 84,100, 84,80, 0,80 ];
         let rectangle = new Phaser.Geom.Rectangle(block.x+GameOptions.maginmenu/2, block.y+this.offset, block.width, block.height);
-        var r1 = this.add.polygon(rectangle.centerX, rectangle.centerY, data, 0xFF0000);
+        var r1 = this.add.polygon(rectangle.centerX, rectangle.centerY, data, 0xFF0000).setScale(1.5);
         if(actualLevel% 2 == 0){
             r1.setRotation(Math.PI);
         }
