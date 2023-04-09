@@ -58,10 +58,10 @@ export class MainPage extends Phaser.Scene{
         /////// end menu ////////////////
 
         ///// settings ////
-        const settings=this.add.text(GameOptions.gameWidth-300, 50, 'Settings', { fill: '#0f0' })
-        .setFontSize(50)
+        var scale=.25;
+        const settings=this.add.image(GameOptions.gameWidth-300, 70, 'gears').setScale(scale);
+        settings.setPosition(GameOptions.gameWidth-settings.width*scale/2-10, settings.height*scale/2+10)
         .setInteractive({ useHandCursor: true })
-        .setStyle({ backgroundColor: '#111' })
         .on('pointerup',  function () {
 
                 // Create modal game object after click basePanel

@@ -21,6 +21,7 @@ export class PreloadAssets extends Phaser.Scene{
       this.load.tilemapTiledJSON("level"+i, "assets/maps/level"+i+".json");
     }
     this.load.atlas('explosion', 'assets/particles/explosion.png', 'assets/particles/explosion.json');
+    this.load.image('gears', 'assets/images/setting.png');
   }
 
   create ()
