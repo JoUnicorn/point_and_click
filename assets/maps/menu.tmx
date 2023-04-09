@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="4" height="6" tilewidth="504" tileheight="504" infinite="0" nextlayerid="7" nextobjectid="10">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="4" height="6" tilewidth="504" tileheight="504" infinite="0" nextlayerid="8" nextobjectid="28">
  <editorsettings>
   <export target="menu.json" format="json"/>
  </editorsettings>
@@ -42,7 +42,24 @@
 </data>
  </layer>
  <objectgroup id="6" name="stars">
-  <object id="8" type="Stars" x="252" y="1724" width="180" height="180"/>
+  <object id="8" type="Stars" x="236" y="1804" width="76" height="48"/>
   <object id="9" x="-824" y="1504"/>
+  <object id="10" type="Stars" x="398" y="1700" width="76" height="48"/>
+  <object id="11" type="Stars" x="566" y="1804" width="76" height="48"/>
+  <object id="12" type="Stars" x="1409" y="1288" width="76" height="48"/>
+  <object id="13" type="Stars" x="1571" y="1184" width="76" height="48"/>
+  <object id="14" type="Stars" x="1739" y="1288" width="76" height="48"/>
+  <object id="15" type="Stars" x="245" y="796" width="76" height="48"/>
+  <object id="16" type="Stars" x="407" y="692" width="76" height="48"/>
+  <object id="17" type="Stars" x="575" y="796" width="76" height="48"/>
+  <object id="18" type="Stars" x="1397" y="296" width="76" height="48"/>
+  <object id="19" type="Stars" x="1559" y="192" width="76" height="48"/>
+  <object id="20" type="Stars" x="1727" y="296" width="76" height="48"/>
+ </objectgroup>
+ <objectgroup id="7" name="Arrows">
+  <object id="22" x="77" y="2151" width="64" height="64"/>
+  <object id="25" x="1852" y="1580" width="64" height="64"/>
+  <object id="26" x="80" y="1108" width="64" height="64"/>
+  <object id="27" x="1852" y="604" width="64" height="64"/>
  </objectgroup>
 </map>

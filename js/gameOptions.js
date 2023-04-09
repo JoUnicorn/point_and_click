@@ -19,6 +19,7 @@ export const GameOptions = {
   fps:61,
   numberOfLevels:3,
   versiongame:Date.now(),
+  maxBomb:[3,3,5,5],
   
   numRays:32,
   DEGTORAD:0.0174532925199432957
