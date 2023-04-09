@@ -1,4 +1,5 @@
 import { GameOptions } from './gameOptions.js';
+import { BLOCKTYPES } from './BLOCKTYPES.js';
 
 export class MainPage extends Phaser.Scene{
     constructor(){
@@ -35,9 +36,8 @@ export class MainPage extends Phaser.Scene{
 
         /////// menu ////////////////
         let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset, 'base_menu').setOrigin(0);
-        console.log(base_menu);
-        //let blocks = menu.objects[0].objects;
-
+        let blocks = menu.objects[1].objects;
+        blocks.forEach(blocks => this.addBlock(blocks));  
         /////// end menu ////////////////
 
         ///// settings ////
@@ -135,5 +135,17 @@ export class MainPage extends Phaser.Scene{
 
     }
         
+    addBlock(block) {
+  
+        // get block object
+        let blockObject = BLOCKTYPES[block.type];
+  
+        // we store block coordinates inside a Phaser Rectangle just to get its center
+        let rectangle = new Phaser.Geom.Rectangle(block.x+GameOptions.maginmenu/2, block.y+this.offset, block.width, block.height);
+        var r1 = this.add.star(rectangle.centerX, rectangle.centerY, 5, 48, 96, 0xFFFF00);
+        r1.setStrokeStyle(4, 0xefc53f);
+  
+    }
+
   };
   

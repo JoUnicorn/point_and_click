@@ -10,6 +10,11 @@ export const BLOCKTYPES = {
         dynamic: false,
         type: TERRAIN
     },
+    "Stars": {
+        color: 0x049b15,
+        dynamic: false,
+        type: TERRAIN
+    },
     "BreakableRect": {
         color: 0x6e5d42,
         dynamic: true,

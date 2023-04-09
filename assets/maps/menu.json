@@ -34,7 +34,7 @@
                  "visible":true,
                  "width":277,
                  "x":305,
-                 "y":2504.78787878788
+                 "y":2504.79
                 }, 
                 {
                  "gid":2,
@@ -94,9 +94,42 @@
          "width":4,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"stars",
+         "objects":[
+                {
+                 "height":180,
+                 "id":8,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Stars",
+                 "visible":true,
+                 "width":180,
+                 "x":252,
+                 "y":1724
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-824,
+                 "y":1504
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":7,
+ "nextlayerid":7,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
