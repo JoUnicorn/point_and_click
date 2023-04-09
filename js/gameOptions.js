@@ -11,6 +11,7 @@ export const GameOptions = {
   worldScaleParam:30,
   worldGravity:3,
   tiledHeightSize:70,
+  tiledMenuHeightSize:504,
   gamesteps:10, // the lower the faster the game is
   densityPart:300, // the bigger the more impactful the particule is
   partpropagationtime:150, // the longer the bigger the bomb propagate particules

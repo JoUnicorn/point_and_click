@@ -7,11 +7,17 @@ export class MainPage extends Phaser.Scene{
     
     create ()
     {
+
+        let menu = this.make.tilemap({key: "menu"});
+        var zoomappliedwidth=(window.innerWidth/(menu.width*GameOptions.tiledMenuHeightSize+200));
+        var limite=1/zoomappliedwidth;
+
         const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
         var camera = this.cameras.main;
         camera.setBounds(0, 0, GameOptions.screenGameWidth, GameOptions.screenGameHeight);
         camera.centerOnY((GameOptions.screenGameHeight-GameOptions.gameHeight)+GameOptions.gameHeight/2);
-        //camera.setZoom(1); //<1 => zoom out
+        camera.setZoom(zoomappliedwidth); //<1 => zoom out
+        this.offset=camera.height*limite-menu.height*GameOptions.tiledMenuHeightSize;
 
         var dragScale = this.plugins.get('rexpinchplugin').add(this);
         dragScale
@@ -28,8 +34,7 @@ export class MainPage extends Phaser.Scene{
 
 
         /////// menu ////////////////
-        let menu = this.make.tilemap({key: "menu"});
-        let base_menu = this.add.image(0, 0, 'base_menu').setOrigin(0);//.setScale(.3)
+        let base_menu = this.add.image(100, this.offset, 'base_menu').setOrigin(0);//.setScale(.3)
         console.log(base_menu);
         //let blocks = menu.objects[0].objects;
 
