@@ -26,6 +26,15 @@ export class MainPage extends Phaser.Scene{
         const sky=this.add.image(0, 0, 'sky').setOrigin(0);
         /////// end sky ////////////////
 
+
+        /////// menu ////////////////
+        let menu = this.make.tilemap({key: "menu"});
+        let base_menu = this.add.image(0, 0, 'base_menu').setOrigin(0);//.setScale(.3)
+        console.log(base_menu);
+        //let blocks = menu.objects[0].objects;
+
+        /////// end menu ////////////////
+
         ///// settings ////
         const settings=this.add.text(GameOptions.gameWidth-300, 50, 'Settings', { fill: '#0f0' })
         .setFontSize(50)
@@ -106,6 +115,7 @@ export class MainPage extends Phaser.Scene{
 
         //// ignore camera////
         UICam.ignore(sky);
+        UICam.ignore(base_menu);
         UICam.ignore(feuille1);
         UICam.ignore(feuille2);
         UICam.ignore(feuille3);
