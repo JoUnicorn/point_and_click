@@ -33,34 +33,57 @@ export class MainPage extends Phaser.Scene{
         const sky=this.add.image(0, 0, 'sky').setOrigin(0).setScale(limite);
         /////// end sky ////////////////
 
-
-        /////// menu ////////////////
-        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset, 'base_menu').setOrigin(0);
-        let stars = menu.objects[1].objects;
-        stars.forEach(stars => this.addStar(stars));  
-        for(var i=0;i<stars.length;i++){
-            UICam.ignore(stars[i]);
-        }
-        let doors = menu.objects[0].objects;
-        //doors.forEach(doors => this.addDoor(doors)); 
-        for(var i=0;i<doors.length;i++){
-            this.addDoor(doors[i],i,GameOptions.maxBomb[i]);
-            UICam.ignore(doors[i]);
-        }
-        let arrows = menu.objects[2].objects;
-        var actualLevel=2;
-        for(var i=0;i<arrows.length;i++){
-            if(actualLevel==i+1){
-                this.addArrow(arrows[i],actualLevel);
-                UICam.ignore(arrows[i]);    
-            }
-        }
-        /////// end menu ////////////////
-
         ///// settings ////
         var scale=.25;
         const settings=this.add.image(GameOptions.gameWidth-300, 70, 'gears').setScale(scale);
-        settings.setPosition(GameOptions.gameWidth-settings.width*scale/2-10, settings.height*scale/2+10)
+        settings.setPosition(GameOptions.gameWidth-settings.width*scale/2-10, GameOptions.gameHeight-settings.height*scale/2-10)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerup',  function () {
+
+                // Create modal game object after click basePanel
+                var modalGameObject = this.add.rectangle(0, 0, GameOptions.gameWidth/1.25, GameOptions.gameHeight/2, 0xffffff)
+                    .on('destroy', function () {
+                        console.log('parent destroy');
+                    })
+                // button will be destroyed after modal closing
+                const closeButton=this.add.text(modalGameObject.width/2-180, -modalGameObject.height/2+10, 'Close', { fill: '#0f0' })
+                .setFontSize(50)
+                .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
+                .on('pointerup',  function () {
+                        modelBehavior.requestClose();
+                    }, this);
+                const volume=this.add.image(0, 0, 'volume').setScale(scale)
+                .setInteractive({ useHandCursor: true })
+                .on('pointerup',  function () {
+                        volume.visible=false;
+                        mute.visible=true;
+                    }, this);
+                const mute=this.add.image(0, 0, 'mute').setScale(scale);
+                mute.visible=false;
+                mute.setInteractive({ useHandCursor: true })
+                .on('pointerup',  function () {
+                        mute.visible=false;
+                        volume.visible=true;
+                    }, this);
+                var container = this.add.container(GameOptions.gameWidth/2, GameOptions.gameHeight/2, [ modalGameObject, closeButton, volume, mute ]);
+                camera.ignore(container);
+
+                var modelBehavior = this.plugins.get('rexmodalplugin').add(container, {                    
+                    touchOutsideClose: true,
+                    duration: {
+                        in: 500,
+                        out: 500
+                    },
+
+                    // destroy: false
+                })
+                camera.ignore(modelBehavior);
+            
+            }, this);
+
+        const interro_mark=this.add.image(GameOptions.gameWidth-300, 70, 'interrogation-mark').setScale(scale);
+        interro_mark.setPosition(GameOptions.gameWidth-interro_mark.width*1.8*scale-10, GameOptions.gameHeight-interro_mark.height*scale/2-10)
         .setInteractive({ useHandCursor: true })
         .on('pointerup',  function () {
 
@@ -93,6 +116,29 @@ export class MainPage extends Phaser.Scene{
             
             }, this);
 
+
+        /////// menu ////////////////
+        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset-settings.height*scale*limite-50, 'base_menu').setOrigin(0);
+        let stars = menu.objects[1].objects;
+        stars.forEach(stars => this.addStar(stars));  
+        for(var i=0;i<stars.length;i++){
+            UICam.ignore(stars[i]);
+        }
+        let doors = menu.objects[0].objects;
+        //doors.forEach(doors => this.addDoor(doors)); 
+        for(var i=0;i<doors.length;i++){
+            this.addDoor(doors[i],i,GameOptions.maxBomb[i]);
+            UICam.ignore(doors[i]);
+        }
+        let arrows = menu.objects[2].objects;
+        var actualLevel=2;
+        for(var i=0;i<arrows.length;i++){
+            if(actualLevel==i+1){
+                this.addArrow(arrows[i],actualLevel);
+                UICam.ignore(arrows[i]);    
+            }
+        }
+        /////// end menu ////////////////
 
 
         //// ignore camera////

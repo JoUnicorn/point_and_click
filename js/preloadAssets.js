@@ -22,6 +22,9 @@ export class PreloadAssets extends Phaser.Scene{
     }
     this.load.atlas('explosion', 'assets/particles/explosion.png', 'assets/particles/explosion.json');
     this.load.image('gears', 'assets/images/setting.png');
+    this.load.image('volume', 'assets/images/volume.png');
+    this.load.image('mute', 'assets/images/mute.png');
+    this.load.image('interrogation-mark', 'assets/images/interrogation-mark.png');
   }
 
   create ()
