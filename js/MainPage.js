@@ -14,10 +14,10 @@ export class MainPage extends Phaser.Scene{
 
         const UICam = this.cameras.add(0, 0, GameOptions.gameWidth, GameOptions.gameHeight);
         var camera = this.cameras.main;
-        camera.setBounds(0, 0, GameOptions.screenGameWidth, GameOptions.screenGameHeight);
-        camera.centerOnY((GameOptions.screenGameHeight-GameOptions.gameHeight)+GameOptions.gameHeight/2);
+        camera.setBounds(0, 0, GameOptions.screenGameWidth, GameOptions.screenGameHeight*limite);
+        camera.centerOnY((GameOptions.screenGameHeight*limite-GameOptions.gameHeight*limite)+GameOptions.gameHeight*limite/2);
         camera.setZoom(zoomappliedwidth); //<1 => zoom out
-        this.offset=camera.height*limite-menu.height*GameOptions.tiledMenuHeightSize;
+        this.offset=GameOptions.screenGameHeight*limite-menu.height*GameOptions.tiledMenuHeightSize;
 
         var dragScale = this.plugins.get('rexpinchplugin').add(this);
         dragScale
@@ -29,12 +29,12 @@ export class MainPage extends Phaser.Scene{
   
 
         /////// sky ////////////////
-        const sky=this.add.image(0, 0, 'sky').setOrigin(0);
+        const sky=this.add.image(0, 0, 'sky').setOrigin(0).setScale(limite);
         /////// end sky ////////////////
 
 
         /////// menu ////////////////
-        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset, 'base_menu').setOrigin(0);//.setScale(.3)
+        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset, 'base_menu').setOrigin(0);
         console.log(base_menu);
         //let blocks = menu.objects[0].objects;
 

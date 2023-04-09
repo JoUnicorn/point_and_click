@@ -68,7 +68,7 @@ export class PlayGame extends Phaser.Scene{
       this.world = planck.World(gravity);
   
       /////// sky ////////////////
-      this.sky=this.add.image(0, 0, 'sky').setOrigin(0);
+      this.sky=this.add.image(0, 0, 'sky').setOrigin(0).setScale(limite);
       /////// end sky ////////////////
   
   
