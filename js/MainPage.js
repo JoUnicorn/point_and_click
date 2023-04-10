@@ -118,7 +118,7 @@ export class MainPage extends Phaser.Scene{
 
 
         /////// menu ////////////////
-        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset-settings.height*scale*limite-50, 'base_menu').setOrigin(0);
+        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset-settings.height*scale*limite-GameOptions.menuBottomMargin, 'base_menu').setOrigin(0);
         let stars = menu.objects[1].objects;
         stars.forEach(stars => this.addStar(stars));  
         for(var i=0;i<stars.length;i++){
@@ -145,6 +145,7 @@ export class MainPage extends Phaser.Scene{
         UICam.ignore(sky);
         UICam.ignore(base_menu);
         camera.ignore(settings);
+        camera.ignore(interro_mark);
             
     }
   
@@ -154,7 +155,7 @@ export class MainPage extends Phaser.Scene{
     }
         
     addStar(block) {
-  
+        
         let rectangle = new Phaser.Geom.Rectangle(block.x+GameOptions.maginmenu/2, block.y+this.offset, block.width, block.height);
         var r1 = this.add.star(rectangle.centerX, rectangle.centerY, 5, 48, 96, 0xFFFF00,0);
         r1.setStrokeStyle(10, 0xefc53f);
@@ -185,7 +186,7 @@ export class MainPage extends Phaser.Scene{
     addDoor(block,i,mbomb) {
         i=i+1;
         let rectangle = new Phaser.Geom.Rectangle(block.x+GameOptions.maginmenu/2, block.y+this.offset, block.width, block.height);
-        this.add.rectangle(rectangle.centerX, rectangle.y-rectangle.height/2, rectangle.width, rectangle.height, 0x6666ff,0)
+        this.add.rectangle(rectangle.centerX, rectangle.y-rectangle.height, rectangle.width, rectangle.height, 0x6666ff,0.5)
         .setInteractive({ useHandCursor: true })
         .on('pointerup',  function () {
             this.scene.start('PlayGame',{ level: "level"+i,maxBomb:mbomb });

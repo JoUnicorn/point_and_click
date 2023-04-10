@@ -20,6 +20,7 @@ export const GameOptions = {
   numberOfLevels:3,
   versiongame:Date.now(),
   maxBomb:[3,3,5,5],
+  menuBottomMargin:50,
   
   numRays:32,
   DEGTORAD:0.0174532925199432957
