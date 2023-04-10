@@ -17,7 +17,7 @@ export const GameOptions = {
   densityPart:300, // the bigger the more impactful the particule is
   partpropagationtime:150, // the longer the bigger the bomb propagate particules
   fps:61,
-  numberOfLevels:3,
+  numberOfLevels:4,
   versiongame:Date.now(),
   maxBomb:[3,3,5,5],
   menuBottomMargin:50,
