@@ -41,9 +41,9 @@ export class MainPage extends Phaser.Scene{
 
                 // Create modal game object after click basePanel
                 var modalGameObject = this.add.rectangle(0, 0, GameOptions.gameWidth/1.25, GameOptions.gameHeight/2, 0xffffff)
-                    .on('destroy', function () {
-                        console.log('parent destroy');
-                    })
+                    //.on('destroy', function () {
+                    //    console.log('parent destroy');
+                    //})
                 // button will be destroyed after modal closing
                 const closeButton=this.add.text(modalGameObject.width/2-180, -modalGameObject.height/2+10, 'Close', { fill: '#0f0' })
                 .setFontSize(50)
@@ -88,9 +88,6 @@ export class MainPage extends Phaser.Scene{
 
                 // Create modal game object after click basePanel
                 var modalGameObject = this.add.rectangle(0, 0, GameOptions.gameWidth/1.25, GameOptions.gameHeight/2, 0xffffff)
-                    //.on('destroy', function () {
-                    //    console.log('parent destroy');
-                    //})
                 // button will be destroyed after modal closing
                 const closeButton=this.add.text(modalGameObject.width/2-180, -modalGameObject.height/2+10, 'Close', { fill: '#0f0' })
                 .setFontSize(50)
