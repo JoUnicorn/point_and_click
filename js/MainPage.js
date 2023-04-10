@@ -18,7 +18,6 @@ export class MainPage extends Phaser.Scene{
         camera.setBounds(0, 0, GameOptions.screenGameWidth, GameOptions.screenGameHeight*limite);
         camera.centerOnY((GameOptions.screenGameHeight*limite-GameOptions.gameHeight*limite)+GameOptions.gameHeight*limite/2);
         camera.setZoom(zoomappliedwidth); //<1 => zoom out
-        this.offset=GameOptions.screenGameHeight*limite-menu.height*GameOptions.tiledMenuHeightSize;
 
         var dragScale = this.plugins.get('rexpinchplugin').add(this);
         dragScale
@@ -118,7 +117,8 @@ export class MainPage extends Phaser.Scene{
 
 
         /////// menu ////////////////
-        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset-settings.height*scale*limite-GameOptions.menuBottomMargin, 'base_menu').setOrigin(0);
+        this.offset=GameOptions.screenGameHeight*limite-menu.height*GameOptions.tiledMenuHeightSize-settings.height*scale*limite-GameOptions.menuBottomMargin;
+        let base_menu = this.add.image(GameOptions.maginmenu/2, this.offset, 'base_menu').setOrigin(0);
         let stars = menu.objects[1].objects;
         stars.forEach(stars => this.addStar(stars));  
         for(var i=0;i<stars.length;i++){
@@ -186,7 +186,7 @@ export class MainPage extends Phaser.Scene{
     addDoor(block,i,mbomb) {
         i=i+1;
         let rectangle = new Phaser.Geom.Rectangle(block.x+GameOptions.maginmenu/2, block.y+this.offset, block.width, block.height);
-        this.add.rectangle(rectangle.centerX, rectangle.y-rectangle.height, rectangle.width, rectangle.height, 0x6666ff,0.5)
+        this.add.rectangle(rectangle.centerX, rectangle.centerY-rectangle.height, rectangle.width, rectangle.height, 0x6666ff,0)
         .setInteractive({ useHandCursor: true })
         .on('pointerup',  function () {
             this.scene.start('PlayGame',{ level: "level"+i,maxBomb:mbomb });
