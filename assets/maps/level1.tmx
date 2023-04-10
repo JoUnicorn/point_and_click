@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="23">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="24">
  <editorsettings>
   <export target="level1.json" format="json"/>
  </editorsettings>
@@ -17,6 +17,7 @@
   <object id="21" type="BreakableCircle" x="984.839" y="1249.82" width="300" height="300">
    <ellipse/>
   </object>
-  <object id="22" type="Terrain" x="6.01095" y="530.731" width="36.3636" height="1853.21"/>
+  <object id="22" type="Terrain" x="2768.01" y="530.731" width="36.3636" height="1853.21"/>
+  <object id="23" type="Terrain" x="-6.1818" y="529.395" width="36.3636" height="1853.21"/>
  </objectgroup>
 </map>

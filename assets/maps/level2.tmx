@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="45" height="45" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="26">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="45" height="45" tilewidth="70" tileheight="70" infinite="0" nextlayerid="3" nextobjectid="27">
  <editorsettings>
   <export target="level2.json" format="json"/>
  </editorsettings>
@@ -18,5 +18,6 @@
   <object id="23" type="BreakableRect" x="2180.3" y="2328.61" width="70" height="350"/>
   <object id="24" type="BreakableRect" x="2610.3" y="2328.61" width="70" height="350"/>
   <object id="25" type="BreakableRect" x="2130.3" y="2258.61" width="600" height="70"/>
+  <object id="26" type="Terrain" x="3109.82" y="8.185" width="36.3636" height="2663.63"/>
  </objectgroup>
 </map>

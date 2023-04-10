@@ -205,7 +205,33 @@ export class PlayGame extends Phaser.Scene{
           this.world.destroyBody(b);
           this.box2DBlock.shift();
           if(this.box2DBlock.length==0){
-             this.scene.start('MainPage');
+                var modalGameObject = this.add.rectangle(0, 0, GameOptions.gameWidth/1.25, GameOptions.gameHeight/2, 0xffffff)
+                    .on('destroy', function () {
+                      this.scene.start('MainPage');
+                    }, this);
+                const closeButton=this.add.text(modalGameObject.width/2-180, -modalGameObject.height/2+10, 'Close', { fill: '#0f0' })
+                .setFontSize(50)
+                .setInteractive({ useHandCursor: true })
+                .setStyle({ backgroundColor: '#111' })
+                .on('pointerup',  function () {
+                        modelBehavior.requestClose();
+                    }, this);
+                var r1 = this.add.star(0, 0, 5, 48, 96, 0xFFFF00);
+                r1.setStrokeStyle(10, 0xefc53f);
+                var container = this.add.container(GameOptions.gameWidth/2, GameOptions.gameHeight/2, [ modalGameObject, closeButton, r1 ]);
+                this.cameras.main.ignore(container);
+
+                var modelBehavior = this.plugins.get('rexmodalplugin').add(container, {                    
+                    touchOutsideClose: true,
+                    duration: {
+                        in: 500,
+                        out: 500
+                    },
+
+                    // destroy: false
+                })
+                this.cameras.main.ignore(modelBehavior);
+
           }
         }
         if(filtergrpindex!=9 & filtergrpindex!=13){

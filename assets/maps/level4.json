@@ -127,7 +127,7 @@
                  "visible":true,
                  "width":300,
                  "x":1459.839,
-                 "y":2970.82
+                 "y":2979.82
                 }, 
                 {
                  "height":3121.21,
@@ -249,7 +249,18 @@
                  "visible":true,
                  "width":300,
                  "x":1010,
-                 "y":3390
+                 "y":3398
+                }, 
+                {
+                 "height":3121.21,
+                 "id":33,
+                 "name":"",
+                 "rotation":0,
+                 "type":"Terrain",
+                 "visible":true,
+                 "width":36.3636,
+                 "x":2899.8182,
+                 "y":1414.395
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -258,7 +269,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":33,
+ "nextobjectid":34,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
