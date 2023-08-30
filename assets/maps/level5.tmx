@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="200" height="200" tilewidth="10" tileheight="10" infinite="0" nextlayerid="3" nextobjectid="15">
+ <editorsettings>
+  <export target="level5.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="spritesheet_elements" tilewidth="10" tileheight="10" tilecount="41616" columns="204">
+  <image source="../kenney_physics-assets/Spritesheet/spritesheet_elements.png" width="2048" height="2048"/>
+ </tileset>
+ <tileset firstgid="41617" name="spritesheet_tiles" tilewidth="70" tileheight="70" tilecount="21" columns="7">
+  <image source="../kenney_physics-assets/Spritesheet/spritesheet_tiles.png" width="512" height="256"/>
+ </tileset>
+ <tileset firstgid="41638" name="elementWood019" tilewidth="70" tileheight="220" tilecount="1" columns="1">
+  <image source="../kenney_physics-assets/PNG/Wood elements/elementWood019.png" width="70" height="220"/>
+ </tileset>
+ <tileset firstgid="41639" name="elementWood012" tilewidth="220" tileheight="70" tilecount="1" columns="1">
+  <image source="../kenney_physics-assets/PNG/Wood elements/elementWood012.png" width="220" height="70"/>
+ </tileset>
+ <objectgroup id="2" name="object_layer">
+  <object id="9" type="Terrain" x="0" y="1930" width="560" height="70"/>
+  <object id="10" type="BreakableRect" x="110" y="1710" width="70" height="220"/>
+  <object id="11" type="BreakableRect" x="80" y="1640" width="220" height="70"/>
+  <object id="12" type="BreakableRect" x="280" y="1710" width="70" height="220"/>
+  <object id="13" type="BreakableRect" x="310" y="1640" width="220" height="70"/>
+  <object id="14" type="BreakableRect" x="450" y="1710" width="70" height="220"/>
+ </objectgroup>
+</map>
